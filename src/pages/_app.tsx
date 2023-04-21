@@ -1,6 +1,17 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import "reset-css";
+import { PlayerLayout } from "@/components";
+
+const theme = extendTheme({});
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <ChakraProvider theme={theme}>
+      <PlayerLayout>
+        <Component {...pageProps} />
+      </PlayerLayout>
+    </ChakraProvider>
+  );
 }
