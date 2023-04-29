@@ -2,7 +2,7 @@ import { spotifyGreen } from "@/styles/colors";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
 import { AiFillPushpin } from "react-icons/ai";
 
-const Favourites = () => {
+const FavouritesListView = () => {
   const fakeAlbums = [
     {
       thumbnail: "https://i.ibb.co/KhBYkPh/thumb.webp",
@@ -184,4 +184,4 @@ const Favourites = () => {
   );
 };
 
-export default Favourites;
+export default FavouritesListView;

@@ -1,5 +1,4 @@
 import { Box, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import React from "react";
 import { MdSearch } from "react-icons/md";
 
 const SearchLibraryInput = () => {

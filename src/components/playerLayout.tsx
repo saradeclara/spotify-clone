@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
-import { Sidebar } from "./index";
 import { marginType } from "@/types";
+import Sidebar from "./Sidebar";
 type PlayerLayoutProps = {
   children: ReactNode;
 };

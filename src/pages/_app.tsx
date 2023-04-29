@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import "reset-css";
-import { PlayerLayout } from "@/components";
+import PlayerLayout from "@/components/PlayerLayout";
 
 const theme = extendTheme({});
 
