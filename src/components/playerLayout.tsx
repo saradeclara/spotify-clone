@@ -2,11 +2,13 @@ import { Box } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
 import { marginType } from "@/types";
 import Sidebar from "./Sidebar";
+
 type PlayerLayoutProps = {
   children: ReactNode;
+  initialUsers: any;
 };
 
-const PlayerLayout = ({ children }: PlayerLayoutProps) => {
+const PlayerLayout = ({ children, initialUsers }: PlayerLayoutProps) => {
   const margins: marginType = {
     sm: "100px",
     md: "420px",

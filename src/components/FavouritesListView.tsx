@@ -155,9 +155,10 @@ const FavouritesListView = () => {
 
       {/* Favourites (Albums, Artists, Podcasts, Songs,...) */}
       <List>
-        {fakeAlbums.map(({ thumbnail, title, category, author }) => {
+        {fakeAlbums.map(({ thumbnail, title, category, author }, index) => {
           return (
             <ListItem
+              key={index}
               _hover={{ backgroundColor: "#1A1A1A" }}
               sx={{
                 display: "flex",

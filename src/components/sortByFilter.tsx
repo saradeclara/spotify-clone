@@ -57,6 +57,7 @@ const SortByFilter = () => {
             </Text>
             {filters.map((singleFilter, index) => (
               <MenuItem
+                key={index}
                 backgroundColor={
                   currentOption === index ? "#4c4c4c" : "#282828"
                 }

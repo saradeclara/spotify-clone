@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id               String     @id @default(cuid())
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  email            String     @unique
+  password         String
+  firstName        String
+  lastName         String
+  favouriteAlbums  Album[]
+  favouriteArtists Artist[]
+  Playlist         Playlist[]
+  favouriteSongs   Song[]
+}
+
+model Artist {
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  name        String        @unique
+  albums      Album[]
+  RecordLabel RecordLabel[]
+  User        User[]
+  thumbnail   String
+  Song        Song[]
+}
+
+model Album {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  releasedOn DateTime
+  Artist     Artist?  @relation(fields: [artistId], references: [id])
+  artistId   String?
+  User       User[]
+  thumbnail  String
+  Song       Song[]
+}
+
+model RecordLabel {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  artists   Artist[]
+  thumbnail String?
+}
+
+model Playlist {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  thumbnail String?
+  Song      Song[]
+}
+
+model Song {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  artist    Artist     @relation(fields: [artistId], references: [id])
+  album     Album      @relation(fields: [albumId], references: [id])
+  artistId  String
+  albumId   String
+  User      User[]
+  thumbnail String?
+  playlists Playlist[]
+}
