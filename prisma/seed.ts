@@ -149,37 +149,53 @@ const updateUser = {
   favouriteSongs: [],
 };
 
-// UPDATE USER
+// UPDATE SONG DURATION
 const main = async () => {
-  const foundAlbum = await prisma.album.findFirst({
-    where: { name: "Badmotorfinger" },
-  });
+  const allSongs = await prisma.song.findMany({});
 
-  const allSongs = await prisma.song.findMany({
-    where: { albumId: foundAlbum?.id },
-  });
-
-  const allSongIds = allSongs?.map((song) => {
-    return {
-      id: song.id,
-    };
-  });
-
-  const currentUser = await prisma.user.findFirst({
-    where: { email: "saradeclara@gmail.com" },
-  });
-
-  const updatedUser = await prisma.user.update({
-    where: { email: updateUser.email },
-    data: {
-      favouriteSongs: {
-        connect: allSongIds,
+  allSongs.map(async (currentSong) => {
+    const updatedSong = await prisma.song.updateMany({
+      where: { id: currentSong.id },
+      data: {
+        url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=0",
       },
-    },
-  });
+    });
 
-  console.log({ allSongs, currentUser, updatedUser });
+    console.log({ updatedSong });
+  });
 };
+
+// UPDATE USER
+// const main = async () => {
+//   const foundAlbum = await prisma.album.findFirst({
+//     where: { name: "Badmotorfinger" },
+//   });
+
+//   const allSongs = await prisma.song.findMany({
+//     where: { albumId: foundAlbum?.id },
+//   });
+
+//   const allSongIds = allSongs?.map((song) => {
+//     return {
+//       id: song.id,
+//     };
+//   });
+
+//   const currentUser = await prisma.user.findFirst({
+//     where: { email: "saradeclara@gmail.com" },
+//   });
+
+//   const updatedUser = await prisma.user.update({
+//     where: { email: updateUser.email },
+//     data: {
+//       favouriteSongs: {
+//         connect: allSongIds,
+//       },
+//     },
+//   });
+
+//   console.log({ allSongs, currentUser, updatedUser });
+// };
 
 // CREATE USERS
 // const main = async () => {
