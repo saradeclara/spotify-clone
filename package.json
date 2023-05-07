@@ -38,6 +38,8 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/cookie": "^0.5.1",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/react": "^18.0.37",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "eslint-plugin-import": "^2.27.5",
