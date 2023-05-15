@@ -5,10 +5,9 @@ import Sidebar from "./Sidebar";
 
 type PlayerLayoutProps = {
   children: ReactNode;
-  initialUsers: any;
 };
 
-const PlayerLayout = ({ children, initialUsers }: PlayerLayoutProps) => {
+const PlayerLayout = ({ children }: PlayerLayoutProps) => {
   const margins: marginType = {
     sm: "100px",
     md: "420px",

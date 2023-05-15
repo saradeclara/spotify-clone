@@ -1,10 +1,15 @@
-import { menuDataType, SidebarProps } from "./sidebar";
+import { AppPropsTypes } from "./app";
+import { AuthFormProps, formDataType } from "./authForm";
 import { marginType } from "./playerLayout";
+import { SidebarProps, menuDataType } from "./sidebar";
 import { jwtPayload, reqBodyTypes } from "./signin";
 export type {
-  menuDataType,
-  SidebarProps,
-  marginType,
-  jwtPayload,
-  reqBodyTypes,
+	AppPropsTypes,
+	AuthFormProps,
+	formDataType,
+	menuDataType,
+	SidebarProps,
+	marginType,
+	jwtPayload,
+	reqBodyTypes,
 };
