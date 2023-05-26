@@ -1,17 +1,46 @@
-enum ModeEnum {
+export enum ModeEnum {
 	signin,
 	signup,
 }
 
-type formDataType = {
+type FormDataType = {
 	type: string;
+	key: string;
 	label: string;
 	defaultValue: string;
 	isRequired: boolean;
 };
 
-type AuthFormProps = {
-	mode: ModeEnum;
+type DefaultLogin = {
+	email: string;
+	password: string;
 };
 
-export type { AuthFormProps, formDataType };
+type DefaultRegister = {
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+	isAdmin: boolean;
+};
+
+type ToastMessagesType = {
+	success: string;
+	failure: string;
+};
+
+type AuthFormProps = {
+	formData: FormDataType[];
+	mode: string;
+	action: string;
+	defaultForm: DefaultLogin | DefaultRegister;
+	toastMessages: ToastMessagesType;
+};
+
+export type {
+	AuthFormProps,
+	FormDataType,
+	DefaultLogin,
+	DefaultRegister,
+	ToastMessagesType,
+};

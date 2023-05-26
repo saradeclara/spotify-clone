@@ -1,7 +1,7 @@
 import fetcher from "./fetcher";
 
 export const auth = (
-	mode: ModeEnum,
+	mode: string,
 	method: string,
 	body: { email: string; password: string }
 ) => {

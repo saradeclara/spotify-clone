@@ -1,5 +1,5 @@
 import { spotifyGreen } from "@/styles/colors";
-import { AuthFormProps, formDataType } from "@/types";
+import { AuthFormProps } from "@/types";
 import {
 	Box,
 	Button,
@@ -17,24 +17,36 @@ import {
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import capitalise from "../../lib/capitalise";
 import { auth } from "../../lib/mutation";
 
-const AuthForm = ({ mode }: AuthFormProps) => {
-	const [loginForm, updateLoginForm] = useState({ email: "", password: "" });
+const AuthForm = ({
+	formData,
+	mode,
+	action,
+	defaultForm,
+	toastMessages,
+}: AuthFormProps) => {
+	const [form, updateForm] = useState(defaultForm);
 	const [passwordVisible, togglePasswordVisible] = useState(false);
 	const toast = useToast();
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 	const isError = false;
-	const defaultInput = "";
 
-	const handleInputChange = (e: FormEvent<HTMLInputElement>, label: string) => {
-		switch (label) {
+	const handleInputChange = (e: FormEvent<HTMLInputElement>, key: string) => {
+		switch (key) {
 			case "email":
-				updateLoginForm({ ...loginForm, email: e.currentTarget.value });
+				updateForm({ ...form, email: e.currentTarget.value });
 				break;
 			case "password":
-				updateLoginForm({ ...loginForm, password: e.currentTarget.value });
+				updateForm({ ...form, password: e.currentTarget.value });
+				break;
+			case "firstName":
+				updateForm({ ...form, firstName: e.currentTarget.value });
+				break;
+			case "lastName":
+				updateForm({ ...form, lastName: e.currentTarget.value });
 				break;
 			default:
 				break;
@@ -45,17 +57,17 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 		togglePasswordVisible(!passwordVisible);
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e: { preventDefault: () => void }) => {
+		e.preventDefault();
 		setIsLoading(true);
 
-		const response = await auth(mode, "POST", loginForm);
+		const response = await auth(mode, "POST", form);
+		setIsLoading(false);
+		router.push("/");
 		if (response) {
-			setIsLoading(false);
 			if (response.ok) {
-				router.push("/");
 				toast({
-					title: "Login successful",
-					description: "You've successfully logged into your account.",
+					title: toastMessages.success,
 					status: "success",
 					duration: 5000,
 					position: "top-right",
@@ -63,8 +75,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 				});
 			} else {
 				toast({
-					title: "Login failed",
-					description: "We do not know this username/password combination.",
+					title: toastMessages.failure,
 					status: "error",
 					duration: 5000,
 					position: "top-right",
@@ -73,21 +84,6 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 			}
 		}
 	};
-
-	const formData: formDataType[] = [
-		{
-			type: "email",
-			label: "Email or username",
-			defaultValue: "",
-			isRequired: true,
-		},
-		{
-			type: "password",
-			label: "Password",
-			defaultValue: "",
-			isRequired: true,
-		},
-	];
 
 	return (
 		<Box sx={{ height: "100vh", width: "100vw", bg: "black", color: "white" }}>
@@ -103,7 +99,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 			>
 				<Box width="100%">
 					{formData.map(
-						({ type, defaultValue, label, isRequired }, index, array) => {
+						({ type, key, defaultValue, label, isRequired }, index, array) => {
 							return (
 								<FormControl
 									key={index}
@@ -122,7 +118,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 										<Input
 											type={passwordVisible ? "text" : type}
 											defaultValue={defaultValue}
-											onChange={(e) => handleInputChange(e, type)}
+											onChange={(e) => handleInputChange(e, key)}
 										/>
 										{type === "password" ? (
 											<InputRightElement onClick={handleTogglePasswordVisible}>
@@ -147,7 +143,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
 						margin: "30px 0px",
 					}}
 				>
-					Log in
+					{capitalise(action)}
 				</Button>
 				<Link href="#" sx={{ textDecoration: "underline" }}>
 					Forgot your password?

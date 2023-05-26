@@ -11,8 +11,6 @@ const main = async () => {
 		where: { email: "saradeclara@gmail.com" },
 		data: { password: bcrypt.hashSync("password", salt) },
 	});
-
-	console.log({ updateWithPassword });
 };
 
 main()

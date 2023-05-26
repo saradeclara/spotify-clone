@@ -1,3 +1,3 @@
 export default function Home(props) {
-  return <div>hello world</div>;
+	return <div>hello world</div>;
 }
