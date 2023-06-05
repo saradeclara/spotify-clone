@@ -24,7 +24,7 @@ export const validateRoute = (
 						where: { id: decodedToken.id },
 					});
 
-					if (!user) throw new Error("We do not know this user.");
+					if (!user) throw new Error("Unknown User");
 				} catch (error) {
 					res.status(401);
 					res.json({ error });

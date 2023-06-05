@@ -33,8 +33,10 @@ const AuthForm = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 	const isError = false;
+	console.log("register form", form);
 
 	const handleInputChange = (e: FormEvent<HTMLInputElement>, key: string) => {
+		console.log("key", key);
 		switch (key) {
 			case "email":
 				updateForm({ ...form, email: e.currentTarget.value });
@@ -61,11 +63,12 @@ const AuthForm = ({
 		e.preventDefault();
 		setIsLoading(true);
 
-		const response = await auth(mode, "POST", form);
+		const response = await auth(mode, form);
 		setIsLoading(false);
 		router.push("/");
+
 		if (response) {
-			if (response.ok) {
+			if (!response.error) {
 				toast({
 					title: toastMessages.success,
 					status: "success",
@@ -149,12 +152,21 @@ const AuthForm = ({
 					Forgot your password?
 				</Link>
 				<Divider color="gray" margin="40px 0px" />
-				<Box marginTop="10px">
-					<Text sx={{ color: "gray", display: "inline", marginRight: "5px" }}>
-						Don't have an account?
-					</Text>
-					<Link>Sign up for Spotify</Link>
-				</Box>
+				{mode === "signin" ? (
+					<Box marginTop="10px">
+						<Text sx={{ color: "gray", display: "inline", marginRight: "5px" }}>
+							Don't have an account?
+						</Text>
+						<Link href="/signup">Sign up for Spotify</Link>
+					</Box>
+				) : (
+					<Box marginTop="10px">
+						<Text sx={{ color: "gray", display: "inline", marginRight: "5px" }}>
+							Have an account?
+						</Text>
+						<Link href="/signin">Login</Link>
+					</Box>
+				)}
 			</Flex>
 		</Box>
 	);

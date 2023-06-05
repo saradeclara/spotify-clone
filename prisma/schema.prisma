@@ -15,6 +15,16 @@ datasource db {
 //   url      = env("DATABASE_URL")
 // }
 
+model Category {
+  id          String     @id @default(cuid())
+  description String     @unique
+  songs       Song[]
+  playlists   Playlist[]
+  shows       Show[]
+  albums      Album[]
+  artists     Artist[]
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -33,13 +43,16 @@ model User {
 }
 
 model Playlist {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  songs     Song[]
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String
+  thumbnail  String?
+  songs      Song[]
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
 
 model Show {
@@ -47,9 +60,12 @@ model Show {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
+  author    String
   thumbnail String?
 
-  users User[]
+  users      User[]
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
 
 model Song {
@@ -61,27 +77,32 @@ model Song {
   url        String
   duration   Int
 
-  album     Album      @relation(fields: [albumId], references: [id])
-  albumId   String
-  artist    Artist     @relation(fields: [artistId], references: [id])
-  artistId  String
-  users     User[]
-  playlists Playlist[]
+  album      Album      @relation(fields: [albumId], references: [id])
+  albumId    String
+  artist     Artist     @relation(fields: [artistId], references: [id])
+  artistId   String
+  users      User[]
+  playlists  Playlist[]
+  Category   Category   @relation(fields: [categoryId], references: [id])
+  categoryId String
 
   @@unique([name, albumIndex])
 }
 
 model Album {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
-  thumbnail String?
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String   @unique
+  thumbnail  String?
+  releasedOn DateTime
 
-  songs    Song[]
-  artist   Artist @relation(fields: [artistId], references: [id])
-  artistId String
-  users    User[]
+  songs      Song[]
+  artist     Artist   @relation(fields: [artistId], references: [id])
+  artistId   String
+  users      User[]
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
 
 model Artist {
@@ -91,7 +112,9 @@ model Artist {
   name      String   @unique
   thumbnail String?
 
-  songs  Song[]
-  albums Album[]
-  users  User[]
+  songs      Song[]
+  albums     Album[]
+  users      User[]
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
