@@ -1,8 +1,8 @@
 import { sidebarMain } from "@/styles/colors";
 import { LibraryMenuProps } from "@/types/libraryMenu";
 import { Box } from "@chakra-ui/react";
-import { useState } from "react";
-import { useFavourites, usePlaylist } from "../../lib/hooks";
+import { useEffect, useState } from "react";
+import { useFeed } from "../../lib/hooks";
 import FavouritesGridView from "./FavouritesGridView";
 import FavouritesListView from "./FavouritesListView";
 import LibraryCarousel from "./LibraryCarousel";
@@ -10,23 +10,33 @@ import LibraryHeader from "./LibraryHeader";
 import SearchLibraryInput from "./SearchLibraryInput";
 import SortByFilter from "./SortByFilter";
 
+const filters: string[] = [
+	"Recents",
+	"Recently Added",
+	"Alphabetical",
+	"Creator",
+];
+
 const LibraryMenu = ({
 	sidebarMargin,
 	updateSidebarMargin,
 	margins,
 }: LibraryMenuProps) => {
 	const [currentView, toggleView] = useState(0);
+	const [currentOption, updateOption] = useState(2);
+
 	const favouritesViews: string[] = ["list", "grid"];
 
-	const { playlists } = usePlaylist();
-	const { favouriteAlbums, favouriteArtists, favouriteShows } = useFavourites();
+	const { data, isLoading, error } = useFeed({ sort: filters[currentOption] });
 
-	const favouritesAndPlaylists = {
-		favouriteAlbums,
-		favouriteArtists,
-		favouriteShows,
-		playlists,
-	};
+	console.log({ data });
+
+	useEffect(() => {
+		if (sidebarMargin === margins.l) {
+			toggleView(1);
+		}
+	}, [sidebarMargin]);
+
 	return (
 		<Box
 			id="libraryMenu"
@@ -60,15 +70,21 @@ const LibraryMenu = ({
 					}}
 				>
 					<SearchLibraryInput />
-					<SortByFilter />
+					<SortByFilter
+						filters={filters}
+						currentOption={currentOption}
+						updateOption={updateOption}
+					/>
 				</Box>
 				{/* Main Favourites List */}
 				<Box sx={{ marginTop: "20px" }}>
-					{favouritesViews[currentView] === "list" ? (
-						<FavouritesListView data={favouritesAndPlaylists} />
-					) : (
-						<FavouritesGridView data={favouritesAndPlaylists} />
-					)}
+					{data ? (
+						favouritesViews[currentView] === "list" ? (
+							<FavouritesListView data={data} />
+						) : (
+							<FavouritesGridView data={data} />
+						)
+					) : null}
 				</Box>
 			</Box>
 		</Box>

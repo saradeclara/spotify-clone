@@ -33,10 +33,8 @@ const AuthForm = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 	const isError = false;
-	console.log("register form", form);
 
 	const handleInputChange = (e: FormEvent<HTMLInputElement>, key: string) => {
-		console.log("key", key);
 		switch (key) {
 			case "email":
 				updateForm({ ...form, email: e.currentTarget.value });

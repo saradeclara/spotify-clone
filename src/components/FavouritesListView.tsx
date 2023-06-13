@@ -5,8 +5,131 @@ import { AiFillPushpin } from "react-icons/ai";
 import capitalise from "../../lib/capitalise";
 
 const FavouritesListView = ({ data }: FavouritesProps) => {
-	const { favouriteAlbums, favouriteArtists, favouriteShows, playlists } = data;
-	console.log({ data });
+	const renderFavFeed = (
+		categoryType: string,
+		feedRecord: any,
+		index: number
+	) => {
+		let component;
+		switch (categoryType) {
+			case "album":
+				component = (
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							padding: "10px",
+							cursor: "pointer",
+						}}
+					>
+						<Image
+							borderRadius="md"
+							boxSize="50px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box sx={{ marginLeft: "10px" }}>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small">{`${capitalise(
+								feedRecord.Category.description
+							)} \u2022 ${feedRecord.artist.name}`}</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			case "podcast":
+				component = (
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							padding: "10px",
+							cursor: "pointer",
+						}}
+					>
+						<Image
+							borderRadius="full"
+							boxSize="50px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box sx={{ marginLeft: "10px" }}>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small">{`${capitalise(
+								feedRecord.Category.description
+							)} \u2022 ${feedRecord.author}`}</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			case "playlist":
+				component = (
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							padding: "10px",
+							cursor: "pointer",
+						}}
+					>
+						<Image
+							borderRadius="md"
+							boxSize="50px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box sx={{ marginLeft: "10px" }}>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small">{`${capitalise(
+								feedRecord.Category.description
+							)} \u2022 ${feedRecord.User.firstName} ${
+								feedRecord.User.lastName
+							}`}</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			case "artist":
+				component = (
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							padding: "10px",
+							cursor: "pointer",
+						}}
+					>
+						<Image
+							borderRadius="full"
+							boxSize="50px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box sx={{ marginLeft: "10px" }}>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small">{`${capitalise(
+								feedRecord.Category.description
+							)}`}</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			default:
+				component = null;
+				break;
+		}
+
+		return component;
+	};
+
 	return (
 		<Box id="favourites-wrapper">
 			{/* Liked Songs & Your Episodes - Always on Top */}
@@ -59,117 +182,20 @@ const FavouritesListView = ({ data }: FavouritesProps) => {
 				</ListItem>
 			</List>
 
-			{/* Favourites (Albums, Artists, Podcasts, Playlists,...) */}
 			<List>
-				{playlists.map(({ thumbnail, name, Category, User }, index) => {
-					return (
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								padding: "10px",
-								cursor: "pointer",
-							}}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="50px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box sx={{ marginLeft: "10px" }}>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small">{`${capitalise(
-									Category.description
-								)} \u2022 ${User.firstName} ${User.lastName}`}</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
-				{favouriteArtists.map(({ thumbnail, name, Category }, index) => {
-					return (
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								padding: "10px",
-								cursor: "pointer",
-							}}
-						>
-							<Image
-								borderRadius="full"
-								boxSize="50px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box sx={{ marginLeft: "10px" }}>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small">{`${capitalise(
-									Category.description
-								)}`}</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
-				{favouriteAlbums.map(({ thumbnail, name, Category, artist }, index) => {
-					return (
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								padding: "10px",
-								cursor: "pointer",
-							}}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="50px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box sx={{ marginLeft: "10px" }}>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small">{`${capitalise(
-									Category.description
-								)} \u2022 ${artist.name}`}</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
-
-				{favouriteShows.map(({ thumbnail, name, author, Category }, index) => {
-					return (
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								padding: "10px",
-								cursor: "pointer",
-							}}
-						>
-							<Image
-								borderRadius="full"
-								boxSize="50px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box sx={{ marginLeft: "10px" }}>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small">{`${capitalise(
-									Category.description
-								)} \u2022 ${author}`}</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
+				{data
+					? data.map((singleFeedRecord, index) => {
+							const categoryType = singleFeedRecord.Category.description;
+							if (singleFeedRecord) {
+								const component = renderFavFeed(
+									categoryType,
+									singleFeedRecord,
+									index
+								);
+								return component;
+							}
+					  })
+					: "No Favourites"}
 			</List>
 		</Box>
 	);

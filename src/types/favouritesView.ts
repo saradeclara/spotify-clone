@@ -55,15 +55,14 @@ type playlistType = {
 	User: UserType;
 };
 
-type currentUserFavouritesType = {
-	favouriteAlbums: favAlbumsType[];
-	favouriteArtists: favArtistsType[];
-	favouriteShows: favShowsType[];
-	playlists: playlistType[];
-};
-
 type FavouritesProps = {
-	data: currentUserFavouritesType;
+	data: (favAlbumsType | favArtistsType | favShowsType | playlistType)[];
 };
 
-export type { FavouritesProps };
+export type {
+	FavouritesProps,
+	favAlbumsType,
+	favArtistsType,
+	favShowsType,
+	playlistType,
+};

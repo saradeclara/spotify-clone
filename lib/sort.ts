@@ -1,0 +1,103 @@
+/**
+ * returns array in alphabetical order (by name)
+ * @param array favourites feed (album, artists, podcasts, playlists)
+ * @returns sorted array (alphabetically)
+ */
+const sortAlphabetical = (array: any[]) => {
+	array.sort((a: { name: number }, b: { name: number }) => {
+		if (a.name < b.name) {
+			return -1;
+		}
+		if (a.name > b.name) {
+			return 1;
+		}
+		return 0;
+	});
+
+	return array;
+};
+
+/**
+ * returns array sorted by creation date (more recent first)
+ * @param array favourites feed (album, artists, podcasts, playlists)
+ * @returns sorted array (by creation date)
+ */
+const sortRecents = (array: any[]) => {
+	array.sort((a, b) => {
+		if (b.createdAt < a.createdAt) {
+			return -1;
+		}
+		if (b.createdAt > a.createdAt) {
+			return 1;
+		}
+		return 0;
+	});
+	return array;
+};
+
+/**
+ * returns array sorted by latest update date (more recent first)
+ * @param array favourites feed (album, artists, podcasts, playlists)
+ * @returns sorted array (by latest update date)
+ */
+const sortRecentlyAdded = (array: any[]) => {
+	array.sort((a, b) => {
+		if (b.updatedAt < a.updatedAt) {
+			return -1;
+		}
+		if (b.updatedAt > a.updatedAt) {
+			return 1;
+		}
+		return 0;
+	});
+	return array;
+};
+
+/**
+ * returns array sorted by creator (alphabetical order)
+ * @param array favourites feed (album, artists, podcasts, playlists)
+ * @returns sorted array (by author/artist)
+ */
+const sortCreator = (array: any[]) => {
+	// remapping authors
+	const arrayOfAuthors = array.map((singleRecord, index) => {
+		switch (singleRecord.Category.description) {
+			case "album":
+				return { index, name: singleRecord.artist?.name };
+			case "artist":
+				return { index, name: singleRecord.name };
+			case "playlist":
+				return {
+					index,
+					name:
+						singleRecord.User?.firstName + " " + singleRecord.User?.lastName,
+				};
+			case "podcast":
+				return { index, name: singleRecord.author };
+			default:
+				break;
+		}
+	});
+
+	arrayOfAuthors.sort((a, b) => {
+		if (a?.name < b?.name) {
+			return -1;
+		}
+		if (a?.name > b?.name) {
+			return 1;
+		}
+		return 0;
+	});
+
+	const sorted: any[] = [];
+
+	arrayOfAuthors.forEach((singleRecord) => {
+		if (singleRecord) {
+			sorted.push(array[singleRecord.index]);
+		}
+	});
+
+	return sorted;
+};
+
+export { sortAlphabetical, sortCreator, sortRecentlyAdded, sortRecents };

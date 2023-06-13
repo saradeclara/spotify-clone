@@ -51,8 +51,6 @@ const main = async () => {
 		where: { description: "podcast" },
 	});
 
-	console.log({ catArtist, catAlbum, catSong });
-
 	if (catArtist && catAlbum && catSong && catPlaylist && catPodcast) {
 		await Promise.all(
 			artists.map(async (singleArtist) => {
@@ -229,24 +227,6 @@ const main = async () => {
 			console.log({ newUser });
 		}
 	}
-
-	// 	// create albums and songs
-
-	//
-
-	// 	// create new user
-	//
-
-	// 	console.log({ newUser });
-	// }
-
-	// // create songs
-
-	// // create albums
-
-	// // create playlists
-
-	// // create shows
 };
 
 main()

@@ -2,12 +2,8 @@ import { spotifyGreen } from "@/styles/colors";
 import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
 import { AiFillPushpin } from "react-icons/ai";
-import capitalise from "../../lib/capitalise";
 
 const FavouritesGridView = ({ data }: FavouritesProps) => {
-	const { favouriteAlbums, favouriteArtists, favouriteShows, playlists } = data;
-	console.log({ data });
-
 	const listItemStyles = {
 		display: "flex",
 		flexDirection: "column",
@@ -58,7 +54,7 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 					</Box>
 				</ListItem>
 				{/* Favourites (Albums, Artists, Podcasts, Songs,...) */}
-				{playlists.map(({ thumbnail, name, Category, User }, index) => {
+				{/* {playlists.map(({ thumbnail, name, Category, User }, index) => {
 					return (
 						<ListItem
 							_hover={{ backgroundColor: "#1A1A1A" }}
@@ -144,7 +140,7 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 							</Box>
 						</ListItem>
 					);
-				})}
+				})} */}
 			</List>
 		</Box>
 	);
