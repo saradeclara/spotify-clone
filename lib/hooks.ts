@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import fetcher from "./fetcher";
 import {
+	searchText,
 	sortAlphabetical,
 	sortCreator,
 	sortRecentlyAdded,
@@ -27,86 +28,61 @@ export const usePlaylist = () => {
 	};
 };
 
-export const useFeed = ({ sort }: { sort: string }) => {
-	const feed = useSWR("/favouritesfeed", fetcher);
+export const useFeed = ({
+	sort,
+	search,
+	catFilter,
+}: {
+	sort: string;
+	search: string;
+	catFilter: string | null;
+}) => {
+	console.log({ catFilter });
+	let searched;
+	let catFiltered;
 	let sorted;
+
+	const feed = useSWR("/favouritesfeed", fetcher);
+
+	// search
+	if (search.length > 0) {
+		searched = searchText(feed.data, search);
+	} else {
+		searched = feed.data;
+	}
+
+	// category filter
+	if (catFilter) {
+		catFiltered = searched.filter(
+			(singleRecord: any) => singleRecord.Category.description === catFilter
+		);
+	} else {
+		catFiltered = searched;
+	}
+
+	// sort
 	if (feed && feed.data && sort) {
 		switch (sort) {
 			case "Alphabetical":
-				sorted = sortAlphabetical(feed.data);
+				sorted = sortAlphabetical(catFiltered);
 				break;
 			case "Recents":
-				sorted = sortRecents(feed.data);
+				sorted = sortRecents(catFiltered);
 				break;
 			case "Recently Added":
-				sorted = sortRecentlyAdded(feed.data);
+				sorted = sortRecentlyAdded(catFiltered);
 				break;
 			case "Creator":
-				sorted = sortCreator(feed.data);
+				sorted = sortCreator(catFiltered);
 				break;
 			default:
 				break;
 		}
 	}
+
 	return {
 		data: sorted,
 		isLoading: feed.isLoading,
 		error: feed.error,
 	};
 };
-
-// export const useFavourites = () => {
-// 	const categories = useSWR("/categories", fetcher);
-// 	const favSongs = useSWR("/favouritesongs", fetcher);
-// 	const favArtists = useSWR("/favouriteartists", fetcher);
-// 	const favAlbums = useSWR("/favouritealbums", fetcher);
-// 	const favShows = useSWR("/favouriteshows", fetcher);
-
-// 	return {
-// 		categories: categories.data || [],
-// 		favouriteSongs: favSongs.data || [],
-// 		favouriteArtists: favArtists.data || [],
-// 		favouriteAlbums: favAlbums.data || [],
-// 		favouriteShows: favShows.data || [],
-// 	};
-// };
-
-// export const useFavouriteSongs = () => {
-// 	const { data, error } = useSWR("/favouritesongs", fetcher);
-
-// 	return {
-// 		favouriteSongs: data || [],
-// 		isLoading: !data && !error,
-// 		isError: error,
-// 	};
-// };
-
-// export const useFavouriteArtists = () => {
-// 	const { data, error } = useSWR("/favouriteartists", fetcher);
-
-// 	return {
-// 		favouriteSongs: data || [],
-// 		isLoading: !data && !error,
-// 		isError: error,
-// 	};
-// };
-
-// export const useFavouriteShows = () => {
-// 	const { data, error } = useSWR("/favouriteshows", fetcher);
-
-// 	return {
-// 		favouriteSongs: data || [],
-// 		isLoading: !data && !error,
-// 		isError: error,
-// 	};
-// };
-
-// export const useFavouriteAlbums = () => {
-// 	const { data, error } = useSWR("/favouritealbums", fetcher);
-
-// 	return {
-// 		favouriteSongs: data || [],
-// 		isLoading: !data && !error,
-// 		isError: error,
-// 	};
-// };

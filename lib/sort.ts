@@ -100,4 +100,45 @@ const sortCreator = (array: any[]) => {
 	return sorted;
 };
 
-export { sortAlphabetical, sortCreator, sortRecentlyAdded, sortRecents };
+const searchText = (array: any[], textInput: string) => {
+	let filtered;
+	textInput = textInput.toLowerCase();
+	if (textInput.length === 0) {
+		return array;
+	} else {
+		filtered = array.filter((element) => {
+			switch (element.Category.description) {
+				case "album":
+					return (
+						element.name.toLowerCase().includes(textInput) ||
+						element.artist.name.toLowerCase().includes(textInput)
+					);
+				case "artist":
+					return element.name.toLowerCase().includes(textInput);
+				case "playlist":
+					return (
+						element.name.toLowerCase().includes(textInput) ||
+						element.User.firstName.toLowerCase().includes(textInput) ||
+						element.User.lastName.toLowerCase().includes(textInput)
+					);
+				case "podcast":
+					return (
+						element.name.toLowerCase().includes(textInput) ||
+						element.author.toLowerCase().includes(textInput)
+					);
+				default:
+					break;
+			}
+		});
+	}
+
+	return filtered;
+};
+
+export {
+	searchText,
+	sortAlphabetical,
+	sortCreator,
+	sortRecentlyAdded,
+	sortRecents,
+};

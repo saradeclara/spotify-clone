@@ -17,25 +17,37 @@ const filters: string[] = [
 	"Creator",
 ];
 
+const libraryTags: { name: string; label: string }[] = [
+	{ name: "Playlists", label: "playlist" },
+	{ name: "Artists", label: "artist" },
+	{ name: "Albums", label: "album" },
+	{ name: "Podcasts & Shows", label: "podcast" },
+];
+
 const LibraryMenu = ({
 	sidebarMargin,
 	updateSidebarMargin,
 	margins,
 }: LibraryMenuProps) => {
 	const [currentView, toggleView] = useState(0);
-	const [currentOption, updateOption] = useState(2);
-
+	const [currentOption, updateOption] = useState(0);
+	const [textInput, updateTextInput] = useState("");
+	const [currentCat, updateCat] = useState<number | null>(null);
 	const favouritesViews: string[] = ["list", "grid"];
 
-	const { data, isLoading, error } = useFeed({ sort: filters[currentOption] });
-
-	console.log({ data });
+	const { data, isLoading, error } = useFeed({
+		sort: filters[currentOption],
+		search: textInput,
+		catFilter: currentCat === null ? null : libraryTags[currentCat].label,
+	});
 
 	useEffect(() => {
 		if (sidebarMargin === margins.l) {
 			toggleView(1);
 		}
 	}, [sidebarMargin]);
+
+	useEffect(() => {}, [textInput]);
 
 	return (
 		<Box
@@ -55,7 +67,11 @@ const LibraryMenu = ({
 				toggleView={toggleView}
 				favouritesViews={favouritesViews}
 			/>
-			<LibraryCarousel />
+			<LibraryCarousel
+				currentCat={currentCat}
+				updateCat={updateCat}
+				libraryTags={libraryTags}
+			/>
 			<Box
 				sx={{
 					height: "calc(100vh - 354.458px)",
@@ -69,7 +85,10 @@ const LibraryMenu = ({
 						justifyContent: "space-between",
 					}}
 				>
-					<SearchLibraryInput />
+					<SearchLibraryInput
+						updateTextInput={updateTextInput}
+						textInput={textInput}
+					/>
 					<SortByFilter
 						filters={filters}
 						currentOption={currentOption}
