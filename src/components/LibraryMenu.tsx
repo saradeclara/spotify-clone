@@ -99,9 +99,9 @@ const LibraryMenu = ({
 				<Box sx={{ marginTop: "20px" }}>
 					{data ? (
 						favouritesViews[currentView] === "list" ? (
-							<FavouritesListView data={data} />
+							<FavouritesListView textInput={textInput} data={data} />
 						) : (
-							<FavouritesGridView data={data} />
+							<FavouritesGridView textInput={textInput} data={data} />
 						)
 					) : null}
 				</Box>

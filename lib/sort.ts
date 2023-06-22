@@ -118,8 +118,8 @@ const searchText = (array: any[], textInput: string) => {
 				case "playlist":
 					return (
 						element.name.toLowerCase().includes(textInput) ||
-						element.User.firstName.toLowerCase().includes(textInput) ||
-						element.User.lastName.toLowerCase().includes(textInput)
+						element.createdBy.firstName.toLowerCase().includes(textInput) ||
+						element.createdBy.lastName.toLowerCase().includes(textInput)
 					);
 				case "podcast":
 					return (

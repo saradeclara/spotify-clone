@@ -21,7 +21,7 @@ const TagCarousel = ({
 			  )
 			: libraryTags;
 	return (
-		<Box sx={{ marginTop: "25px" }}>
+		<Box sx={{ marginTop: "25px", height: "30px", overflow: "hidden" }}>
 			<Box
 				onClick={() => updateCat(null)}
 				display={typeof currentCat === "number" ? "inline-block" : "none"}
@@ -60,6 +60,31 @@ const TagCarousel = ({
 					</Tag>
 				);
 			})}
+			{typeof currentCat === "number" &&
+			libraryTags[currentCat].label === "playlist"
+				? ["By Spotify", "By you"].map((singleTag, index) => {
+						return (
+							<Tag
+								_hover={{
+									backgroundColor: "#383838",
+									transition: "background-color .3s",
+								}}
+								size="md"
+								key={singleTag}
+								backgroundColor={"#2A2A2A"}
+								// color={typeof currentCat === "number" ? "black" :/ "white"}
+								borderRadius="full"
+								variant="solid"
+								transition="background-color .3s"
+								marginRight="8px"
+								cursor="pointer"
+								onClick={() => handleTagClick(index)}
+							>
+								<Text padding="6px">{singleTag}</Text>
+							</Tag>
+						);
+				  })
+				: null}
 		</Box>
 	);
 };

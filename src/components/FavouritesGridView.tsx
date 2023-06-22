@@ -2,6 +2,7 @@ import { spotifyGreen } from "@/styles/colors";
 import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
 import { AiFillPushpin } from "react-icons/ai";
+import capitalise from "../../lib/capitalise";
 
 const FavouritesGridView = ({ data }: FavouritesProps) => {
 	const listItemStyles = {
@@ -17,6 +18,99 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 		whiteSpace: "nowrap",
 		overflow: "hidden",
 		textOverflow: "ellipsis",
+	};
+
+	const renderFavFeed = (
+		categoryType: string,
+		feedRecord: any,
+		index: number
+	) => {
+		let component;
+		switch (categoryType) {
+			case "album":
+				component = (
+					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+						<Image
+							borderRadius="md"
+							boxSize="150px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small" sx={textWithEllipsis}>
+								{`${capitalise(feedRecord.Category.description)} \u2022 ${
+									feedRecord.artist.name
+								}`}
+							</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			case "podcast":
+				component = (
+					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+						<Image
+							borderRadius="md"
+							boxSize="150px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small" sx={textWithEllipsis}>
+								{`${capitalise(feedRecord.Category.description)} \u2022 ${
+									feedRecord.author
+								}`}
+							</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			case "playlist":
+				component = (
+					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+						<Image
+							borderRadius="md"
+							boxSize="150px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small" sx={textWithEllipsis}>
+								{`${capitalise(feedRecord.Category.description)} \u2022 ${
+									feedRecord.createdBy.firstName
+								} ${feedRecord.createdBy.lastName}`}
+							</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			case "artist":
+				component = (
+					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+						<Image
+							borderRadius="full"
+							boxSize="150px"
+							src={feedRecord.thumbnail}
+							alt={feedRecord.name}
+						/>
+						<Box>
+							<Text color="white">{feedRecord.name}</Text>
+							<Text fontSize="small" sx={textWithEllipsis}>
+								{`${capitalise(feedRecord.Category.description)}`}
+							</Text>
+						</Box>
+					</ListItem>
+				);
+				break;
+			default:
+				component = null;
+				break;
+		}
+
+		return component;
 	};
 
 	return (
@@ -53,94 +147,19 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 						</Text>
 					</Box>
 				</ListItem>
-				{/* Favourites (Albums, Artists, Podcasts, Songs,...) */}
-				{/* {playlists.map(({ thumbnail, name, Category, User }, index) => {
-					return (
-						<ListItem
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="150px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									{`${capitalise(Category.description)} \u2022 ${
-										User.firstName
-									} ${User.lastName}`}
-								</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
-				{favouriteArtists.map(({ thumbnail, name, Category }, index) => {
-					return (
-						<ListItem
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="full"
-								boxSize="150px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									{`${capitalise(Category.description)}`}
-								</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
-				{favouriteAlbums.map(({ thumbnail, name, Category, artist }, index) => {
-					return (
-						<ListItem
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="150px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									{`${capitalise(Category.description)} \u2022 ${artist.name}`}
-								</Text>
-							</Box>
-						</ListItem>
-					);
-				})}
-
-				{favouriteShows.map(({ thumbnail, name, author, Category }, index) => {
-					return (
-						<ListItem
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="150px"
-								src={thumbnail}
-								alt={name}
-							/>
-							<Box>
-								<Text color="white">{name}</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									{`${capitalise(Category.description)} \u2022 ${author}`}
-								</Text>
-							</Box>
-						</ListItem>
-					);
-				})} */}
+				{data
+					? data.map((singleFeedRecord, index) => {
+							const categoryType = singleFeedRecord.Category.description;
+							if (singleFeedRecord) {
+								const component = renderFavFeed(
+									categoryType,
+									singleFeedRecord,
+									index
+								);
+								return component;
+							}
+					  })
+					: "No Favourites"}
 			</List>
 		</Box>
 	);

@@ -57,6 +57,7 @@ type playlistType = {
 
 type FavouritesProps = {
 	data: (favAlbumsType | favArtistsType | favShowsType | playlistType)[];
+	textInput: string;
 };
 
 export type {

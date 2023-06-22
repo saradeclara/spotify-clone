@@ -175,6 +175,19 @@ const main = async () => {
 		const favAlbum = await prisma.album.findFirst({
 			where: { name: "Dry" },
 		});
+
+		const spotifyUser = await prisma.user.create({
+			data: {
+				firstName: "Spotify",
+				lastName: "Spotify",
+				email: "spotify@spotify.com",
+				password: bcrypt.hashSync("spotify", salt),
+				isAdmin: true,
+			},
+		});
+
+		console.log({ spotifyUser });
+
 		if (favAlbum) {
 			const newUser = await prisma.user.create({
 				data: {

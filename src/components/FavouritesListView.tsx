@@ -3,8 +3,9 @@ import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
 import { AiFillPushpin } from "react-icons/ai";
 import capitalise from "../../lib/capitalise";
+import SubstringSearchText from "./SubstringSearchText";
 
-const FavouritesListView = ({ data }: FavouritesProps) => {
+const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 	const renderFavFeed = (
 		categoryType: string,
 		feedRecord: any,
@@ -31,10 +32,21 @@ const FavouritesListView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box sx={{ marginLeft: "10px" }}>
-							<Text color="white">{feedRecord.name}</Text>
-							<Text fontSize="small">{`${capitalise(
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
+							<Text as="span" fontSize="small">{`${capitalise(
 								feedRecord.Category.description
-							)} \u2022 ${feedRecord.artist.name}`}</Text>
+							)} \u2022 `}</Text>
+							<Text as="span" fontSize="small">
+								<SubstringSearchText
+									string={feedRecord.artist.name}
+									substring={textInput}
+								/>
+							</Text>
 						</Box>
 					</ListItem>
 				);
@@ -58,10 +70,21 @@ const FavouritesListView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box sx={{ marginLeft: "10px" }}>
-							<Text color="white">{feedRecord.name}</Text>
-							<Text fontSize="small">{`${capitalise(
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
+							<Text as="span" fontSize="small">{`${capitalise(
 								feedRecord.Category.description
-							)} \u2022 ${feedRecord.author}`}</Text>
+							)} \u2022 `}</Text>
+							<Text as="span" fontSize="small">
+								<SubstringSearchText
+									string={feedRecord.author}
+									substring={textInput}
+								/>
+							</Text>
 						</Box>
 					</ListItem>
 				);
@@ -85,12 +108,21 @@ const FavouritesListView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box sx={{ marginLeft: "10px" }}>
-							<Text color="white">{feedRecord.name}</Text>
-							<Text fontSize="small">{`${capitalise(
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
+							<Text as="span" fontSize="small">{`${capitalise(
 								feedRecord.Category.description
-							)} \u2022 ${feedRecord.User.firstName} ${
-								feedRecord.User.lastName
-							}`}</Text>
+							)} \u2022 `}</Text>
+							<Text as="span" fontSize="small">
+								<SubstringSearchText
+									string={`${feedRecord.createdBy.firstName} ${feedRecord.createdBy.lastName}`}
+									substring={textInput}
+								/>
+							</Text>
 						</Box>
 					</ListItem>
 				);
@@ -114,7 +146,12 @@ const FavouritesListView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box sx={{ marginLeft: "10px" }}>
-							<Text color="white">{feedRecord.name}</Text>
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
 							<Text fontSize="small">{`${capitalise(
 								feedRecord.Category.description
 							)}`}</Text>
