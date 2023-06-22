@@ -37,7 +37,6 @@ export const useFeed = ({
 	search: string;
 	catFilter: string | null;
 }) => {
-	console.log({ catFilter });
 	let searched;
 	let catFiltered;
 	let sorted;

@@ -3,8 +3,9 @@ import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
 import { AiFillPushpin } from "react-icons/ai";
 import capitalise from "../../lib/capitalise";
+import SubstringSearchText from "./SubstringSearchText";
 
-const FavouritesGridView = ({ data }: FavouritesProps) => {
+const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 	const listItemStyles = {
 		display: "flex",
 		flexDirection: "column",
@@ -29,7 +30,11 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 		switch (categoryType) {
 			case "album":
 				component = (
-					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={listItemStyles}
+					>
 						<Image
 							borderRadius="md"
 							boxSize="150px"
@@ -37,11 +42,22 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box>
-							<Text color="white">{feedRecord.name}</Text>
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
 							<Text fontSize="small" sx={textWithEllipsis}>
-								{`${capitalise(feedRecord.Category.description)} \u2022 ${
-									feedRecord.artist.name
-								}`}
+								<Text as="span">{`${capitalise(
+									feedRecord.Category.description
+								)} \u2022 `}</Text>
+								<Text as="span">
+									<SubstringSearchText
+										string={feedRecord.artist.name}
+										substring={textInput}
+									/>
+								</Text>
 							</Text>
 						</Box>
 					</ListItem>
@@ -49,7 +65,11 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 				break;
 			case "podcast":
 				component = (
-					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={listItemStyles}
+					>
 						<Image
 							borderRadius="md"
 							boxSize="150px"
@@ -57,11 +77,22 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box>
-							<Text color="white">{feedRecord.name}</Text>
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
 							<Text fontSize="small" sx={textWithEllipsis}>
-								{`${capitalise(feedRecord.Category.description)} \u2022 ${
-									feedRecord.author
-								}`}
+								<Text as="span">{`${capitalise(
+									feedRecord.Category.description
+								)} \u2022 `}</Text>
+								<Text as="span">
+									<SubstringSearchText
+										string={feedRecord.author}
+										substring={textInput}
+									/>
+								</Text>
 							</Text>
 						</Box>
 					</ListItem>
@@ -69,7 +100,11 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 				break;
 			case "playlist":
 				component = (
-					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={listItemStyles}
+					>
 						<Image
 							borderRadius="md"
 							boxSize="150px"
@@ -77,11 +112,22 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box>
-							<Text color="white">{feedRecord.name}</Text>
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
 							<Text fontSize="small" sx={textWithEllipsis}>
-								{`${capitalise(feedRecord.Category.description)} \u2022 ${
-									feedRecord.createdBy.firstName
-								} ${feedRecord.createdBy.lastName}`}
+								<Text as="span">{`${capitalise(
+									feedRecord.Category.description
+								)} \u2022 `}</Text>
+								<Text as="span">
+									<SubstringSearchText
+										string={`${feedRecord.createdBy.firstName} ${feedRecord.createdBy.lastName}`}
+										substring={textInput}
+									/>
+								</Text>
 							</Text>
 						</Box>
 					</ListItem>
@@ -89,7 +135,11 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 				break;
 			case "artist":
 				component = (
-					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
+					<ListItem
+						key={index}
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={listItemStyles}
+					>
 						<Image
 							borderRadius="full"
 							boxSize="150px"
@@ -97,7 +147,12 @@ const FavouritesGridView = ({ data }: FavouritesProps) => {
 							alt={feedRecord.name}
 						/>
 						<Box>
-							<Text color="white">{feedRecord.name}</Text>
+							<Text color="white">
+								<SubstringSearchText
+									string={feedRecord.name}
+									substring={textInput}
+								/>
+							</Text>
 							<Text fontSize="small" sx={textWithEllipsis}>
 								{`${capitalise(feedRecord.Category.description)}`}
 							</Text>

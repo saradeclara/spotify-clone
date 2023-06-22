@@ -1,4 +1,4 @@
-import { Box, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Box, UnorderedList } from "@chakra-ui/react";
 
 const Home = () => {
 	const list = ["apple", "mango", "banana"];
@@ -7,13 +7,7 @@ const Home = () => {
 		<Box marginLeft="30px">
 			<h3>List</h3>
 			<h4>Substring: </h4> {substring}
-			<UnorderedList>
-				{list.map((element) => (
-					<ListItem>
-						{/* <SubstringSearchText string={element} substring={substring} /> */}
-					</ListItem>
-				))}
-			</UnorderedList>
+			<UnorderedList></UnorderedList>
 		</Box>
 	);
 };

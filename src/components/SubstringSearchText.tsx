@@ -17,7 +17,7 @@ function SubstringSearchText({
 					return singleSegment.match ? (
 						<Text
 							as="span"
-							key={index}
+							key={index.toString()}
 							sx={{
 								color: "white",
 								backgroundColor: "#2E77D0",
@@ -27,7 +27,9 @@ function SubstringSearchText({
 							{singleSegment.text}
 						</Text>
 					) : (
-						<Text as="span">{singleSegment.text}</Text>
+						<Text key={index.toString()} as="span">
+							{singleSegment.text}
+						</Text>
 					);
 			  })
 			: string;
