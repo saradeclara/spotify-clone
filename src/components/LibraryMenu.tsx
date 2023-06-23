@@ -74,7 +74,7 @@ const LibraryMenu = ({
 			/>
 			<Box
 				sx={{
-					height: "calc(100vh - 354.458px)",
+					height: "calc(100vh - 346.458px)",
 					overflow: "auto",
 				}}
 			>

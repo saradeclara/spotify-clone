@@ -1,13 +1,27 @@
-import { Box, UnorderedList } from "@chakra-ui/react";
+import GradientLayoutMain from "@/components/GradientLayoutMain";
+import GradientLayoutPages from "@/components/GradientLayoutPages";
+import { Box } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
-const Home = () => {
-	const list = ["apple", "mango", "banana"];
-	const substring = "a";
+const Home = (_props: any) => {
+	const { pathname } = useRouter();
 	return (
-		<Box marginLeft="30px">
-			<h3>List</h3>
-			<h4>Substring: </h4> {substring}
-			<UnorderedList></UnorderedList>
+		<Box
+			sx={{
+				background: "black",
+				height: "calc(100vh - 90px)",
+				padding: "8px 8px 8px 0px",
+			}}
+		>
+			{pathname === "/" ? (
+				<GradientLayoutMain color="red">
+					<Box>hello</Box>
+				</GradientLayoutMain>
+			) : (
+				<GradientLayoutPages color="red">
+					<Box>hello</Box>
+				</GradientLayoutPages>
+			)}
 		</Box>
 	);
 };

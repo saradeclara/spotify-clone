@@ -31,7 +31,6 @@ const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 					marginLeft: sidebarMargin,
 				}}
 			>
-				content
 				{children}
 			</Box>
 			<Box sx={{ position: "absolute", left: "0", bottom: "0" }}>player</Box>
