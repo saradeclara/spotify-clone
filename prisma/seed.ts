@@ -180,6 +180,7 @@ const main = async () => {
 			data: {
 				firstName: "Spotify",
 				lastName: "Spotify",
+				username: "spotify_admin",
 				email: "spotify@spotify.com",
 				password: bcrypt.hashSync("spotify", salt),
 				isAdmin: true,
@@ -193,10 +194,11 @@ const main = async () => {
 				data: {
 					firstName: "Sara",
 					lastName: "De Clara",
+					username: "saradc88",
 					email: "saradeclara@gmail.com",
 					password: bcrypt.hashSync("password", salt),
 					isAdmin: true,
-					playlists: {
+					createdPlaylists: {
 						connect: { id: playlist1.id },
 					},
 					favouriteShows: {

@@ -4,6 +4,8 @@
  * @returns sorted array (alphabetically)
  */
 const sortAlphabetical = (array: any[]) => {
+	if (typeof array !== "object") throw Error;
+
 	array.sort((a: { name: number }, b: { name: number }) => {
 		if (a.name < b.name) {
 			return -1;
@@ -23,6 +25,8 @@ const sortAlphabetical = (array: any[]) => {
  * @returns sorted array (by creation date)
  */
 const sortRecents = (array: any[]) => {
+	if (typeof array !== "object") throw Error;
+
 	array.sort((a, b) => {
 		if (b.createdAt < a.createdAt) {
 			return -1;
@@ -41,6 +45,7 @@ const sortRecents = (array: any[]) => {
  * @returns sorted array (by latest update date)
  */
 const sortRecentlyAdded = (array: any[]) => {
+	if (typeof array !== "object") throw Error;
 	array.sort((a, b) => {
 		if (b.updatedAt < a.updatedAt) {
 			return -1;
@@ -59,6 +64,8 @@ const sortRecentlyAdded = (array: any[]) => {
  * @returns sorted array (by author/artist)
  */
 const sortCreator = (array: any[]) => {
+	if (typeof array !== "object") throw Error;
+
 	// remapping authors
 	const arrayOfAuthors = array.map((singleRecord, index) => {
 		switch (singleRecord.Category.description) {
@@ -101,6 +108,8 @@ const sortCreator = (array: any[]) => {
 };
 
 const searchText = (array: any[], textInput: string) => {
+	if (typeof array !== "object") throw Error;
+
 	let filtered;
 	textInput = textInput.toLowerCase();
 	if (textInput.length === 0) {
