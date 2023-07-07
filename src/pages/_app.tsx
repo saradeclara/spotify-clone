@@ -10,10 +10,7 @@ const theme = extendTheme({
 	},
 });
 
-const App = ({
-    	Component,
-    	pageProps,
-    }) => {
+const App = ({ Component, pageProps }) => {
 	const router = useRouter();
 
 	const authLayout = <Component {...pageProps} />;

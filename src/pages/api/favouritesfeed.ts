@@ -7,7 +7,7 @@ export default validateRoute(async (_req, res, user) => {
 		include: {
 			createdPlaylists: { include: { Category: true, createdBy: true } },
 			favouritedPlaylists: { include: { Category: true, createdBy: true } },
-			favouriteArtists: { include: { Category: true } },
+			followingArtist: { include: { Category: true } },
 			favouriteAlbums: { include: { artist: true, Category: true } },
 			favouriteShows: { include: { Category: true } },
 		},
@@ -18,7 +18,7 @@ export default validateRoute(async (_req, res, user) => {
 		feed = [
 			...currentUserWithFavourites?.createdPlaylists,
 			...currentUserWithFavourites?.favouritedPlaylists,
-			...currentUserWithFavourites?.favouriteArtists,
+			...currentUserWithFavourites?.followingArtist,
 			...currentUserWithFavourites?.favouriteAlbums,
 			...currentUserWithFavourites?.favouriteShows,
 		];

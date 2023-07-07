@@ -155,6 +155,7 @@ const main = async () => {
 			data: {
 				name: "90s Mix",
 				categoryId: catPlaylist?.id,
+				thumbnail: "https://i.ibb.co/QD8qHnT/download.png",
 				songs: {
 					connect: allSongs.map((singleSong) => {
 						return { id: singleSong.id };
@@ -195,6 +196,7 @@ const main = async () => {
 					firstName: "Sara",
 					lastName: "De Clara",
 					username: "saradc88",
+					avatarUrl: "https://i.ibb.co/fH00WNk/500x500-000000-80-0-0.jpg",
 					email: "saradeclara@gmail.com",
 					password: bcrypt.hashSync("password", salt),
 					isAdmin: true,
@@ -212,7 +214,7 @@ const main = async () => {
 							return { id: singleSong.id };
 						}),
 					},
-					favouriteArtists: {
+					followingArtist: {
 						connectOrCreate: [
 							{
 								where: {

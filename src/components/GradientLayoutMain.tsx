@@ -4,9 +4,11 @@ import { ReactNode } from "react";
 const GradientLayoutMain = ({
 	color,
 	children,
+	image,
 }: {
 	color: string;
 	children: ReactNode;
+	image: string;
 }) => {
 	return (
 		<Box
@@ -15,10 +17,10 @@ const GradientLayoutMain = ({
 				overflowY: "auto",
 				borderRadius: "10px",
 				background: "black",
-				bgGradient: `linear(to-b, ${color}.700 0%, rgba(18,18,18, .90) 40%)`,
+				bgGradient: `linear(to-b, ${color}.900 0%, rgba(18,18,18, .90) 40%)`,
 			}}
 		>
-			<Flex sx={{ padding: "40px", align: "end" }}>nav</Flex>
+			<Flex sx={{ padding: "40px" }}>{children}</Flex>
 		</Box>
 	);
 };

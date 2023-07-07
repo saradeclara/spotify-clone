@@ -68,7 +68,11 @@ function LibraryHeader({
 					</Box>
 				</Link>
 				<Box display="flex">
-					<Tooltip label="Create playlist or folder" placement="top">
+					<Tooltip
+						boxShadow="md"
+						label="Create playlist or folder"
+						placement="top"
+					>
 						<Box>
 							<ListIcon
 								_hover={{ color: "white" }}

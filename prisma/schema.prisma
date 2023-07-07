@@ -34,14 +34,20 @@ model User {
   email     String   @unique
   username  String   @unique
   password  String
+  avatarUrl String?
   isAdmin   Boolean  @default(false)
 
   favouriteSongs      Song[]
   favouriteAlbums     Album[]
-  favouriteArtists    Artist[]
   favouriteShows      Show[]
   createdPlaylists    Playlist[] @relation(name: "createdPlaylists")
   favouritedPlaylists Playlist[] @relation(name: "favPlaylists")
+
+  followedBy User[] @relation("UserFollows")
+  following  User[] @relation("UserFollows")
+
+  followedByArtist Artist[] @relation("UserArtistFollowed")
+  followingArtist  Artist[] @relation("UserArtistFollowing")
 }
 
 model Playlist {
@@ -117,7 +123,12 @@ model Artist {
 
   songs      Song[]
   albums     Album[]
-  users      User[]
   Category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
+
+  followedBy Artist[] @relation("ArtistFollows")
+  following  Artist[] @relation("ArtistFollows")
+
+  followedByUser User[] @relation("UserArtistFollowing")
+  followingUser  User[] @relation("UserArtistFollowed")
 }
