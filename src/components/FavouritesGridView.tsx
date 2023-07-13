@@ -1,6 +1,7 @@
 import { spotifyGreen } from "@/styles/colors";
 import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
+import Link from "next/link";
 import { AiFillPushpin } from "react-icons/ai";
 import capitalise from "../../lib/capitalise";
 import SubstringSearchText from "./SubstringSearchText";
@@ -27,137 +28,147 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 		index: number
 	) => {
 		let component;
+		const url = `/${categoryType}/${feedRecord.id}`;
+
 		switch (categoryType) {
 			case "album":
 				component = (
-					<ListItem
-						key={index}
-						_hover={{ backgroundColor: "#1A1A1A" }}
-						sx={listItemStyles}
-					>
-						<Image
-							borderRadius="md"
-							boxSize="150px"
-							src={feedRecord.thumbnail}
-							alt={feedRecord.name}
-						/>
-						<Box>
-							<Text color="white">
-								<SubstringSearchText
-									string={feedRecord.name}
-									substring={textInput}
-								/>
-							</Text>
-							<Text fontSize="small" sx={textWithEllipsis}>
-								<Text as="span">{`${capitalise(
-									feedRecord.Category.description
-								)} \u2022 `}</Text>
-								<Text as="span">
+					<Link key={index} href={url}>
+						<ListItem
+							key={index}
+							_hover={{ backgroundColor: "#1A1A1A" }}
+							sx={listItemStyles}
+						>
+							<Image
+								borderRadius="md"
+								boxSize="150px"
+								src={feedRecord.thumbnail}
+								alt={feedRecord.name}
+							/>
+							<Box>
+								<Text color="white">
 									<SubstringSearchText
-										string={feedRecord.artist.name}
+										string={feedRecord.name}
 										substring={textInput}
 									/>
 								</Text>
-							</Text>
-						</Box>
-					</ListItem>
+								<Text fontSize="small" sx={textWithEllipsis}>
+									<Text as="span">{`${capitalise(
+										feedRecord.Category.description
+									)} \u2022 `}</Text>
+									<Text as="span">
+										<SubstringSearchText
+											string={feedRecord.artist.name}
+											substring={textInput}
+										/>
+									</Text>
+								</Text>
+							</Box>
+						</ListItem>
+					</Link>
 				);
 				break;
 			case "podcast":
 				component = (
-					<ListItem
-						key={index}
-						_hover={{ backgroundColor: "#1A1A1A" }}
-						sx={listItemStyles}
-					>
-						<Image
-							borderRadius="md"
-							boxSize="150px"
-							src={feedRecord.thumbnail}
-							alt={feedRecord.name}
-						/>
-						<Box>
-							<Text color="white">
-								<SubstringSearchText
-									string={feedRecord.name}
-									substring={textInput}
-								/>
-							</Text>
-							<Text fontSize="small" sx={textWithEllipsis}>
-								<Text as="span">{`${capitalise(
-									feedRecord.Category.description
-								)} \u2022 `}</Text>
-								<Text as="span">
+					<Link key={index} href={url}>
+						<ListItem
+							key={index}
+							_hover={{ backgroundColor: "#1A1A1A" }}
+							sx={listItemStyles}
+						>
+							<Image
+								borderRadius="md"
+								boxSize="150px"
+								src={feedRecord.thumbnail}
+								alt={feedRecord.name}
+							/>
+							<Box>
+								<Text color="white">
 									<SubstringSearchText
-										string={feedRecord.author}
+										string={feedRecord.name}
 										substring={textInput}
 									/>
 								</Text>
-							</Text>
-						</Box>
-					</ListItem>
+								<Text fontSize="small" sx={textWithEllipsis}>
+									<Text as="span">{`${capitalise(
+										feedRecord.Category.description
+									)} \u2022 `}</Text>
+									<Text as="span">
+										<SubstringSearchText
+											string={feedRecord.author}
+											substring={textInput}
+										/>
+									</Text>
+								</Text>
+							</Box>
+						</ListItem>
+					</Link>
 				);
 				break;
 			case "playlist":
 				component = (
-					<ListItem
-						key={index}
-						_hover={{ backgroundColor: "#1A1A1A" }}
-						sx={listItemStyles}
-					>
-						<Image
-							borderRadius="md"
-							boxSize="150px"
-							src={feedRecord.thumbnail}
-							alt={feedRecord.name}
-						/>
-						<Box>
-							<Text color="white">
-								<SubstringSearchText
-									string={feedRecord.name}
-									substring={textInput}
-								/>
-							</Text>
-							<Text fontSize="small" sx={textWithEllipsis}>
-								<Text as="span">{`${capitalise(
-									feedRecord.Category.description
-								)} \u2022 `}</Text>
-								<Text as="span">
+					<Link key={index} href={url}>
+						<ListItem
+							key={index}
+							_hover={{ backgroundColor: "#1A1A1A" }}
+							sx={listItemStyles}
+						>
+							<Image
+								borderRadius="md"
+								boxSize="150px"
+								src={feedRecord.thumbnail}
+								alt={feedRecord.name}
+							/>
+							<Box>
+								<Text color="white">
 									<SubstringSearchText
-										string={`${feedRecord.createdBy.firstName} ${feedRecord.createdBy.lastName}`}
+										string={feedRecord.name}
 										substring={textInput}
 									/>
 								</Text>
-							</Text>
-						</Box>
-					</ListItem>
+								<Text fontSize="small" sx={textWithEllipsis}>
+									<Text as="span">{`${capitalise(
+										feedRecord.Category.description
+									)} \u2022 `}</Text>
+									<Text as="span">
+										<SubstringSearchText
+											string={`${feedRecord.createdBy.firstName} ${feedRecord.createdBy.lastName}`}
+											substring={textInput}
+										/>
+									</Text>
+								</Text>
+							</Box>
+						</ListItem>
+					</Link>
 				);
 				break;
 			case "artist":
 				component = (
-					<ListItem
-						key={index}
-						_hover={{ backgroundColor: "#1A1A1A" }}
-						sx={listItemStyles}
-					>
-						<Image
-							borderRadius="full"
-							boxSize="150px"
-							src={feedRecord.thumbnail}
-							alt={feedRecord.name}
-						/>
-						<Box>
-							<Text color="white">
-								<SubstringSearchText
-									string={feedRecord.name}
-									substring={textInput}
-								/>
-							</Text>
-							<Text fontSize="small" sx={textWithEllipsis}>
-								{`${capitalise(feedRecord.Category.description)}`}
-							</Text>
-						</Box>
-					</ListItem>
+					<Link key={index} href={url}>
+						<ListItem
+							key={index}
+							_hover={{ backgroundColor: "#1A1A1A" }}
+							sx={listItemStyles}
+						>
+							<Image
+								borderRadius="full"
+								boxSize="150px"
+								src={feedRecord.thumbnail}
+								alt={feedRecord.name}
+							/>
+							<Box>
+								<Text color="white">
+									<SubstringSearchText
+										string={feedRecord.name}
+										substring={textInput}
+									/>
+								</Text>
+								<Text fontSize="small" sx={textWithEllipsis}>
+									{`${capitalise(feedRecord.Category.description)}`}
+								</Text>
+							</Box>
+						</ListItem>
+					</Link>
 				);
 				break;
 			default:

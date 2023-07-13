@@ -13,5 +13,8 @@ export default validateRoute(async (_req, res, user) => {
 		},
 	});
 
-	res.json(currentUserWithArtists?.followingArtist);
+	if (currentUserWithArtists) {
+		const firstFiveArtists = currentUserWithArtists.followingArtist.slice(0, 4);
+		res.json(firstFiveArtists);
+	}
 });

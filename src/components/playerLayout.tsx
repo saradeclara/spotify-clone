@@ -1,5 +1,9 @@
+import { UserColorContext } from "@/context/UserColorContext";
 import { marginType } from "@/types";
 import { Box } from "@chakra-ui/react";
+import getAverageColor from "get-average-color";
+// import getAverageColor from "get-average-color";
+import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { ReactNode, useEffect, useState } from "react";
 import { useMe } from "../../lib/hooks";
 import Navbar from "./Navbar";
@@ -11,6 +15,9 @@ type PlayerLayoutProps = {
 
 const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 	const { user } = useMe();
+	const [currentColor, updateCurrentColor] = useState({ r: 0, g: 0, b: 0 });
+	const [scrollPosition, updateScrollPosition] = useState(0);
+
 	const [currentHistoryPos, updateHistoryPos] = useState<{
 		current: number;
 		len: number;
@@ -34,32 +41,52 @@ const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 		}
 	});
 
+	useEffect(() => {
+		if (user) {
+			getAverageColor(user.avatarUrl).then((rgb: any) => {
+				updateCurrentColor(rgb);
+			});
+		}
+	}, [user]);
 	return user ? (
-		<Box width="100vw" height="100vh">
-			<Box
-				sx={{ position: "absolute", top: "0", width: sidebarMargin, left: "0" }}
+		<UserColorContext.Provider value={currentColor}>
+			<ScrollPositionContext.Provider
+				value={{ scrollPosition, updateScrollPosition }}
 			>
-				<Sidebar
-					margins={margins}
-					sidebarMargin={sidebarMargin}
-					updateSidebarMargin={updateSidebarMargin}
-				/>
-			</Box>
-			<Box
-				sx={{
-					marginLeft: sidebarMargin,
-				}}
-			>
-				<Navbar
-					currentHistoryPos={currentHistoryPos}
-					updateHistoryPos={updateHistoryPos}
-					user={user}
-					sidebarMargin={sidebarMargin}
-				/>
-				{children}
-			</Box>
-			<Box sx={{ position: "absolute", left: "0", bottom: "0" }}>player</Box>
-		</Box>
+				<Box width="100vw" height="100vh">
+					<Box
+						sx={{
+							position: "absolute",
+							top: "0",
+							width: sidebarMargin,
+							left: "0",
+						}}
+					>
+						<Sidebar
+							margins={margins}
+							sidebarMargin={sidebarMargin}
+							updateSidebarMargin={updateSidebarMargin}
+						/>
+					</Box>
+					<Box
+						sx={{
+							marginLeft: sidebarMargin,
+						}}
+					>
+						<Navbar
+							currentHistoryPos={currentHistoryPos}
+							updateHistoryPos={updateHistoryPos}
+							user={user}
+							sidebarMargin={sidebarMargin}
+						/>
+						{children}
+					</Box>
+					<Box sx={{ position: "absolute", left: "0", bottom: "0" }}>
+						player
+					</Box>
+				</Box>
+			</ScrollPositionContext.Provider>
+		</UserColorContext.Provider>
 	) : null;
 };
 

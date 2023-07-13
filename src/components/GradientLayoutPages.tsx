@@ -1,8 +1,9 @@
+import { ScrollPositionContext } from "@/context/ScrollPositionContext";
+import { UserColorContext } from "@/context/UserColorContext";
 import { Avatar, Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 
 const GradientLayoutPages = ({
-	color,
 	children,
 	image,
 	roundAvatar,
@@ -13,20 +14,37 @@ const GradientLayoutPages = ({
 	title: string;
 	subtitle: string;
 	description: string;
-	color: { r: number; g: number; b: number };
 	children: ReactNode;
 	image: string;
 	roundAvatar: boolean;
 }) => {
-	console.log({ color });
+	const color = useContext(UserColorContext);
+	const { updateScrollPosition } = useContext(ScrollPositionContext);
+
+	const handleScroll = (e: any) => {
+		if (e.target && e.target.scrollTop) {
+			updateScrollPosition(e.target.scrollTop);
+		}
+	};
+
+	useEffect(() => {
+		window.addEventListener("scroll", handleScroll, { passive: true });
+
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
+
 	return (
 		<Box
+			onScroll={handleScroll}
 			sx={{
 				height: "100%",
 				overflowY: "auto",
 				borderRadius: "10px",
-				background: "black",
-				bgGradient: `linear(to-b, rgba(${color.r},${color.g},${color.b}) 0%, rgba(${color.r},${color.g},${color.b}) 15%, rgba(${color.r},${color.g},${color.b}) 20%, rgba(18,18,18) 65%)`,
+				background: "blue",
+				bgGradient: `linear(to-b, rgba(${color.r},${color.g},${color.b}) 0%, rgba(${color.r},${color.g},${color.b}) 15%, rgba(${color.r},${color.g},${color.b}) 20%, rgba(18,18,18) 40%)`,
+				backgroundAttachment: "local",
 			}}
 		>
 			<Flex

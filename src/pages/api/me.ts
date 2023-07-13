@@ -5,12 +5,16 @@ export default validateRoute(async (_req, res, user) => {
 	const currentUser = await prisma.user.findUnique({
 		where: { id: user?.id },
 		include: {
-			createdPlaylists: true,
-			favouritedPlaylists: true,
+			createdPlaylists: { include: { Category: true } },
+			favouritedPlaylists: { include: { Category: true } },
 			followedBy: true,
-			followedByArtist: true,
+			followedByArtist: {
+				include: { albums: true, songs: true, Category: true },
+			},
 			following: true,
-			followingArtist: true,
+			followingArtist: {
+				include: { albums: true, songs: true, Category: true },
+			},
 		},
 	});
 

@@ -28,6 +28,16 @@ export const usePlaylist = () => {
 	};
 };
 
+export const useTopFiveArtists = () => {
+	const { data, error } = useSWR("/favouriteartists", fetcher);
+
+	return {
+		topArtists: data || [],
+		isLoading: !data && !error,
+		isError: error,
+	};
+};
+
 export const useFeed = ({
 	sort,
 	search,

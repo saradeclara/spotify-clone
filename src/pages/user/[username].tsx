@@ -1,14 +1,30 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
+import UserFeed from "@/components/UserFeed";
 import { Box } from "@chakra-ui/react";
-import getAverageColor from "get-average-color";
-import { useEffect, useState } from "react";
 import capitalise from "../../../lib/capitalise";
 import { useMe } from "../../../lib/hooks";
 import pluralise from "../../../lib/pluralise";
 
-const UserDashboard = (_props: any) => {
-	const [currentColor, updateCurrentColor] = useState({ r: 0, g: 0, b: 0 });
+const UserDashboard = () => {
 	const { user } = useMe();
+	const userFeedData: { label: string; data: any[] }[] = [
+		{
+			label: "your top artists",
+			data: user.followingArtist,
+		},
+		{
+			label: "your playlists",
+			data: [...user.createdPlaylists, ...user.favouritedPlaylists],
+		},
+		{
+			label: "followers",
+			data: [...user.followedBy, ...user.followedByArtist],
+		},
+		{
+			label: "following",
+			data: [...user.following, ...user.followingArtist],
+		},
+	];
 
 	const renderText = (total: number, label: string, plural: boolean) => {
 		return plural
@@ -29,15 +45,6 @@ const UserDashboard = (_props: any) => {
 		}
 	);
 
-	useEffect(() => {
-		if (user) {
-			getAverageColor(user.avatarUrl).then((rgb: any) => {
-				updateCurrentColor(rgb);
-				console.log({ rgb });
-			}); // { r: 66, g: 83, b: 25 }
-		}
-	}, []);
-
 	return (
 		<Box
 			sx={{
@@ -48,13 +55,12 @@ const UserDashboard = (_props: any) => {
 		>
 			<GradientLayoutPages
 				image={user ? user.avatarUrl : null}
-				color={currentColor}
 				roundAvatar={true}
 				title={`${user.firstName} ${user.lastName}`}
 				subtitle="Profile"
 				description={description}
 			>
-				<Box>hello</Box>
+				<UserFeed data={userFeedData} />
 			</GradientLayoutPages>
 		</Box>
 	);

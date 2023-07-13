@@ -1,3 +1,5 @@
+import { ScrollPositionContext } from "@/context/ScrollPositionContext";
+import { UserColorContext } from "@/context/UserColorContext";
 import {
 	Avatar,
 	Box,
@@ -11,7 +13,7 @@ import {
 	UnorderedList,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 import {
 	IoChevronBackCircleSharp,
 	IoChevronForwardCircleSharp,
@@ -47,6 +49,13 @@ const Navbar = ({
 			});
 		}
 	};
+
+	const { r, g, b } = useContext(UserColorContext);
+	const { scrollPosition } = useContext(ScrollPositionContext);
+
+	// perceived brightness of RGB color
+	const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+	const textColor = luma > 40 ? "black" : "white";
 	return (
 		<Box
 			sx={{
@@ -60,6 +69,8 @@ const Navbar = ({
 				alignItems: "center",
 				justifyContent: "space-between",
 				padding: "0px 30px 0px 20px",
+				backgroundColor:
+					scrollPosition > 300 ? `rgb(${r}, ${g}, ${b})` : undefined,
 			}}
 		>
 			<Box
@@ -94,6 +105,19 @@ const Navbar = ({
 					boxSize="9"
 					as={IoChevronForwardCircleSharp}
 				/>
+			</Box>
+			<Box
+				sx={{
+					fontSize: "20px",
+					fontWeight: "bold",
+					width: "100%",
+					color: textColor,
+					opacity: scrollPosition > 400 ? "100%" : "0%",
+					marginLeft: "10px",
+					transition: "all .4s",
+				}}
+			>
+				{user.firstName} {user.lastName}
 			</Box>
 			<Box>
 				<Tooltip label={`${user.firstName} ${user.lastName}`}>
