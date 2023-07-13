@@ -1,21 +1,20 @@
+import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { UserColorContext } from "@/context/UserColorContext";
 import { marginType } from "@/types";
 import { Box } from "@chakra-ui/react";
-import getAverageColor from "get-average-color";
-// import getAverageColor from "get-average-color";
-import { ScrollPositionContext } from "@/context/ScrollPositionContext";
+import { FastAverageColor } from "fast-average-color";
 import { ReactNode, useEffect, useState } from "react";
 import { useMe } from "../../lib/hooks";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
+const fac = new FastAverageColor();
 type PlayerLayoutProps = {
 	children: ReactNode;
 };
-
 const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 	const { user } = useMe();
-	const [currentColor, updateCurrentColor] = useState({ r: 0, g: 0, b: 0 });
+	const [currentColor, updateCurrentColor] = useState({ r: 18, g: 18, b: 18 });
 	const [scrollPosition, updateScrollPosition] = useState(0);
 
 	const [currentHistoryPos, updateHistoryPos] = useState<{
@@ -42,12 +41,24 @@ const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 	});
 
 	useEffect(() => {
-		if (user) {
-			getAverageColor(user.avatarUrl).then((rgb: any) => {
-				updateCurrentColor(rgb);
-			});
+		if (user && user.avatarUrl) {
+			fac
+				.getColorAsync(user.avatarUrl)
+				.then((color) => {
+					console.log("color", color.value);
+					const rgbColor = {
+						r: color.value[0],
+						g: color.value[1],
+						b: color.value[2],
+					};
+					updateCurrentColor(rgbColor);
+				})
+				.catch((e) => {
+					console.log(e);
+				});
 		}
 	}, [user]);
+
 	return user ? (
 		<UserColorContext.Provider value={currentColor}>
 			<ScrollPositionContext.Provider

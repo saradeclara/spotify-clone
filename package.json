@@ -24,6 +24,7 @@
 		"easy-peasy": "^6.0.0",
 		"eslint": "8.38.0",
 		"eslint-config-next": "13.3.0",
+		"fast-average-color": "^9.3.0",
 		"format-duration": "^3.0.2",
 		"framer-motion": "^10.12.4",
 		"get-average-color": "^0.0.6",
