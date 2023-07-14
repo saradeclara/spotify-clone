@@ -15,7 +15,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import capitalise from "../../lib/capitalise";
 import { auth } from "../../lib/mutation";
@@ -86,6 +86,22 @@ const AuthForm = ({
 		}
 	};
 
+	const emailElement = React.useRef<HTMLInputElement>(null);
+	const passwordElement = React.useRef<HTMLInputElement>(null);
+
+	React.useEffect(() => {
+		const newEmail = emailElement.current?.value;
+		const newPassword = passwordElement.current?.value;
+
+		if (newEmail && newPassword) {
+			updateForm({
+				...form,
+				email: newEmail !== form.email ? newEmail : form.email,
+				password: newPassword !== form.password ? newPassword : form.password,
+			});
+		}
+	}, [emailElement, passwordElement]);
+
 	return (
 		<Box sx={{ height: "100vh", width: "100vw", bg: "black", color: "white" }}>
 			<Flex justify="center" align="center" height="100px">
@@ -100,7 +116,7 @@ const AuthForm = ({
 			>
 				<Box width="100%">
 					{formData.map(
-						({ type, key, defaultValue, label, isRequired }, index, array) => {
+						({ type, defaultValue, key, label, isRequired }, index, array) => {
 							return (
 								<FormControl
 									key={index}
@@ -117,6 +133,7 @@ const AuthForm = ({
 									</FormLabel>
 									<InputGroup>
 										<Input
+											ref={key === "email" ? emailElement : passwordElement}
 											type={passwordVisible ? "text" : type}
 											defaultValue={defaultValue}
 											onChange={(e) => handleInputChange(e, key)}
