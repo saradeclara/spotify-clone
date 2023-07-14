@@ -9,14 +9,22 @@ export default function middleware(
 		cookies: RequestCookies & { FAKE_SPOTIFY_ACCESS_TOKEN: string };
 	}
 ) {
-	if (
-		protectedPages.find((singlePage) => singlePage === req.nextUrl.pathname)
-	) {
-		const cookiesValue = req.cookies.get("FAKE_SPOTIFY_ACCESS_TOKEN")?.value;
-		if (!cookiesValue) {
-			const url = req.nextUrl.clone();
-			url.pathname = "/signin";
-			return NextResponse.redirect(url);
-		}
+	const cookiesValue = req.cookies.get("FAKE_SPOTIFY_ACCESS_TOKEN")?.value;
+	if (!cookiesValue) {
+		const url = req.nextUrl.clone();
+		url.pathname = "/signin";
+		return NextResponse.redirect(url);
 	}
 }
+
+export const config = {
+	matcher: [
+		"/",
+		"/user/:path*",
+		"/album/:path*",
+		"/artist/:path*",
+		"/playlist/:path*",
+		"/show/:path*",
+		"/song/:path*",
+	],
+};
