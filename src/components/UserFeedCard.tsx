@@ -4,8 +4,15 @@ import capitalise from "../../lib/capitalise";
 const UserFeedCard = ({
 	data,
 }: {
-	data: { name: string; thumbnail: string; Category: { description: string } };
+	data: {
+		name: string;
+		firstName?: string;
+		lastName?: string;
+		thumbnail: string;
+		Category?: { description: string };
+	};
 }) => {
+	console.log("UserFeedCard", data);
 	return (
 		<Box
 			_hover={{
@@ -31,7 +38,7 @@ const UserFeedCard = ({
 				src={data.thumbnail}
 			/>
 			<Text fontWeight="bold" fontSize="sm" color="white">
-				{data.name}
+				{data.Category ? data.name : `${data.firstName} ${data.lastName}`}
 			</Text>
 			<Text fontSize="sm" marginTop="5px" color="gray">
 				{data.Category ? capitalise(data.Category.description) : "Profile"}
