@@ -1,12 +1,23 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
 import UserFeed from "@/components/UserFeed";
 import { Box } from "@chakra-ui/react";
+import { User } from "@prisma/client";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { ParsedUrlQuery } from "querystring";
 import capitalise from "../../../lib/capitalise";
-import { useMe } from "../../../lib/hooks";
 import pluralise from "../../../lib/pluralise";
+import prisma from "../../../lib/prisma";
 
-const UserDashboard = () => {
-	const { user } = useMe();
+interface CustomUser extends User {
+	createdPlaylists: any[];
+	followingArtist: any[];
+	favouritedPlaylists: any[];
+}
+
+const UserDashboard = ({
+	user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+	// if (user) {
 	const userFeedData: { label: string; data: any[] }[] = [
 		{
 			label: "your top artists",
@@ -54,7 +65,7 @@ const UserDashboard = () => {
 			}}
 		>
 			<GradientLayoutPages
-				image={user ? user.avatarUrl : null}
+				image={user.avatarUrl}
 				roundAvatar={true}
 				title={`${user.firstName} ${user.lastName}`}
 				subtitle="Profile"
@@ -64,6 +75,39 @@ const UserDashboard = () => {
 			</GradientLayoutPages>
 		</Box>
 	);
+	// }
+};
+
+interface CustomQuery extends ParsedUrlQuery {
+	username?: string;
+}
+
+export const getServerSideProps = async (
+	context: GetServerSidePropsContext
+) => {
+	const customQuery: CustomQuery = context.query;
+
+	// let user: CustomUser | null;
+	const user = await prisma.user.findUnique({
+		where: {
+			username: customQuery.username,
+		},
+		include: {
+			favouritedPlaylists: true,
+			followedByArtist: true,
+			followingArtist: true,
+			createdPlaylists: true,
+			followedBy: true,
+			following: true,
+		},
+	});
+	if (user) {
+		return {
+			props: {
+				user,
+			},
+		};
+	}
 };
 
 export default UserDashboard;

@@ -1,3 +1,4 @@
+import { LayoutContext } from "@/context/LayoutContext";
 import { menuDataType } from "@/types";
 import { LibraryHeaderProps } from "@/types/libraryMenu";
 import {
@@ -10,6 +11,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useContext } from "react";
 import {
 	MdAdd,
 	MdArrowBack,
@@ -20,9 +22,6 @@ import {
 } from "react-icons/md";
 
 function LibraryHeader({
-	sidebarMargin,
-	updateSidebarMargin,
-	margins,
 	currentView,
 	toggleView,
 	favouritesViews,
@@ -32,6 +31,8 @@ function LibraryHeader({
 		icon: MdLibraryBooks,
 		route: "/library",
 	};
+	const { sidebarMargin, updateSidebarMargin, margins } =
+		useContext(LayoutContext);
 
 	const handleExpandReduceLibrary = () => {
 		if (sidebarMargin === margins.md) {

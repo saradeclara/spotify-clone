@@ -1,9 +1,14 @@
+import { LayoutContext } from "@/context/LayoutContext";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
+import { SearchQueryContext } from "@/context/SearchQueryContext";
 import { UserColorContext } from "@/context/UserColorContext";
 import {
 	Avatar,
 	Box,
 	Icon,
+	Input,
+	InputGroup,
+	InputLeftElement,
 	ListItem,
 	Popover,
 	PopoverBody,
@@ -13,23 +18,33 @@ import {
 	UnorderedList,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import {
 	IoChevronBackCircleSharp,
 	IoChevronForwardCircleSharp,
 } from "react-icons/io5";
 
+import { MdSearch } from "react-icons/md";
+import lumaTextColor from "../../lib/lumaTextColor";
+
 const Navbar = ({
 	user,
-	sidebarMargin,
 	currentHistoryPos,
 	updateHistoryPos,
 }: {
 	user: any;
-	sidebarMargin: string;
 	currentHistoryPos: { current: number; len: number };
 	updateHistoryPos: Dispatch<SetStateAction<{ current: number; len: number }>>;
 }) => {
+	const { pathname } = useRouter();
+	const [searchText, updateSearchText] = useState("");
+	const router = useRouter();
+	const { sidebarMargin } = useContext(LayoutContext);
+	const { updateStatus } = useContext(SearchQueryContext);
+	const whiteNavIcons =
+		pathname.includes("search") || pathname.includes("[category]");
+
 	const pushPrevHistoryPos = () => {
 		window.history.back();
 		if (currentHistoryPos.current !== 0) {
@@ -50,12 +65,17 @@ const Navbar = ({
 		}
 	};
 
+	const handleSearch = (e: any) => {
+		updateSearchText(e.target.value);
+		setTimeout(() => {
+			router.push(`/search/${e.target.value}`);
+			updateStatus(true);
+		}, 100);
+	};
+
 	const { r, g, b } = useContext(UserColorContext);
 	const { scrollPosition } = useContext(ScrollPositionContext);
 
-	// perceived brightness of RGB color
-	const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-	const textColor = luma > 40 ? "black" : "white";
 	return (
 		<Box
 			sx={{
@@ -81,11 +101,8 @@ const Navbar = ({
 			>
 				<Icon
 					onClick={pushPrevHistoryPos}
-					color={
-						currentHistoryPos.current !== 0
-							? "rgba(0,0,0,1)"
-							: "rgba(0,0,0,0.6)"
-					}
+					opacity={currentHistoryPos.current !== 0 ? "100%" : "60%"}
+					color={whiteNavIcons ? "white" : "black"}
 					cursor={currentHistoryPos.current !== 0 ? "pointer" : "auto"}
 					boxSize="9"
 					as={IoChevronBackCircleSharp}
@@ -97,11 +114,12 @@ const Navbar = ({
 							? "pointer"
 							: "auto"
 					}
-					color={
+					opacity={
 						currentHistoryPos.current !== currentHistoryPos.len - 1
-							? "rgba(0,0,0,1)"
-							: "rgba(0,0,0,0.6)"
+							? "100%"
+							: "60%"
 					}
+					color={whiteNavIcons ? "white" : "black"}
 					boxSize="9"
 					as={IoChevronForwardCircleSharp}
 				/>
@@ -111,13 +129,40 @@ const Navbar = ({
 					fontSize: "20px",
 					fontWeight: "bold",
 					width: "100%",
-					color: textColor,
-					opacity: scrollPosition > 400 ? "100%" : "0%",
+					color: lumaTextColor({ r, g, b }),
+					opacity: whiteNavIcons
+						? "100%"
+						: scrollPosition > 400
+						? "100%"
+						: "0%",
 					marginLeft: "10px",
 					transition: "all .4s",
 				}}
 			>
-				{user.firstName} {user.lastName}
+				{whiteNavIcons ? (
+					<InputGroup>
+						<InputLeftElement pointerEvents="none">
+							<MdSearch fontSize="25px" color="#808080" />
+						</InputLeftElement>
+						<Input
+							onChange={handleSearch}
+							value={searchText}
+							placeholder="What do you want to listen to?"
+							_placeholder={{
+								color: "#808080",
+							}}
+							sx={{
+								borderRadius: "full",
+								color: "#808080",
+								border: "0px",
+								width: "30%",
+								backgroundColor: "#2b2b2b",
+							}}
+						/>
+					</InputGroup>
+				) : (
+					`${user.firstName} ${user.lastName}`
+				)}
 			</Box>
 			<Box>
 				<Tooltip label={`${user.firstName} ${user.lastName}`}>

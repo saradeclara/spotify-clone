@@ -15,7 +15,7 @@ const GradientLayoutPages = ({
 	subtitle: string;
 	description: string;
 	children: ReactNode;
-	image: string;
+	image: string | null;
 	roundAvatar: boolean;
 }) => {
 	const color = useContext(UserColorContext);

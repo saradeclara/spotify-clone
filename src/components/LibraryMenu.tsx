@@ -1,7 +1,7 @@
-import { sidebarMain } from "@/styles/colors";
-import { LibraryMenuProps } from "@/types/libraryMenu";
+import { LayoutContext } from "@/context/LayoutContext";
+import { grayMain } from "@/styles/colors";
 import { Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFeed } from "../../lib/hooks";
 import FavouritesGridView from "./FavouritesGridView";
 import FavouritesListView from "./FavouritesListView";
@@ -24,11 +24,7 @@ const libraryTags: { name: string; label: string }[] = [
 	{ name: "Podcasts & Shows", label: "podcast" },
 ];
 
-const LibraryMenu = ({
-	sidebarMargin,
-	updateSidebarMargin,
-	margins,
-}: LibraryMenuProps) => {
+const LibraryMenu = () => {
 	const [currentView, toggleView] = useState(0);
 	const [currentOption, updateOption] = useState(0);
 	const [textInput, updateTextInput] = useState("");
@@ -40,6 +36,9 @@ const LibraryMenu = ({
 		search: textInput,
 		catFilter: currentCat === null ? null : libraryTags[currentCat].label,
 	});
+
+	const { sidebarMargin, updateSidebarMargin, margins } =
+		useContext(LayoutContext);
 
 	useEffect(() => {
 		if (sidebarMargin === margins.l) {
@@ -54,7 +53,7 @@ const LibraryMenu = ({
 			id="libraryMenu"
 			sx={{
 				borderRadius: "10px",
-				backgroundColor: sidebarMain,
+				backgroundColor: grayMain,
 				padding: "17px 17px 0px 17px",
 				marginTop: "8px",
 			}}

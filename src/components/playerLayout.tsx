@@ -1,4 +1,6 @@
+import { LayoutContext } from "@/context/LayoutContext";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
+import { SearchQueryContext } from "@/context/SearchQueryContext";
 import { UserColorContext } from "@/context/UserColorContext";
 import { marginType } from "@/types";
 import { Box } from "@chakra-ui/react";
@@ -14,6 +16,8 @@ type PlayerLayoutProps = {
 };
 const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 	const { user } = useMe();
+	const [queryStatus, updateQueryStatus] = useState(false);
+
 	const [currentColor, updateCurrentColor] = useState({ r: 18, g: 18, b: 18 });
 	const [scrollPosition, updateScrollPosition] = useState(0);
 
@@ -27,6 +31,8 @@ const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 		md: "450px",
 		l: "840px",
 	};
+
+	const musicPlayerHeight = "90px";
 	const [sidebarMargin, updateSidebarMargin] = useState(margins.md);
 
 	useEffect(() => {
@@ -60,44 +66,54 @@ const PlayerLayout = ({ children }: PlayerLayoutProps) => {
 	}, [user]);
 
 	return user ? (
-		<UserColorContext.Provider value={currentColor}>
-			<ScrollPositionContext.Provider
-				value={{ scrollPosition, updateScrollPosition }}
+		<SearchQueryContext.Provider
+			value={{ status: queryStatus, updateStatus: updateQueryStatus }}
+		>
+			<LayoutContext.Provider
+				value={{
+					sidebarMargin,
+					updateSidebarMargin,
+					margins,
+					musicPlayerHeight,
+				}}
 			>
-				<Box width="100vw" height="100vh">
-					<Box
-						sx={{
-							position: "absolute",
-							top: "0",
-							width: sidebarMargin,
-							left: "0",
-						}}
+				<UserColorContext.Provider value={currentColor}>
+					<ScrollPositionContext.Provider
+						value={{ scrollPosition, updateScrollPosition }}
 					>
-						<Sidebar
-							margins={margins}
-							sidebarMargin={sidebarMargin}
-							updateSidebarMargin={updateSidebarMargin}
-						/>
-					</Box>
-					<Box
-						sx={{
-							marginLeft: sidebarMargin,
-						}}
-					>
-						<Navbar
-							currentHistoryPos={currentHistoryPos}
-							updateHistoryPos={updateHistoryPos}
-							user={user}
-							sidebarMargin={sidebarMargin}
-						/>
-						{children}
-					</Box>
-					<Box sx={{ position: "absolute", left: "0", bottom: "0" }}>
-						player
-					</Box>
-				</Box>
-			</ScrollPositionContext.Provider>
-		</UserColorContext.Provider>
+						<Box width="100vw" height="100vh">
+							<Box
+								sx={{
+									position: "absolute",
+									top: "0",
+									width: sidebarMargin,
+									left: "0",
+								}}
+							>
+								<Sidebar />
+							</Box>
+							<Box
+								sx={{
+									marginLeft: sidebarMargin,
+									height: `calc(100vh - ${musicPlayerHeight})`,
+									background: "black",
+								}}
+							>
+								<Navbar
+									currentHistoryPos={currentHistoryPos}
+									updateHistoryPos={updateHistoryPos}
+									user={user}
+								/>
+								{children}
+							</Box>
+							<Box sx={{ position: "absolute", left: "0", bottom: "0" }}>
+								player
+							</Box>
+						</Box>
+					</ScrollPositionContext.Provider>
+				</UserColorContext.Provider>
+			</LayoutContext.Provider>
+		</SearchQueryContext.Provider>
 	) : null;
 };
 

@@ -1,4 +1,4 @@
-import { sidebarMain, spotifyGreen } from "@/styles/colors";
+import { grayMain, spotifyGreen } from "@/styles/colors";
 import {
 	Button,
 	Icon,
@@ -28,12 +28,12 @@ const SortByFilter = ({
 						isActive={isOpen}
 						as={Button}
 						rightIcon={isOpen ? <AiOutlineCaretUp /> : <AiOutlineCaretDown />}
-						_hover={{ backgroundColor: sidebarMain }}
-						_focusVisible={{ backgroundColor: sidebarMain }}
-						_active={{ backgroundColor: sidebarMain }}
+						_hover={{ backgroundColor: grayMain }}
+						_focusVisible={{ backgroundColor: grayMain }}
+						_active={{ backgroundColor: grayMain }}
 						sx={{
 							width: "170px",
-							backgroundColor: sidebarMain,
+							backgroundColor: grayMain,
 							textAlign: "right",
 						}}
 					>
