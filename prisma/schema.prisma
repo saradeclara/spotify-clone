@@ -56,7 +56,7 @@ model Playlist {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String
-  thumbnail   String?
+  avatarUrl   String?
   songs       Song[]
   Category    Category @relation(fields: [categoryId], references: [id])
   categoryId  String
@@ -71,7 +71,7 @@ model Show {
   updatedAt DateTime @updatedAt
   name      String
   author    String
-  thumbnail String?
+  avatarUrl String?
 
   users      User[]
   Category   Category @relation(fields: [categoryId], references: [id])
@@ -104,7 +104,7 @@ model Album {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   name       String   @unique
-  thumbnail  String?
+  avatarUrl  String?
   releasedOn DateTime
 
   songs      Song[]
@@ -120,7 +120,8 @@ model Artist {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
-  thumbnail String?
+  avatarUrl String?
+  headerUrl String?
 
   songs      Song[]
   albums     Album[]

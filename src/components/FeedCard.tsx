@@ -1,8 +1,9 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import capitalise from "../../lib/capitalise";
+import returnYearFromDate from "../../lib/returnYearFromDate";
 
-const UserFeedCard = ({
+const FeedCard = ({
 	data,
 	isLast,
 }: {
@@ -11,8 +12,9 @@ const UserFeedCard = ({
 		name: string;
 		firstName?: string;
 		lastName?: string;
-		thumbnail: string;
+		avatarUrl?: string;
 		username?: string;
+		releasedOn?: Date;
 		Category: { description: string };
 	};
 	isLast?: boolean;
@@ -43,13 +45,20 @@ const UserFeedCard = ({
 					sx={{ marginBottom: "20px" }}
 					width="150px"
 					height="150px"
-					borderRadius="full"
-					src={data.thumbnail}
+					borderRadius={
+						!data.Category || data.Category.description === "artist"
+							? "full"
+							: "5px"
+					}
+					src={data.avatarUrl}
 				/>
 				<Text fontWeight="bold" fontSize="sm" color="white">
 					{data.Category ? data.name : `${data.firstName} ${data.lastName}`}
 				</Text>
 				<Text fontSize="sm" marginTop="5px" color="gray">
+					{data.Category && data.Category.description === "album"
+						? `${returnYearFromDate(data.releasedOn?.toISOString())} \u2022 `
+						: ""}
 					{data.Category ? capitalise(data.Category.description) : "Profile"}
 				</Text>
 			</Box>
@@ -57,4 +66,4 @@ const UserFeedCard = ({
 	);
 };
 
-export default UserFeedCard;
+export default FeedCard;

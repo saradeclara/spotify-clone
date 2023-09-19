@@ -14,7 +14,7 @@ type artistType = {
 	createdAt: string;
 	id: string;
 	name: string;
-	thumbnail: string;
+	avatarUrl: string;
 	updatedAt: string;
 };
 
@@ -29,26 +29,26 @@ type favAlbumsType = {
 	name: string;
 	updatedAt: string;
 	url: string;
-	thumbnail: string;
+	avatarUrl: string;
 };
 
 type favArtistsType = {
 	Category: CategoryType;
 	id: string;
 	name: string;
-	thumbnail: string;
+	avatarUrl: string;
 };
 
 type favShowsType = {
 	id: string;
 	name: string;
 	author: string;
-	thumbnail: string;
+	avatarUrl: string;
 	Category: CategoryType;
 };
 
 type playlistType = {
-	thumbnail: string;
+	avatarUrl: string;
 	author: string;
 	Category: CategoryType;
 	name: string;

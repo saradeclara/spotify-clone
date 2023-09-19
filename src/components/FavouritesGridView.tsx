@@ -42,7 +42,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="md"
 								boxSize="150px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box>
@@ -79,7 +79,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="md"
 								boxSize="150px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box>
@@ -116,7 +116,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="md"
 								boxSize="150px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box>
@@ -153,7 +153,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="full"
 								boxSize="150px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box>

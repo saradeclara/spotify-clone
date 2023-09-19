@@ -1,4 +1,4 @@
-import UserFeedCard from "@/components/UserFeedCard";
+import FeedCard from "@/components/FeedCard";
 import { LayoutContext } from "@/context/LayoutContext";
 import { grayMain } from "@/styles/colors";
 import { Box } from "@chakra-ui/react";
@@ -26,7 +26,7 @@ const CategoryFeed = (
 			>
 				<Box sx={{ marginTop: "50px", display: "flex" }}>
 					{items.map((item) => {
-						return <UserFeedCard data={item} />;
+						return <FeedCard data={item} />;
 					})}
 				</Box>
 			</Box>

@@ -25,25 +25,31 @@ import {
 	IoChevronForwardCircleSharp,
 } from "react-icons/io5";
 
+import { NavBarHeaderContext } from "@/context/NavBarHeader";
 import { MdSearch } from "react-icons/md";
 import lumaTextColor from "../../lib/lumaTextColor";
 
 const Navbar = ({
-	user,
+	loggedInUser,
 	currentHistoryPos,
 	updateHistoryPos,
 }: {
-	user: any;
+	loggedInUser: any;
 	currentHistoryPos: { current: number; len: number };
 	updateHistoryPos: Dispatch<SetStateAction<{ current: number; len: number }>>;
 }) => {
-	const { pathname } = useRouter();
-	const [searchText, updateSearchText] = useState("");
 	const router = useRouter();
+
+	const { pathname } = useRouter();
+	// const reqElements = asPath.split("/").filter((el) => el !== "");
+	const [searchText, updateSearchText] = useState("");
 	const { sidebarMargin } = useContext(LayoutContext);
 	const { updateStatus } = useContext(SearchQueryContext);
+	const { header } = useContext(NavBarHeaderContext);
 	const whiteNavIcons =
 		pathname.includes("search") || pathname.includes("[category]");
+
+	// const result = useNavHeader(reqElements);
 
 	const pushPrevHistoryPos = () => {
 		window.history.back();
@@ -75,6 +81,7 @@ const Navbar = ({
 
 	const { r, g, b } = useContext(UserColorContext);
 	const { scrollPosition } = useContext(ScrollPositionContext);
+	const lumaColor = lumaTextColor({ r, g, b });
 
 	return (
 		<Box
@@ -82,7 +89,7 @@ const Navbar = ({
 				position: "absolute",
 				zIndex: 1000,
 				marginTop: "8px",
-				borderRadius: "10px",
+				borderRadius: "10px 10px 0px 0px",
 				width: `calc(100vw - ${sidebarMargin} - 8px)`,
 				height: "60px",
 				display: "flex",
@@ -90,7 +97,8 @@ const Navbar = ({
 				justifyContent: "space-between",
 				padding: "0px 30px 0px 20px",
 				backgroundColor:
-					scrollPosition > 300 ? `rgb(${r}, ${g}, ${b})` : undefined,
+					scrollPosition < 300 ? "rgba(0,0,0,0)" : `rgba(${r}, ${g}, ${b}, 1)`,
+				transition: "all .3s",
 			}}
 		>
 			<Box
@@ -129,12 +137,10 @@ const Navbar = ({
 					fontSize: "20px",
 					fontWeight: "bold",
 					width: "100%",
-					color: lumaTextColor({ r, g, b }),
-					opacity: whiteNavIcons
-						? "100%"
-						: scrollPosition > 400
-						? "100%"
-						: "0%",
+					// color:
+					// 	scrollPosition > 400
+					// 		? `rgba(${lumaColor.r}, ${lumaColor.g}, ${lumaColor.b}, 1)`
+					// 		: `rgba(${lumaColor.r}, ${lumaColor.g}, ${lumaColor.b}, 0)`,
 					marginLeft: "10px",
 					transition: "all .4s",
 				}}
@@ -161,24 +167,33 @@ const Navbar = ({
 						/>
 					</InputGroup>
 				) : (
-					`${user.firstName} ${user.lastName}`
+					<Box
+						transition="all .3s"
+						color={
+							scrollPosition < 400
+								? "rgba(0,0,0,0)"
+								: `rgba(${lumaColor.r}, ${lumaColor.g}, ${lumaColor.b})`
+						}
+					>
+						{header}
+					</Box>
 				)}
 			</Box>
 			<Box>
-				<Tooltip label={`${user.firstName} ${user.lastName}`}>
+				<Tooltip label={`${loggedInUser.firstName} ${loggedInUser.lastName}`}>
 					<Popover placement="bottom-end">
 						<PopoverTrigger>
 							<Avatar
 								size="sm"
 								sx={{ border: "5px solid black" }}
-								src={user.avatarUrl}
+								src={loggedInUser.avatarUrl}
 							/>
 						</PopoverTrigger>
 						<PopoverContent>
 							<PopoverBody>
 								<UnorderedList>
 									<ListItem>
-										<Link href={`/user/${user.username}`}>Profile</Link>
+										<Link href={`/user/${loggedInUser.username}`}>Profile</Link>
 									</ListItem>
 									<ListItem>Logout</ListItem>
 								</UnorderedList>{" "}
@@ -189,6 +204,12 @@ const Navbar = ({
 			</Box>
 		</Box>
 	);
+};
+
+const getServerSideProps = () => {
+	return {
+		props: {},
+	};
 };
 
 export default Navbar;

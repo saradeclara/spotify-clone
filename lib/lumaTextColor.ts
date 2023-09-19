@@ -7,12 +7,13 @@ const lumaTextColor = (backgroundColor: {
 	r: number;
 	g: number;
 	b: number;
-}): string => {
+}): { r: number; g: number; b: number } => {
 	const { r, g, b } = backgroundColor;
 
 	// perceived brightness of RGB color
 	const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-	const textColor = luma > 40 ? "black" : "white";
+	const textColor =
+		luma > 40 ? { r: 0, g: 0, b: 0 } : { r: 255, g: 255, b: 255 };
 
 	return textColor;
 };

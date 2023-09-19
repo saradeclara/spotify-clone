@@ -59,9 +59,6 @@ const LibraryMenu = () => {
 			}}
 		>
 			<LibraryHeader
-				sidebarMargin={sidebarMargin}
-				updateSidebarMargin={updateSidebarMargin}
-				margins={margins}
 				currentView={currentView}
 				toggleView={toggleView}
 				favouritesViews={favouritesViews}

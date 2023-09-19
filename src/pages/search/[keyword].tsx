@@ -1,4 +1,4 @@
-import UserFeedCarousel from "@/components/UserFeedCarousel";
+import FeedCarousel from "@/components/FeedCarousel";
 import { LayoutContext } from "@/context/LayoutContext";
 import { SearchQueryContext } from "@/context/SearchQueryContext";
 import { grayMain } from "@/styles/colors";
@@ -40,16 +40,16 @@ const Search = (
 				}}
 			>
 				{allAlbums.length > 0 ? (
-					<UserFeedCarousel feed={{ label: "albums", data: allAlbums }} />
+					<FeedCarousel feed={{ label: "albums", data: allAlbums }} />
 				) : null}
 				{allPlaylists.length > 0 ? (
-					<UserFeedCarousel feed={{ label: "playlists", data: allPlaylists }} />
+					<FeedCarousel feed={{ label: "playlists", data: allPlaylists }} />
 				) : null}
 				{allArtists.length > 0 ? (
-					<UserFeedCarousel feed={{ label: "artists", data: allArtists }} />
+					<FeedCarousel feed={{ label: "artists", data: allArtists }} />
 				) : null}
 				{allShows.length > 0 ? (
-					<UserFeedCarousel feed={{ label: "podcasts", data: allShows }} />
+					<FeedCarousel feed={{ label: "podcasts", data: allShows }} />
 				) : null}
 			</Box>
 		</Box>

@@ -1,23 +1,24 @@
+import FeedWrapper from "@/components/FeedWrapper";
 import GradientLayoutPages from "@/components/GradientLayoutPages";
-import UserFeed from "@/components/UserFeed";
+import TopList from "@/components/TopList";
+import { NavBarHeaderContext } from "@/context/NavBarHeader";
+import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { Box } from "@chakra-ui/react";
-import { User } from "@prisma/client";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
+import { useContext, useEffect } from "react";
 import capitalise from "../../../lib/capitalise";
 import pluralise from "../../../lib/pluralise";
 import prisma from "../../../lib/prisma";
 
-interface CustomUser extends User {
-	createdPlaylists: any[];
-	followingArtist: any[];
-	favouritedPlaylists: any[];
-}
-
 const UserDashboard = ({
 	user,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-	// if (user) {
+	const { updateHeader } = useContext(NavBarHeaderContext);
+	const { updateScrollPosition } = useContext(ScrollPositionContext);
+	const { asPath } = useRouter();
+
 	const userFeedData: { label: string; data: any[] }[] = [
 		{
 			label: "your top artists",
@@ -56,6 +57,15 @@ const UserDashboard = ({
 		}
 	);
 
+	useEffect(() => {
+		updateHeader(`${user.firstName} ${user.lastName}`);
+	});
+
+	// reset scrollPosition when navigating through pages
+	useEffect(() => {
+		updateScrollPosition(0);
+	}, [asPath]);
+
 	return (
 		<Box
 			sx={{
@@ -71,7 +81,11 @@ const UserDashboard = ({
 				subtitle="Profile"
 				description={description}
 			>
-				<UserFeed data={userFeedData} />
+				<TopList
+					heading={`${user.firstName}'s Favourite Tracks`}
+					items={user.favouriteSongs}
+				/>
+				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
 		</Box>
 	);
@@ -87,24 +101,45 @@ export const getServerSideProps = async (
 ) => {
 	const customQuery: CustomQuery = context.query;
 
-	// let user: CustomUser | null;
 	const user = await prisma.user.findUnique({
 		where: {
 			username: customQuery.username,
 		},
 		include: {
-			favouritedPlaylists: true,
-			followedByArtist: true,
-			followingArtist: true,
-			createdPlaylists: true,
+			favouriteSongs: { include: { album: true } },
+			createdPlaylists: { include: { Category: true } },
+			favouritedPlaylists: { include: { Category: true } },
 			followedBy: true,
+			followedByArtist: {
+				include: { albums: true, songs: true, Category: true },
+			},
 			following: true,
+			followingArtist: {
+				include: { albums: true, songs: true, Category: true },
+			},
 		},
 	});
 	if (user) {
+		const userWithStats = {
+			...user,
+			stats: [
+				{
+					label: "playlist",
+					total: user.createdPlaylists.length + user.favouritedPlaylists.length,
+				},
+				{
+					label: "follower",
+					total: user.followedBy.length + user.followedByArtist.length,
+				},
+				{
+					label: "following",
+					total: user.following.length + user.followingArtist.length,
+				},
+			],
+		};
 		return {
 			props: {
-				user,
+				user: userWithStats,
 			},
 		};
 	}

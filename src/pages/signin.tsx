@@ -6,7 +6,7 @@ import {
 	ToastMessagesType,
 } from "@/types/authForm";
 
-const Signin = (_props) => {
+const Signin = (props) => {
 	const formData: FormDataType[] = [
 		{
 			type: "email",

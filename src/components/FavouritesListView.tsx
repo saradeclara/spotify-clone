@@ -30,7 +30,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="md"
 								boxSize="50px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box sx={{ marginLeft: "10px" }}>
@@ -70,7 +70,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="full"
 								boxSize="50px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box sx={{ marginLeft: "10px" }}>
@@ -110,7 +110,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="md"
 								boxSize="50px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box sx={{ marginLeft: "10px" }}>
@@ -150,7 +150,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 							<Image
 								borderRadius="full"
 								boxSize="50px"
-								src={feedRecord.thumbnail}
+								src={feedRecord.avatarUrl}
 								alt={feedRecord.name}
 							/>
 							<Box sx={{ marginLeft: "10px" }}>

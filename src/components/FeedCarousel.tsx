@@ -1,9 +1,10 @@
 import { Box, Heading } from "@chakra-ui/react";
 import Link from "next/link";
 import capitalise from "../../lib/capitalise";
-import UserFeedCard from "./UserFeedCard";
+import FeedCard from "./FeedCard";
 
-function UserFeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
+function FeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
+	console.log("feed.data", feed);
 	return feed.data.length > 0 ? (
 		<Box>
 			<Heading size="md" sx={{ color: "white", margin: "20px 0px" }}>
@@ -16,7 +17,7 @@ function UserFeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
 						: `/${singleElement.id}`;
 					return (
 						<Link href={url}>
-							<UserFeedCard
+							<FeedCard
 								key={index}
 								data={singleElement}
 								isLast={index === array.length - 1}
@@ -29,4 +30,4 @@ function UserFeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
 	) : null;
 }
 
-export default UserFeedCarousel;
+export default FeedCarousel;

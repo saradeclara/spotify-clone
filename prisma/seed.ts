@@ -7,16 +7,19 @@ const categories = ["album", "song", "artist", "podcast", "playlist"];
 const artists = [
 	{
 		name: "Depeche Mode",
-		thumbnail:
+		headerUrl: "https://i.ibb.co/gwBGf2c/depeche-mode-FINAL-IMAGE.jpg",
+		avatarUrl:
 			"https://i.ibb.co/hghwKxr/ab6761610000e5ebaff13c9484fdad590ccfb73c.jpg",
 	},
 	{
 		name: "Soundgarden",
-		thumbnail: "https://i.ibb.co/hY7mtbT/cc7.jpg",
+		headerUrl: "https://i.ibb.co/0VpYgLD/soundgardenborucki-copy.jpg",
+		avatarUrl: "https://i.ibb.co/hY7mtbT/cc7.jpg",
 	},
 	{
 		name: "PJ Harvey",
-		thumbnail: "https://i.ibb.co/Vg67Q7h/500x500-000000-80-0-0.jpg",
+		headerUrl: "https://i.ibb.co/0sXLrJh/image-18.png",
+		avatarUrl: "https://i.ibb.co/Vg67Q7h/500x500-000000-80-0-0.jpg",
 	},
 ];
 
@@ -57,7 +60,8 @@ const main = async () => {
 				return await prisma.artist.create({
 					data: {
 						name: singleArtist.name,
-						thumbnail: singleArtist.thumbnail,
+						avatarUrl: singleArtist.avatarUrl,
+						headerUrl: singleArtist.headerUrl,
 						categoryId: catArtist.id,
 					},
 				});
@@ -79,7 +83,7 @@ const main = async () => {
 		const albums: any = [
 			{
 				name: "Superunknown",
-				thumbnail: "https://i.ibb.co/9VrXvB0/Superunknown.jpg",
+				avatarUrl: "https://i.ibb.co/9VrXvB0/Superunknown.jpg",
 				releasedOn: new Date("1994-03-07T00:00:00+0000"),
 				artistId: artist1?.id,
 				songs: [
@@ -93,7 +97,7 @@ const main = async () => {
 			},
 			{
 				name: "Violator",
-				thumbnail: "https://i.ibb.co/9hCrb1r/violator.png",
+				avatarUrl: "https://i.ibb.co/9hCrb1r/violator.png",
 				releasedOn: new Date("1990-03-19T00:00:00+0000"),
 				artistId: artist2?.id,
 				songs: [
@@ -107,7 +111,7 @@ const main = async () => {
 			},
 			{
 				name: "Dry",
-				thumbnail: "https://i.ibb.co/dLDQG6R/PJHarvey-Dryalbumcover.jpg",
+				avatarUrl: "https://i.ibb.co/dLDQG6R/PJHarvey-Dryalbumcover.jpg",
 				releasedOn: new Date("1992-03-30T00:00:00+0000"),
 				artistId: artist3?.id,
 				songs: [
@@ -127,7 +131,7 @@ const main = async () => {
 					return await prisma.album.create({
 						data: {
 							name: singleAlbum.name,
-							thumbnail: singleAlbum.thumbnail,
+							avatarUrl: singleAlbum.avatarUrl,
 							releasedOn: singleAlbum.releasedOn,
 							artistId: singleAlbum.artistId,
 							categoryId: catAlbum.id,
@@ -155,7 +159,7 @@ const main = async () => {
 			data: {
 				name: "90s Mix",
 				categoryId: catPlaylist?.id,
-				thumbnail: "https://i.ibb.co/QD8qHnT/download.png",
+				avatarUrl: "https://i.ibb.co/QD8qHnT/download.png",
 				songs: {
 					connect: allSongs.map((singleSong) => {
 						return { id: singleSong.id };
@@ -169,7 +173,7 @@ const main = async () => {
 				name: "Significant Others",
 				author: "Team Coco",
 				categoryId: catPodcast?.id,
-				thumbnail: "https://i.ibb.co/M8tmrvk/significant.webp",
+				avatarUrl: "https://i.ibb.co/M8tmrvk/significant.webp",
 			},
 		});
 
@@ -222,7 +226,7 @@ const main = async () => {
 								},
 								create: {
 									name: "Depeche Mode",
-									thumbnail:
+									avatarUrl:
 										"https://i.ibb.co/hghwKxr/ab6761610000e5ebaff13c9484fdad590ccfb73c.jpg",
 									categoryId: catArtist.id,
 								},
@@ -233,7 +237,7 @@ const main = async () => {
 								},
 								create: {
 									name: "Soundgarden",
-									thumbnail: "https://i.ibb.co/hY7mtbT/cc7.jpg",
+									avatarUrl: "https://i.ibb.co/hY7mtbT/cc7.jpg",
 									categoryId: catArtist.id,
 								},
 							},
