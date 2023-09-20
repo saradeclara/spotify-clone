@@ -78,6 +78,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 				include: {
 					Category: true,
 					album: true,
+					artist: true,
 				},
 			},
 		},

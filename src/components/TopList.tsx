@@ -1,12 +1,26 @@
-import { Box, Heading, Img, ListItem, OrderedList } from "@chakra-ui/react";
+import { lightGrayText } from "@/styles/colors";
+import {
+	Box,
+	Heading,
+	Img,
+	ListItem,
+	OrderedList,
+	Tooltip,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
 import capitalise from "../../lib/capitalise";
+
 interface albumType {
 	id: string;
 	name: string;
 	avatarUrl: string | null;
+}
+
+interface artistType {
+	id: string;
+	name: string;
 }
 
 interface listItem {
@@ -14,6 +28,7 @@ interface listItem {
 	name: string;
 	album: albumType;
 	duration?: number;
+	artist: artistType;
 }
 
 interface TopListProps {
@@ -48,7 +63,7 @@ function TopList({ heading, items }: TopListProps) {
 					width: "50%",
 				}}
 			>
-				{items.map(({ name, album, duration }, index) => (
+				{items.map(({ name, album, duration, artist }, index) => (
 					<Box
 						onMouseEnter={handleMouseEnter}
 						onMouseLeave={handleMouseLeave}
@@ -60,9 +75,11 @@ function TopList({ heading, items }: TopListProps) {
 						}}
 						sx={{ display: "flex", alignItems: "center", padding: "10px 20px" }}
 					>
-						<Box width="20px" marginRight="20px">
-							{isHovering && item == index ? <BsFillPlayFill /> : index + 1}
-						</Box>
+						<Tooltip placement="top" label={`Play ${name} by ${artist.name}`}>
+							<Box width="20px" marginRight="20px">
+								{isHovering && item == index ? <BsFillPlayFill /> : index + 1}
+							</Box>
+						</Tooltip>
 						<ListItem
 							sx={{
 								display: "flex",
@@ -83,10 +100,17 @@ function TopList({ heading, items }: TopListProps) {
 									marginLeft: "auto",
 									display: "flex",
 									alignItems: "center",
+									color: lightGrayText,
 								}}
 							>
 								<Box marginRight="50px">
-									{isHovering && item == index ? <AiOutlineHeart /> : null}
+									{isHovering && item == index ? (
+										<Tooltip placement="top" label="Save to Your Library">
+											<Box _hover={{ color: "white" }} cursor="pointer">
+												<AiOutlineHeart />
+											</Box>
+										</Tooltip>
+									) : null}
 								</Box>
 								<Box>{duration}</Box>
 							</Box>
