@@ -6,6 +6,7 @@ export default validateRoute(async (_req, res, user) => {
 		where: { id: user?.id },
 		include: {
 			createdPlaylists: { include: { Category: true } },
+			favouriteSongs: true,
 			favouritedPlaylists: { include: { Category: true } },
 			followedBy: true,
 			followedByArtist: {

@@ -4,7 +4,6 @@ import capitalise from "../../lib/capitalise";
 import FeedCard from "./FeedCard";
 
 function FeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
-	console.log("feed.data", feed);
 	return feed.data.length > 0 ? (
 		<Box>
 			<Heading size="md" sx={{ color: "white", margin: "20px 0px" }}>

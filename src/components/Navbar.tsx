@@ -206,10 +206,4 @@ const Navbar = ({
 	);
 };
 
-const getServerSideProps = () => {
-	return {
-		props: {},
-	};
-};
-
 export default Navbar;

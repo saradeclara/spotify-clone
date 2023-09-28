@@ -15,7 +15,6 @@ export const validateRoute = (
 
 		if (token) {
 			let user;
-
 			const decodedToken = jwt.verify(token, "hello");
 
 			if (typeof decodedToken !== "string") {
@@ -23,14 +22,12 @@ export const validateRoute = (
 					user = await prisma.user.findUnique({
 						where: { id: decodedToken.id },
 					});
-
 					if (!user) throw new Error("Unknown User");
 				} catch (error) {
 					res.status(401);
 					res.json({ error });
 				}
 			}
-
 			return handler(req, res, user);
 		}
 	};

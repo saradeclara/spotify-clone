@@ -5,7 +5,6 @@
  */
 
 const returnYearFromDate = (ISODate: string | undefined) => {
-	console.log({ ISODate });
 	let result;
 	if (typeof ISODate === "string") {
 		const parsedDate = ISODate.split("-");

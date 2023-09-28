@@ -18,14 +18,6 @@ export const useMe = () => {
 	};
 };
 
-// export const useNavHeader = (reqElements: string[]) => {
-// 	console.log("insidehook", { reqElements });
-// 	const { data, error } = useSWR("/");
-// 	return {
-// 		user: { id: 1234 },
-// 	};
-// };
-
 export const usePlaylist = () => {
 	const { data, error } = useSWR("/playlist", fetcher);
 

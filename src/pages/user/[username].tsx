@@ -13,8 +13,8 @@ import pluralise from "../../../lib/pluralise";
 import prisma from "../../../lib/prisma";
 
 const UserDashboard = ({
-	user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    	user,
+    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	const { updateHeader } = useContext(NavBarHeaderContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const { asPath } = useRouter();
@@ -84,6 +84,7 @@ const UserDashboard = ({
 				<TopList
 					heading={`${user.firstName}'s Favourite Tracks`}
 					items={user.favouriteSongs}
+					showFavourites={false}
 				/>
 				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
@@ -106,7 +107,7 @@ export const getServerSideProps = async (
 			username: customQuery.username,
 		},
 		include: {
-			favouriteSongs: { include: { album: true } },
+			favouriteSongs: { include: { album: true, artist: true } },
 			createdPlaylists: { include: { Category: true } },
 			favouritedPlaylists: { include: { Category: true } },
 			followedBy: true,

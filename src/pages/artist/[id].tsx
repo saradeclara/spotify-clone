@@ -55,6 +55,7 @@ const ArtistPage = (
 					<TopList
 						heading={`${artist.name}'s Top 5 Tracks`}
 						items={artist.top5Songs}
+						showFavourites
 					/>
 					<FeedWrapper data={artistFeedData} />
 				</Box>
