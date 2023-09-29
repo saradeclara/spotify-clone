@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
 import capitalise from "../../lib/capitalise";
+import convertSeconds from "../../lib/convertSeconds";
 
 interface albumType {
 	id: string;
@@ -64,7 +65,6 @@ function TopList({ heading, items, showFavourites }: TopListProps) {
 			body: JSON.stringify(body),
 		});
 		const updatedUser = await result.json();
-		console.log({ updatedUser });
 
 		setFavouriteSongs(
 			updatedUser.favouriteSongs.map((el: { id: string }) => el.id)
@@ -72,7 +72,6 @@ function TopList({ heading, items, showFavourites }: TopListProps) {
 	};
 
 	const handleClick = (flag: boolean, id: string) => {
-		console.log({ flag });
 		updateSongFavourites(flag, id);
 	};
 
@@ -168,7 +167,7 @@ function TopList({ heading, items, showFavourites }: TopListProps) {
 									</Tooltip>
 								) : null}
 
-								<Box>{duration}</Box>
+								<Box>{convertSeconds(duration)}</Box>
 							</Box>
 						</ListItem>
 					</Box>

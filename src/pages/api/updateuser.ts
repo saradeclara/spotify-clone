@@ -2,7 +2,6 @@ import { validateRoute } from "../../../lib/auth";
 import prisma from "../../../lib/prisma";
 
 export default validateRoute(async (req, res, user) => {
-	console.log("body", req.body);
 	const { songId, flag } = req.body;
 	const foundUser = await prisma.user.findUnique({
 		where: {
@@ -26,7 +25,6 @@ export default validateRoute(async (req, res, user) => {
 				},
 			},
 		});
-		console.log({ updatedUser });
 		res.json(updatedUser);
 	} else {
 		// add song
@@ -41,7 +39,6 @@ export default validateRoute(async (req, res, user) => {
 				},
 			},
 		});
-		console.log({ updatedUser });
 		res.json(updatedUser);
 	}
 });
