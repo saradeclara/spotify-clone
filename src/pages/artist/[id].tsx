@@ -1,6 +1,6 @@
 import FeedWrapper from "@/components/FeedWrapper";
 import GradientLayoutArtist from "@/components/GradientLayoutArtist";
-import TopList from "@/components/TopList";
+import TopList from "@/components/TopList/TopList";
 import { NavBarHeaderContext } from "@/context/NavBarHeader";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { Box } from "@chakra-ui/react";
@@ -56,6 +56,7 @@ const ArtistPage = (
 						heading={`${artist.name}'s Top 5 Tracks`}
 						items={artist.top5Songs}
 						showFavourites
+						showAlbumCovers
 					/>
 					<FeedWrapper data={artistFeedData} />
 				</Box>

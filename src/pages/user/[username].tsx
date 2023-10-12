@@ -1,6 +1,6 @@
 import FeedWrapper from "@/components/FeedWrapper";
 import GradientLayoutPages from "@/components/GradientLayoutPages";
-import TopList from "@/components/TopList";
+import TopList from "@/components/TopList/TopList";
 import { NavBarHeaderContext } from "@/context/NavBarHeader";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { Box } from "@chakra-ui/react";
@@ -13,8 +13,8 @@ import pluralise from "../../../lib/pluralise";
 import prisma from "../../../lib/prisma";
 
 const UserDashboard = ({
-    	user,
-    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+	user,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	const { updateHeader } = useContext(NavBarHeaderContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const { asPath } = useRouter();
@@ -81,11 +81,15 @@ const UserDashboard = ({
 				subtitle="Profile"
 				description={description}
 			>
-				<TopList
-					heading={`${user.firstName}'s Favourite Tracks`}
-					items={user.favouriteSongs}
-					showFavourites={false}
-				/>
+				{user.favouriteSongs.length > 0 ? (
+					<TopList
+						heading={`${user.firstName}'s Favourite Tracks`}
+						items={user.favouriteSongs}
+						showFavourites={false}
+						showAlbumCovers
+					/>
+				) : null}
+
 				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
 		</Box>

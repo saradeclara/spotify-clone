@@ -8,8 +8,8 @@ const GradientLayoutArtist = ({
 	headerUrl,
 	name,
 }: {
-	children: ReactNode;
-	headerUrl: string | null;
+	children?: ReactNode;
+	headerUrl?: string | null;
 	name: string;
 }) => {
 	const color = useContext(UserColorContext);

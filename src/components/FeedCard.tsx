@@ -1,7 +1,7 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import capitalise from "../../lib/capitalise";
-import returnYearFromDate from "../../lib/returnYearFromDate";
+import dateParser from "../../lib/dateParser";
 
 const FeedCard = ({
 	data,
@@ -57,7 +57,7 @@ const FeedCard = ({
 				</Text>
 				<Text fontSize="sm" marginTop="5px" color="gray">
 					{data.Category && data.Category.description === "album"
-						? `${returnYearFromDate(data.releasedOn?.toISOString())} \u2022 `
+						? `${dateParser(data.releasedOn)?.year} \u2022 `
 						: ""}
 					{data.Category ? capitalise(data.Category.description) : "Profile"}
 				</Text>
