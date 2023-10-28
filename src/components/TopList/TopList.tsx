@@ -1,4 +1,5 @@
-import { LoggedInUserContext } from "@/context/LoggedInUserContext";
+import { fetchFavouriteSongs } from "@/react-query/fetch";
+import { favouriteSongsKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
 import {
 	Box,
@@ -9,46 +10,28 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
+import { Album, Artist, Song } from "@prisma/client";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import convertSeconds from "../../../lib/convertSeconds";
 import dateParser from "../../../lib/dateParser";
 import TopListHeadings from "./TopListHeadings";
-interface albumType {
-	id: string;
-	name: string;
-	avatarUrl: string | null;
-}
-
-interface artistType {
-	id: string;
-	name: string;
-}
-
-interface listItem {
-	id: string;
-	name: string;
-	album: albumType;
-	duration?: number;
-	artist: artistType;
-	albumIndex: number;
-	updatedAt: Date;
-}
 
 interface TopListProps {
 	heading?: string | null;
-	items: listItem[];
-	showFavourites: boolean;
-	showAlbumCovers: boolean;
-	showHeadings: boolean;
-	showArtist: boolean;
+	items: (Song & { album: Album | null; artist: Artist | null })[];
+	showFavourites?: boolean;
+	showAlbumCovers?: boolean;
+	showHeadings?: boolean;
+	showArtist?: boolean;
 	mode?: string;
 	width?: string;
-	showDateAdded: boolean;
-	showAlbumColumn: boolean;
+	showDateAdded?: boolean;
+	showAlbumColumn?: boolean;
 }
 
 function TopList({
@@ -63,15 +46,53 @@ function TopList({
 	mode,
 	width = "100%",
 }: TopListProps) {
-	console.log("toplist", showDateAdded, showAlbumColumn);
 	const [{ isHovering, item }, updateHoveringState] = useState({
 		isHovering: false,
 		item: 0,
 	});
-	const defaultFavouriteSongs: string[] = [];
-	const [favouriteSongs, setFavouriteSongs] = useState(defaultFavouriteSongs);
 
-	const loggedInUser = useContext(LoggedInUserContext);
+	const {
+		data: favouriteSongs,
+		isLoading,
+		error,
+	} = useQuery(favouriteSongsKey, fetchFavouriteSongs, {
+		staleTime: 60 * 5 * 1000,
+	});
+
+	const queryClient = useQueryClient();
+
+	interface Body {
+		itemId: string;
+		category: string;
+	}
+
+	const isSongInFavourites = (id: string, favSongs: Song[]) => {
+		const favSongsIds = favSongs.map((song) => song.id);
+		return favSongsIds.includes(id);
+	};
+
+	const updateFeedMutation = useMutation<Body, Error, Partial<Body>>(
+		async (newItem) => {
+			const response = await fetch("/api/updatefeed", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(newItem),
+			});
+
+			if (!response.ok) {
+				throw new Error("Network response was not ok");
+			}
+
+			return response.json();
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries(favouriteSongsKey);
+			},
+		}
+	);
 
 	const handleMouseEnter = (e: any) => {
 		updateHoveringState({ isHovering: true, item: e.target.id });
@@ -81,22 +102,13 @@ function TopList({
 		updateHoveringState({ isHovering: false, item: e.target.id });
 	};
 
-	const updateSongFavourites = async (flag: boolean, id: string) => {
-		const body = { songId: id, flag };
-		const result = await fetch(`/api/updateuser`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(body),
-		});
-		const updatedUser = await result.json();
-
-		setFavouriteSongs(
-			updatedUser.favouriteSongs.map((el: { id: string }) => el.id)
-		);
+	const updateSongFavourites = async (id: string) => {
+		const body = { itemId: id, category: "favouriteSongs" };
+		updateFeedMutation.mutate(body);
 	};
 
-	const handleClick = (flag: boolean, id: string) => {
-		updateSongFavourites(flag, id);
+	const handleClick = (id: string) => {
+		updateSongFavourites(id);
 	};
 
 	const orderedItems =
@@ -104,22 +116,20 @@ function TopList({
 			? [...items].sort((a, b) => a.albumIndex - b.albumIndex)
 			: items;
 
-	useEffect(() => {
-		// add favourite songs on load
-		const favouriteSongsIds = loggedInUser?.favouriteSongs?.map(
-			(el: { id: string }) => el.id
-		);
-		if (favouriteSongsIds) {
-			setFavouriteSongs(favouriteSongsIds);
-		}
-	}, []);
-
 	const colStyles =
 		showDateAdded && showAlbumColumn
 			? {
 					marginLeft: "auto",
 			  }
 			: {};
+
+	if (isLoading) {
+		return <Box>Loading...</Box>;
+	}
+
+	if (error) {
+		return <Box>Error</Box>;
+	}
 
 	return (
 		<Box sx={{ padding: "30px" }}>
@@ -152,6 +162,7 @@ function TopList({
 						index
 					) => (
 						<Box
+							key={index}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}
 							id={index.toString()}
@@ -166,7 +177,10 @@ function TopList({
 								padding: "10px 20px",
 							}}
 						>
-							<Tooltip placement="top" label={`Play ${name} by ${artist.name}`}>
+							<Tooltip
+								placement="top"
+								label={`Play ${name} by ${artist?.name}`}
+							>
 								<Box width="20px" marginRight="20px">
 									{isHovering && item == index ? (
 										<BsFillPlayFill />
@@ -203,7 +217,7 @@ function TopList({
 											<Box marginRight="20px">
 												<Img
 													width="50px"
-													src={!album.avatarUrl ? undefined : album.avatarUrl}
+													src={!album?.avatarUrl ? undefined : album.avatarUrl}
 												/>
 											</Box>
 										) : null}
@@ -216,9 +230,9 @@ function TopList({
 											<Box>{name}</Box>
 											{showArtist ? (
 												<Box sx={{ color: "gray", fontSize: "small" }}>
-													<Link href={`/artist/${artist.id}`}>
+													<Link href={`/artist/${artist?.id}`}>
 														<Text _hover={{ textDecoration: "underline" }}>
-															{artist.name}
+															{artist?.name}
 														</Text>
 													</Link>
 												</Box>
@@ -226,7 +240,7 @@ function TopList({
 										</Box>
 									</Box>
 									{showAlbumColumn ? (
-										<Box sx={{ flex: 1, fontSize: "sm" }}>{album.name}</Box>
+										<Box sx={{ flex: 1, fontSize: "sm" }}>{album?.name}</Box>
 									) : null}
 
 									{showDateAdded ? (
@@ -240,7 +254,7 @@ function TopList({
 										<Tooltip
 											placement="top"
 											label={
-												favouriteSongs.includes(id)
+												isSongInFavourites(id, favouriteSongs)
 													? "Remove from Your Library"
 													: "Save to Your Library"
 											}
@@ -253,20 +267,14 @@ function TopList({
 												}}
 												cursor="pointer"
 											>
-												{favouriteSongs.includes(id) ? (
+												{isSongInFavourites(id, favouriteSongs) ? (
 													<AiFillHeart
-														onClick={() =>
-															handleClick(favouriteSongs.includes(id), id)
-														}
+														onClick={() => handleClick(id)}
 														color={spotifyGreen}
 													/>
 												) : isHovering && item == index ? (
 													<Box _hover={{ color: "white" }}>
-														<AiOutlineHeart
-															onClick={() =>
-																handleClick(favouriteSongs.includes(id), id)
-															}
-														/>
+														<AiOutlineHeart onClick={() => handleClick(id)} />
 													</Box>
 												) : null}
 											</Box>

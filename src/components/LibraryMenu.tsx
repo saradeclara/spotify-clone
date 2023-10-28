@@ -1,8 +1,10 @@
 import { LayoutContext } from "@/context/LayoutContext";
+import { fetchFeedData } from "@/react-query/fetch";
+import { feedKey } from "@/react-query/queryKeys";
 import { grayMain } from "@/styles/colors";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
-import { useFeed } from "../../lib/hooks";
+import { useQuery } from "react-query";
 import FavouritesGridView from "./FavouritesGridView";
 import FavouritesListView from "./FavouritesListView";
 import LibraryCarousel from "./LibraryCarousel";
@@ -21,7 +23,7 @@ const libraryTags: { name: string; label: string }[] = [
 	{ name: "Playlists", label: "playlist" },
 	{ name: "Artists", label: "artist" },
 	{ name: "Albums", label: "album" },
-	{ name: "Podcasts & Shows", label: "podcast" },
+	{ name: "Podcasts & Shows", label: "show" },
 ];
 
 const LibraryMenu = () => {
@@ -31,22 +33,15 @@ const LibraryMenu = () => {
 	const [currentCat, updateCat] = useState<number | null>(null);
 	const favouritesViews: string[] = ["list", "grid"];
 
-	const { data, isLoading, error } = useFeed({
-		sort: filters[currentOption],
-		search: textInput,
-		catFilter: currentCat === null ? null : libraryTags[currentCat].label,
-	});
+	const { sidebarMargin, margins } = useContext(LayoutContext);
 
-	const { sidebarMargin, updateSidebarMargin, margins } =
-		useContext(LayoutContext);
+	const { data, status } = useQuery(feedKey, fetchFeedData);
 
 	useEffect(() => {
 		if (sidebarMargin === margins.l) {
 			toggleView(1);
 		}
 	}, [sidebarMargin]);
-
-	useEffect(() => {}, [textInput]);
 
 	return (
 		<Box
@@ -93,13 +88,15 @@ const LibraryMenu = () => {
 				</Box>
 				{/* Main Favourites List */}
 				<Box sx={{ marginTop: "20px" }}>
-					{data ? (
-						favouritesViews[currentView] === "list" ? (
-							<FavouritesListView textInput={textInput} data={data} />
-						) : (
-							<FavouritesGridView textInput={textInput} data={data} />
-						)
-					) : null}
+					{status === "loading" ? (
+						<Text>Loading data...</Text>
+					) : status === "error" ? (
+						<Text>Error!</Text>
+					) : favouritesViews[currentView] === "list" ? (
+						<FavouritesListView textInput={textInput} data={data} />
+					) : (
+						<FavouritesGridView textInput={textInput} data={data} />
+					)}
 				</Box>
 			</Box>
 		</Box>

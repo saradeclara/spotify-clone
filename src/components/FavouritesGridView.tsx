@@ -1,12 +1,18 @@
 import { spotifyGreen } from "@/styles/colors";
-import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
+import { Album, Artist, Category, Playlist, Show } from "@prisma/client";
 import Link from "next/link";
 import { AiFillPushpin } from "react-icons/ai";
 import capitalise from "../../lib/capitalise";
 import SubstringSearchText from "./SubstringSearchText";
 
-const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
+const FavouritesGridView = ({
+	data,
+	textInput,
+}: {
+	data: ((Show | Artist | Album | Playlist) & { category: Category })[];
+	textInput: string;
+}) => {
 	const listItemStyles = {
 		display: "flex",
 		flexDirection: "column",
@@ -54,7 +60,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 								</Text>
 								<Text fontSize="small" sx={textWithEllipsis}>
 									<Text as="span">{`${capitalise(
-										feedRecord.Category.description
+										feedRecord.category.description
 									)} \u2022 `}</Text>
 									<Text as="span">
 										<SubstringSearchText
@@ -68,7 +74,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 					</Link>
 				);
 				break;
-			case "podcast":
+			case "show":
 				component = (
 					<Link key={index} href={url}>
 						<ListItem
@@ -91,7 +97,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 								</Text>
 								<Text fontSize="small" sx={textWithEllipsis}>
 									<Text as="span">{`${capitalise(
-										feedRecord.Category.description
+										feedRecord.category.description
 									)} \u2022 `}</Text>
 									<Text as="span">
 										<SubstringSearchText
@@ -128,7 +134,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 								</Text>
 								<Text fontSize="small" sx={textWithEllipsis}>
 									<Text as="span">{`${capitalise(
-										feedRecord.Category.description
+										feedRecord.category.description
 									)} \u2022 `}</Text>
 									<Text as="span">
 										<SubstringSearchText
@@ -164,7 +170,7 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 									/>
 								</Text>
 								<Text fontSize="small" sx={textWithEllipsis}>
-									{`${capitalise(feedRecord.Category.description)}`}
+									{`${capitalise(feedRecord.category.description)}`}
 								</Text>
 							</Box>
 						</ListItem>
@@ -214,17 +220,22 @@ const FavouritesGridView = ({ data, textInput }: FavouritesProps) => {
 					</Box>
 				</ListItem>
 				{data
-					? data.map((singleFeedRecord, index) => {
-							const categoryType = singleFeedRecord.Category.description;
-							if (singleFeedRecord) {
-								const component = renderFavFeed(
-									categoryType,
-									singleFeedRecord,
-									index
-								);
-								return component;
+					? data.map(
+							(
+								singleFeedRecord: { category: { description: string } },
+								index: number
+							) => {
+								const categoryType = singleFeedRecord.category.description;
+								if (singleFeedRecord) {
+									const component = renderFavFeed(
+										categoryType,
+										singleFeedRecord,
+										index
+									);
+									return component;
+								}
 							}
-					  })
+					  )
 					: "No Favourites"}
 			</List>
 		</Box>

@@ -25,8 +25,8 @@ const CategoryFeed = (
 				}}
 			>
 				<Box sx={{ marginTop: "50px", display: "flex" }}>
-					{items.map((item) => {
-						return <FeedCard data={item} />;
+					{items.map((item, index) => {
+						return <FeedCard key={index} data={item} />;
 					})}
 				</Box>
 			</Box>
@@ -39,24 +39,24 @@ export const getServerSideProps = async (context: any) => {
 
 	let items: any[] = [];
 	switch (params.category) {
-		case "podcasts":
+		case "shows":
 			items = await prisma.show.findMany({
 				include: {
-					Category: true,
+					category: true,
 				},
 			});
 			break;
 		case "artists":
 			items = await prisma.artist.findMany({
 				include: {
-					Category: true,
+					category: true,
 				},
 			});
 			break;
 		case "albums":
 			items = await prisma.album.findMany({
 				include: {
-					Category: true,
+					category: true,
 				},
 			});
 			break;

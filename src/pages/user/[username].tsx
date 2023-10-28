@@ -22,19 +22,19 @@ const UserDashboard = ({
 	const userFeedData: { label: string; data: any[] }[] = [
 		{
 			label: "your top artists",
-			data: user.followingArtist,
+			data: user.artistFollowing,
 		},
 		{
 			label: "your playlists",
-			data: [...user.createdPlaylists, ...user.favouritedPlaylists],
+			data: [...user.createdPlaylists, ...user.favouritePlaylists],
 		},
 		{
 			label: "followers",
-			data: [...user.followedBy, ...user.followedByArtist],
+			data: [...user.userFollowers, ...user.artistFollowers],
 		},
 		{
 			label: "following",
-			data: [...user.following, ...user.followingArtist],
+			data: [...user.userFollowing, ...user.artistFollowing],
 		},
 	];
 
@@ -81,14 +81,29 @@ const UserDashboard = ({
 				subtitle="Profile"
 				description={description}
 			>
-				{user.favouriteSongs.length > 0 ? (
+				{user.favouriteSongs && user.favouriteSongs.length > 0 ? (
+					<TopList
+						heading={`${user.firstName}'s Top Tracks`}
+						items={user.favouriteSongs}
+						showFavourites={false}
+						showAlbumCovers
+						showHeadings={false}
+						showArtist
+						showDateAdded={false}
+						showAlbumColumn={false}
+					/>
+				) : null}
+				{/* {user.favouriteSongs &&
+				user.favouriteSongs.album &&
+				user.favouriteSongs.artist &&
+				user.favouriteSongs.length > 0 ? (
 					<TopList
 						heading={`${user.firstName}'s Favourite Tracks`}
 						items={user.favouriteSongs}
 						showFavourites={false}
 						showAlbumCovers
 					/>
-				) : null}
+				) : null} */}
 
 				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
@@ -112,33 +127,33 @@ export const getServerSideProps = async (
 		},
 		include: {
 			favouriteSongs: { include: { album: true, artist: true } },
-			createdPlaylists: { include: { Category: true } },
-			favouritedPlaylists: { include: { Category: true } },
-			followedBy: true,
-			followedByArtist: {
-				include: { albums: true, songs: true, Category: true },
+			createdPlaylists: { include: { category: true } },
+			favouritePlaylists: { include: { category: true } },
+			userFollowers: true,
+			artistFollowers: {
+				include: { albums: true, songs: true, category: true },
 			},
-			following: true,
-			followingArtist: {
-				include: { albums: true, songs: true, Category: true },
+			userFollowing: true,
+			artistFollowing: {
+				include: { albums: true, songs: true, category: true },
 			},
 		},
 	});
-	if (user) {
+	if (user && user.favouriteSongs && user.favouriteSongs) {
 		const userWithStats = {
 			...user,
 			stats: [
 				{
 					label: "playlist",
-					total: user.createdPlaylists.length + user.favouritedPlaylists.length,
+					total: user.createdPlaylists.length + user.favouritePlaylists.length,
 				},
 				{
 					label: "follower",
-					total: user.followedBy.length + user.followedByArtist.length,
+					total: user.userFollowers.length + user.artistFollowers.length,
 				},
 				{
 					label: "following",
-					total: user.following.length + user.followingArtist.length,
+					total: user.userFollowing.length + user.artistFollowing.length,
 				},
 			],
 		};

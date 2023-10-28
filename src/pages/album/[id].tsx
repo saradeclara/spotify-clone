@@ -1,6 +1,9 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
+import FollowButton from "@/components/ShowPage/FollowButton";
 import TopList from "@/components/TopList/TopList";
+import { Mode } from "@/enums/FollowButton";
 import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Artist, Song } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import convertSeconds from "../../../lib/convertSeconds";
@@ -69,6 +72,11 @@ const AlbumPage = (
 		>
 			<GradientLayoutPages {...gradientProps}>
 				<Box>
+					<FollowButton
+						mode={Mode.Heart}
+						categoryArray="favouriteAlbums"
+						categoryData={album}
+					/>
 					<TopList
 						showHeadings
 						items={album.songs}
@@ -95,6 +103,7 @@ export const getServerSideProps = async ({
 			id: query.id,
 		},
 		include: {
+			category: true,
 			artist: true,
 			songs: true,
 		},
@@ -110,8 +119,19 @@ export const getServerSideProps = async ({
 			});
 
 		const newSongs: {
-			artist: { name: string; id: string };
-			album: { avatarUrl: string | null; id: string; name: string };
+			artist: Artist;
+			album: {
+				id: string;
+				name: string;
+				avatarUrl: string | null;
+				createdAt: Date;
+				updatedAt: Date;
+				releasedOn: Date;
+				categoryId: string;
+				artistId: string;
+				artist: Artist;
+				songs: Song[];
+			};
 			id: string;
 			albumIndex: number;
 			createdAt: Date;
@@ -119,18 +139,20 @@ export const getServerSideProps = async ({
 			name: string;
 			url: string;
 			duration: number;
-			albumId: string;
-			artistId: string;
+			albumId: string | null;
+			artistId: string | null;
 			categoryId: string;
 		}[] = [];
 		singleAlbum.songs.forEach((singleSong) => {
 			const tempSong = {
 				...singleSong,
 				artist: {
+					...singleAlbum.artist,
 					id: singleAlbum.artist.id,
 					name: singleAlbum.artist.name,
 				},
 				album: {
+					...singleAlbum,
 					id: singleAlbum.id,
 					name: singleAlbum.name,
 					avatarUrl: singleAlbum.avatarUrl,

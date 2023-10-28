@@ -5,17 +5,19 @@ export default validateRoute(async (_req, res, user) => {
 	const currentUser = await prisma.user.findUnique({
 		where: { id: user?.id },
 		include: {
-			createdPlaylists: { include: { Category: true } },
+			favouriteShows: { include: { category: true } },
+			createdPlaylists: { include: { category: true, createdBy: true } },
 			favouriteSongs: true,
-			favouritedPlaylists: { include: { Category: true } },
-			followedBy: true,
-			followedByArtist: {
-				include: { albums: true, songs: true, Category: true },
+			favouritePlaylists: { include: { category: true, createdBy: true } },
+			userFollowers: true,
+			artistFollowers: {
+				include: { albums: true, songs: true, category: true },
 			},
-			following: true,
-			followingArtist: {
-				include: { albums: true, songs: true, Category: true },
+			userFollowing: true,
+			artistFollowing: {
+				include: { albums: true, songs: true, category: true },
 			},
+			favouriteAlbums: { include: { category: true, artist: true } },
 		},
 	});
 
@@ -27,17 +29,19 @@ export default validateRoute(async (_req, res, user) => {
 					label: "playlist",
 					total:
 						currentUser.createdPlaylists.length +
-						currentUser.favouritedPlaylists.length,
+						currentUser.favouritePlaylists.length,
 				},
 				{
 					label: "follower",
 					total:
-						currentUser.followedBy.length + currentUser.followedByArtist.length,
+						currentUser.userFollowers.length +
+						currentUser.artistFollowers.length,
 				},
 				{
 					label: "following",
 					total:
-						currentUser.following.length + currentUser.followingArtist.length,
+						currentUser.userFollowing.length +
+						currentUser.artistFollowing.length,
 				},
 			],
 		};

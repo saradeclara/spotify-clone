@@ -49,7 +49,7 @@ const Search = (
 					<FeedCarousel feed={{ label: "artists", data: allArtists }} />
 				) : null}
 				{allShows.length > 0 ? (
-					<FeedCarousel feed={{ label: "podcasts", data: allShows }} />
+					<FeedCarousel feed={{ label: "shows", data: allShows }} />
 				) : null}
 			</Box>
 		</Box>

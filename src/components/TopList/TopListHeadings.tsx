@@ -12,15 +12,9 @@ const TopListHeadings = ({
 	width: string;
 	colStyles: { marginLeft?: string };
 	showFavourites: boolean;
-	showAlbumColumn: boolean;
-	showDateAdded: boolean;
+	showAlbumColumn?: boolean;
+	showDateAdded?: boolean;
 }) => {
-	console.log(
-		"headings",
-		showDateAdded,
-		showAlbumColumn,
-		showDateAdded && showAlbumColumn ? 2 : 10
-	);
 	return (
 		<OrderedList
 			sx={{

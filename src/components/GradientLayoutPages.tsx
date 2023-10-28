@@ -49,7 +49,6 @@ const GradientLayoutPages = ({
 						g: color.value[1],
 						b: color.value[2],
 					};
-					console.log({ rgbColor });
 					setColor(rgbColor);
 				})
 				.catch((e) => {
@@ -66,13 +65,13 @@ const GradientLayoutPages = ({
 				overflowY: "auto",
 				borderRadius: "10px",
 				background: "blue",
-				bgGradient: `linear(to-b, rgba(${color.r},${color.g},${color.b}) 5%, rgba(${color.r},${color.g},${color.b}) 10%, rgba(${color.r},${color.g},${color.b}) 15%, rgba(18,18,18) 35%)`,
+				bgGradient: `linear(to-b, rgba(${color.r},${color.g},${color.b}) 10px, rgba(${color.r},${color.g},${color.b}) 30px, rgba(${color.r},${color.g},${color.b}) 50px, rgba(18,18,18) 700px)`,
 				backgroundAttachment: "local",
 			}}
 		>
 			<Flex
 				sx={{
-					bg: `rgba(${color.r},${color.g},${color.b}, .8)`,
+					bg: `rgba(${color.r},${color.g},${color.b}, .4)`,
 					padding: "60px 20px 20px 20px",
 					align: "end",
 				}}
@@ -101,7 +100,11 @@ const GradientLayoutPages = ({
 							<Heading as="h1" size="4xl">
 								{capitalise(title)}
 							</Heading>
-							<Text fontSize="sm" paddingTop="40px">
+							<Text
+								fontSize={subtitle === "Podcast" ? "xl" : "sm"}
+								fontWeight={subtitle === "Podcast" ? "bold" : "normal"}
+								paddingTop="40px"
+							>
 								{description}
 							</Text>
 						</Box>

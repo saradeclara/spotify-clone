@@ -15,12 +15,12 @@ const FeedCard = ({
 		avatarUrl?: string;
 		username?: string;
 		releasedOn?: Date;
-		Category: { description: string };
+		category: { description: string };
 	};
 	isLast?: boolean;
 }) => {
-	const url = data.Category
-		? `/${data.Category.description}/${data.id}`
+	const url = data.category
+		? `/${data.category.description}/${data.id}`
 		: `/user/${data.username}`;
 	return (
 		<Link href={url}>
@@ -46,20 +46,20 @@ const FeedCard = ({
 					width="150px"
 					height="150px"
 					borderRadius={
-						!data.Category || data.Category.description === "artist"
+						!data.category || data.category.description === "artist"
 							? "full"
 							: "5px"
 					}
 					src={data.avatarUrl}
 				/>
 				<Text fontWeight="bold" fontSize="sm" color="white">
-					{data.Category ? data.name : `${data.firstName} ${data.lastName}`}
+					{data.category ? data.name : `${data.firstName} ${data.lastName}`}
 				</Text>
 				<Text fontSize="sm" marginTop="5px" color="gray">
-					{data.Category && data.Category.description === "album"
+					{data.category && data.category.description === "album"
 						? `${dateParser(data.releasedOn)?.year} \u2022 `
 						: ""}
-					{data.Category ? capitalise(data.Category.description) : "Profile"}
+					{data.category ? capitalise(data.category.description) : "Profile"}
 				</Text>
 			</Box>
 		</Link>

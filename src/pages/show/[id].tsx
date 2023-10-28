@@ -1,21 +1,29 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
-import TopList from "@/components/TopList/TopList";
+import FollowButton from "@/components/ShowPage/FollowButton";
 import { Box } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
 import prisma from "../../../lib/prisma";
 
-const PlaylistPage = (
+const ShowPage = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-	const { playlist } = props;
+	const { show } = props;
+
+	enum Mode {
+		Button,
+		Heart,
+	}
 
 	const gradientProps = {
-		image: playlist.avatarUrl,
+		image: show.avatarUrl,
 		roundAvatar: false,
-		description: ["description"],
-		subtitle: playlist.category.description,
-		title: playlist.name,
-		...playlist,
+		description: [show.author],
+		subtitle:
+			show.category.description === "show"
+				? "Podcast"
+				: show.category.description,
+		title: show.name,
+		...show,
 	};
 
 	return (
@@ -27,15 +35,11 @@ const PlaylistPage = (
 			}}
 		>
 			<GradientLayoutPages {...gradientProps}>
-				<Box>
-					<TopList
-						items={playlist.songs}
-						showArtist
-						showFavourites
-						showAlbumCovers
-						showDateAdded
-						showAlbumColumn
-						showHeadings
+				<Box sx={{ marginTop: "50px", marginLeft: "30px" }}>
+					<FollowButton
+						mode={Mode.Button}
+						categoryArray="favouriteShows"
+						categoryData={show}
 					/>
 				</Box>
 			</GradientLayoutPages>
@@ -48,28 +52,23 @@ export const getServerSideProps = async ({
 }: {
 	query: { id: string };
 }) => {
-	const playlist = await prisma.playlist.findUnique({
+	const show = await prisma.show.findUnique({
 		where: {
 			id: query.id,
 		},
 		include: {
 			category: true,
-			songs: {
-				include: {
-					album: true,
-					artist: true,
-				},
-			},
+			subscribers: true,
 		},
 	});
 
-	if (playlist) {
+	if (show) {
 		return {
 			props: {
-				playlist,
+				show,
 			},
 		};
 	}
 };
 
-export default PlaylistPage;
+export default ShowPage;

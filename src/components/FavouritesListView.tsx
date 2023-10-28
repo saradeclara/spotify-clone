@@ -1,12 +1,18 @@
 import { spotifyGreen } from "@/styles/colors";
-import { FavouritesProps } from "@/types/favouritesView";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
+import { Album, Artist, Category, Playlist, Show } from "@prisma/client";
 import Link from "next/link";
 import { AiFillPushpin } from "react-icons/ai";
 import capitalise from "../../lib/capitalise";
 import SubstringSearchText from "./SubstringSearchText";
 
-const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
+const FavouritesListView = ({
+	data,
+	textInput,
+}: {
+	data: ((Show | Artist | Album | Playlist) & { category?: Category })[];
+	textInput: string;
+}) => {
 	const renderFavFeed = (
 		categoryType: string,
 		feedRecord: any,
@@ -41,7 +47,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 									/>
 								</Text>
 								<Text as="span" fontSize="small">{`${capitalise(
-									feedRecord.Category.description
+									feedRecord.category.description
 								)} \u2022 `}</Text>
 								<Text as="span" fontSize="small">
 									<SubstringSearchText
@@ -54,7 +60,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 					</Link>
 				);
 				break;
-			case "podcast":
+			case "show":
 				component = (
 					<Link key={index} href={url}>
 						<ListItem
@@ -81,7 +87,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 									/>
 								</Text>
 								<Text as="span" fontSize="small">{`${capitalise(
-									feedRecord.Category.description
+									feedRecord.category.description
 								)} \u2022 `}</Text>
 								<Text as="span" fontSize="small">
 									<SubstringSearchText
@@ -121,7 +127,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 									/>
 								</Text>
 								<Text as="span" fontSize="small">{`${capitalise(
-									feedRecord.Category.description
+									feedRecord.category.description
 								)} \u2022 `}</Text>
 								<Text as="span" fontSize="small">
 									<SubstringSearchText
@@ -161,7 +167,7 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 									/>
 								</Text>
 								<Text fontSize="small">{`${capitalise(
-									feedRecord.Category.description
+									feedRecord.category.description
 								)}`}</Text>
 							</Box>
 						</ListItem>
@@ -230,9 +236,9 @@ const FavouritesListView = ({ data, textInput }: FavouritesProps) => {
 
 			<List>
 				{data
-					? data.map((singleFeedRecord, index) => {
-							const categoryType = singleFeedRecord.Category.description;
-							if (singleFeedRecord) {
+					? data.map((singleFeedRecord, index: number) => {
+							if (singleFeedRecord && singleFeedRecord.category) {
+								const categoryType = singleFeedRecord.category.description;
 								const component = renderFavFeed(
 									categoryType,
 									singleFeedRecord,

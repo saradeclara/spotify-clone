@@ -155,19 +155,6 @@ const main = async () => {
 
 		const allSongs = await prisma.song.findMany();
 
-		const playlist1 = await prisma.playlist.create({
-			data: {
-				name: "90s Mix",
-				categoryId: catPlaylist?.id,
-				avatarUrl: "https://i.ibb.co/QD8qHnT/download.png",
-				songs: {
-					connect: allSongs.map((singleSong) => {
-						return { id: singleSong.id };
-					}),
-				},
-			},
-		});
-
 		const podcast1 = await prisma.show.create({
 			data: {
 				name: "Significant Others",
@@ -195,6 +182,19 @@ const main = async () => {
 		console.log({ spotifyUser });
 
 		if (favAlbum) {
+			const playlist1 = await prisma.playlist.create({
+				data: {
+					name: "90s Mix",
+					categoryId: catPlaylist?.id,
+					userId: spotifyUser?.id,
+					avatarUrl: "https://i.ibb.co/QD8qHnT/download.png",
+					songs: {
+						connect: allSongs.map((singleSong) => {
+							return { id: singleSong.id };
+						}),
+					},
+				},
+			});
 			const newUser = await prisma.user.create({
 				data: {
 					firstName: "Sara",
@@ -218,7 +218,7 @@ const main = async () => {
 							return { id: singleSong.id };
 						}),
 					},
-					followingArtist: {
+					artistFollowing: {
 						connectOrCreate: [
 							{
 								where: {

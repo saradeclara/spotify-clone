@@ -1,24 +1,38 @@
-import { createContext } from "react";
+import { Album, Artist, Playlist, Show, Song, User } from "@prisma/client";
+import { Dispatch, createContext } from "react";
 
 export type loggedInUserContextType = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	password: string;
-	avatarUrl?: string;
-	isAdmin: boolean;
-	favouriteSongs?: any[];
+	updateLoggedInUser: Dispatch<React.SetStateAction<User>>;
 };
 
-const loggedInUserDefault: loggedInUserContextType = {
+const loggedInUserDefault: User & {
+	favouriteShows?: Show[];
+	favouriteSongs?: Song[];
+	followingArtist?: Artist[];
+	favouriteAlbums?: Album[];
+	createdPlaylists?: Playlist[];
+	favouritedPlaylists?: Playlist[];
+} & loggedInUserContextType = {
 	id: "",
 	firstName: "",
 	lastName: "",
 	email: "",
 	password: "",
 	isAdmin: false,
+	createdAt: new Date(),
+	updatedAt: new Date(),
+	username: "",
+	avatarUrl: "",
+	updateLoggedInUser: () => {},
 };
 
-export const LoggedInUserContext =
-	createContext<loggedInUserContextType>(loggedInUserDefault);
+export const LoggedInUserContext = createContext<
+	User & {
+		favouriteShows?: Show[];
+		favouriteSongs?: Song[];
+		artistFollowing?: Artist[];
+		favouriteAlbums?: Album[];
+		createdPlaylists?: Playlist[];
+		favouritePlaylists?: Playlist[];
+	} & loggedInUserContextType
+>(loggedInUserDefault);

@@ -9,7 +9,7 @@ const Search = (props) => {
 	const { sidebarMargin, musicPlayerHeight } = useContext(LayoutContext);
 	const browseAllItems = [
 		{
-			label: "podcasts",
+			label: "shows",
 			color: "red",
 		},
 		{

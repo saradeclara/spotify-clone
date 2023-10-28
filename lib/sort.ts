@@ -79,7 +79,7 @@ const sortCreator = (array: any[]) => {
 					name:
 						singleRecord.User?.firstName + " " + singleRecord.User?.lastName,
 				};
-			case "podcast":
+			case "show":
 				return { index, name: singleRecord.author };
 			default:
 				break;
@@ -130,7 +130,7 @@ const searchText = (array: any[], textInput: string) => {
 						element.createdBy.firstName.toLowerCase().includes(textInput) ||
 						element.createdBy.lastName.toLowerCase().includes(textInput)
 					);
-				case "podcast":
+				case "show":
 					return (
 						element.name.toLowerCase().includes(textInput) ||
 						element.author.toLowerCase().includes(textInput)

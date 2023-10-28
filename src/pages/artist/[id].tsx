@@ -1,5 +1,6 @@
 import FeedWrapper from "@/components/FeedWrapper";
 import GradientLayoutArtist from "@/components/GradientLayoutArtist";
+import FollowButton from "@/components/ShowPage/FollowButton";
 import TopList from "@/components/TopList/TopList";
 import { NavBarHeaderContext } from "@/context/NavBarHeader";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
@@ -16,6 +17,11 @@ const ArtistPage = (
 	const { updateHeader } = useContext(NavBarHeaderContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const { asPath } = useRouter();
+
+	enum Mode {
+		Button,
+		Heart,
+	}
 
 	const gradientProps = {
 		image: "",
@@ -51,6 +57,13 @@ const ArtistPage = (
 			}}
 		>
 			<GradientLayoutArtist {...gradientProps}>
+				<Box sx={{ marginTop: "50px", marginLeft: "30px" }}>
+					<FollowButton
+						mode={Mode.Button}
+						categoryArray="artistFollowing"
+						categoryData={artist}
+					/>
+				</Box>
 				<Box>
 					<TopList
 						heading={`${artist.name}'s Top 5 Tracks`}
@@ -71,14 +84,15 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 			id: query.id,
 		},
 		include: {
+			category: true,
 			albums: {
 				include: {
-					Category: true,
+					category: true,
 				},
 			},
 			songs: {
 				include: {
-					Category: true,
+					category: true,
 					album: true,
 					artist: true,
 				},
