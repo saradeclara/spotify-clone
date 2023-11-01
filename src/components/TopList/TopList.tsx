@@ -227,7 +227,11 @@ function TopList({
 												margin: "auto 0",
 											}}
 										>
-											<Box>{name}</Box>
+											<Link href={`/track/${id}`}>
+												<Box _hover={{ textDecoration: "underline" }}>
+													{name}
+												</Box>
+											</Link>
 											{showArtist ? (
 												<Box sx={{ color: "gray", fontSize: "small" }}>
 													<Link href={`/artist/${artist?.id}`}>

@@ -8,7 +8,7 @@ export default validateRoute(async (_req, res, user) => {
 			favouriteAlbums: {
 				include: {
 					artist: true,
-					Category: true,
+					category: true,
 				},
 			},
 		},

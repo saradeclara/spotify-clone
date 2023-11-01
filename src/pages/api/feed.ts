@@ -14,17 +14,19 @@ export default validateRoute(async (req, res, user) => {
 			artistFollowing: { include: { category: true } },
 			favouriteAlbums: { include: { artist: true, category: true } },
 			favouriteShows: { include: { category: true } },
+			favouriteSongs: { include: { category: true } },
 		},
 	});
 
 	let feed;
 	if (currentUserWithFavourites) {
 		feed = [
-			...currentUserWithFavourites?.createdPlaylists,
-			...currentUserWithFavourites?.favouritePlaylists,
-			...currentUserWithFavourites?.artistFollowing,
-			...currentUserWithFavourites?.favouriteAlbums,
-			...currentUserWithFavourites?.favouriteShows,
+			...currentUserWithFavourites.createdPlaylists,
+			...currentUserWithFavourites.favouritePlaylists,
+			...currentUserWithFavourites.artistFollowing,
+			...currentUserWithFavourites.favouriteAlbums,
+			...currentUserWithFavourites.favouriteShows,
+			...currentUserWithFavourites.favouriteSongs,
 		];
 	}
 	res.json(feed);

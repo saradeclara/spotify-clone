@@ -16,9 +16,9 @@ const GradientLayoutPages = ({
 }: {
 	title: string;
 	subtitle: string;
-	description: (string | null | JSX.Element)[];
+	description: (string | number | null | JSX.Element)[];
 	children: ReactNode;
-	image: string | null;
+	image: string | null | undefined;
 	roundAvatar: boolean;
 }) => {
 	const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
@@ -104,6 +104,7 @@ const GradientLayoutPages = ({
 								fontSize={subtitle === "Podcast" ? "xl" : "sm"}
 								fontWeight={subtitle === "Podcast" ? "bold" : "normal"}
 								paddingTop="40px"
+								sx={{ display: "flex", alignItems: "center" }}
 							>
 								{description}
 							</Text>

@@ -23,9 +23,7 @@ const FollowButton = ({
 		category?: Category;
 	};
 }) => {
-	// console.log({ categoryData });
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
-	console.log({ followStatus });
 	const { data } = useQuery<FeedData>(feedKey, fetchFeedData);
 
 	enum BtnStatus {

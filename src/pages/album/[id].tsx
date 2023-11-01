@@ -3,7 +3,7 @@ import FollowButton from "@/components/ShowPage/FollowButton";
 import TopList from "@/components/TopList/TopList";
 import { Mode } from "@/enums/FollowButton";
 import { Avatar, Box, Text } from "@chakra-ui/react";
-import { Artist, Song } from "@prisma/client";
+import { Album, Artist, Song } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import convertSeconds from "../../../lib/convertSeconds";
@@ -43,7 +43,7 @@ const AlbumPage = (
 			artistImage,
 			<Link href={`/artist/${album.artist.id}`}>
 				<Text
-					sx={{ display: "inline" }}
+					sx={{ display: "inline", marginRight: "4px" }}
 					_hover={{ textDecoration: "underline" }}
 				>
 					{artistName}
@@ -62,6 +62,7 @@ const AlbumPage = (
 		title: album.name,
 		...album,
 	};
+
 	return (
 		<Box
 			sx={{
@@ -83,9 +84,6 @@ const AlbumPage = (
 						mode="album"
 						showArtist
 						showFavourites
-						showAlbumCovers={false}
-						showDateAdded={false}
-						showAlbumColumn={false}
 					/>
 				</Box>
 			</GradientLayoutPages>
@@ -120,15 +118,7 @@ export const getServerSideProps = async ({
 
 		const newSongs: {
 			artist: Artist;
-			album: {
-				id: string;
-				name: string;
-				avatarUrl: string | null;
-				createdAt: Date;
-				updatedAt: Date;
-				releasedOn: Date;
-				categoryId: string;
-				artistId: string;
+			album: Album & {
 				artist: Artist;
 				songs: Song[];
 			};
@@ -143,6 +133,7 @@ export const getServerSideProps = async ({
 			artistId: string | null;
 			categoryId: string;
 		}[] = [];
+
 		singleAlbum.songs.forEach((singleSong) => {
 			const tempSong = {
 				...singleSong,
