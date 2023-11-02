@@ -2,7 +2,7 @@ import { Mode } from "@/enums/FollowButton";
 import { fetchFeedData } from "@/react-query/fetch";
 import { feedKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
-import { Box, Button, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Button, Text, Tooltip, useToast } from "@chakra-ui/react";
 import { Album, Artist, Category, Playlist, Show, Song } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -25,6 +25,7 @@ const FollowButton = ({
 }) => {
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
 	const { data } = useQuery<FeedData>(feedKey, fetchFeedData);
+	const addRemoveToast = useToast();
 
 	enum BtnStatus {
 		Follow = "Follow",
@@ -57,13 +58,29 @@ const FollowButton = ({
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries(feedKey);
+				if (followStatus === BtnStatus.Follow) {
+					addRemoveToast({
+						title: "Added to Your Library",
+						status: "success",
+						duration: 3000,
+						isClosable: false,
+					});
+				} else if (followStatus === BtnStatus.Following) {
+					addRemoveToast({
+						title: "Removed from Your Library",
+						status: "success",
+						duration: 3000,
+						isClosable: false,
+					});
+				}
 			},
 		}
 	);
 
 	const handleFollowUnfollow = async (itemId: string) => {
 		const body = { itemId, category: categoryArray };
-		updateFeedMutation.mutate(body);
+		const result = await updateFeedMutation.mutate(body);
+		console.log({ result });
 	};
 
 	useEffect(() => {
@@ -74,7 +91,6 @@ const FollowButton = ({
 					feedItem.id === categoryData.id &&
 					feedItem.category?.description === categoryData.category?.description
 			);
-			console.log("useEffect", data, categoryData, { foundItem });
 			// if show is found, print 'Following'
 			if (foundItem) {
 				setFollowStatus(BtnStatus.Following);
