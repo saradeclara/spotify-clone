@@ -1,6 +1,5 @@
 import { LayoutContext } from "@/context/LayoutContext";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
-import { SearchQueryContext } from "@/context/SearchQueryContext";
 import { UserColorContext } from "@/context/UserColorContext";
 import {
 	Avatar,
@@ -44,7 +43,6 @@ const Navbar = ({
 	// const reqElements = asPath.split("/").filter((el) => el !== "");
 	const [searchText, updateSearchText] = useState("");
 	const { sidebarMargin } = useContext(LayoutContext);
-	const { updateStatus } = useContext(SearchQueryContext);
 	const { header } = useContext(NavBarHeaderContext);
 	const whiteNavIcons =
 		pathname.includes("search") || pathname.includes("[category]");
@@ -75,7 +73,6 @@ const Navbar = ({
 		updateSearchText(e.target.value);
 		setTimeout(() => {
 			router.push(`/search/${e.target.value}`);
-			updateStatus(true);
 		}, 100);
 	};
 

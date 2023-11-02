@@ -1,10 +1,9 @@
 import FeedCarousel from "@/components/FeedCarousel";
 import { LayoutContext } from "@/context/LayoutContext";
-import { SearchQueryContext } from "@/context/SearchQueryContext";
 import { grayMain } from "@/styles/colors";
 import { Box } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import prisma from "../../../lib/prisma";
 
 const Search = (
@@ -13,12 +12,7 @@ const Search = (
 	const {
 		result: { allAlbums, allArtists, allPlaylists, allShows },
 	} = props;
-	const { updateStatus } = useContext(SearchQueryContext);
 	const { sidebarMargin, musicPlayerHeight } = useContext(LayoutContext);
-
-	useEffect(() => {
-		updateStatus(false);
-	}, []);
 
 	return (
 		<Box
@@ -59,7 +53,7 @@ const Search = (
 export const getServerSideProps = async ({ query }: { query: any }) => {
 	let allArtists = await prisma.artist.findMany({
 		include: {
-			Category: true,
+			category: true,
 		},
 		where: {
 			name: {
@@ -72,7 +66,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 	let allAlbums = await prisma.album.findMany({
 		include: {
 			artist: true,
-			Category: true,
+			category: true,
 		},
 		where: {
 			OR: [
@@ -96,7 +90,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 
 	let allShows = await prisma.show.findMany({
 		include: {
-			Category: true,
+			category: true,
 		},
 		where: {
 			OR: [
@@ -119,7 +113,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 	let allPlaylists = await prisma.playlist.findMany({
 		include: {
 			createdBy: true,
-			Category: true,
+			category: true,
 		},
 		where: {
 			OR: [
