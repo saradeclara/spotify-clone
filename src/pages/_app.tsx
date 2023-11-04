@@ -1,8 +1,10 @@
 import PlayerLayout from "@/components/PlayerLayout";
 import "@/styles/globals.css";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { StoreProvider } from "easy-peasy";
 import { useRouter } from "next/router";
 import "reset-css";
+import { store } from "../../lib/store";
 
 const theme = extendTheme({
 	fonts: {
@@ -32,7 +34,9 @@ const App = ({ Component, pageProps }) => {
 	};
 
 	return (
-		<ChakraProvider theme={theme}>{AppLayout(router.pathname)}</ChakraProvider>
+		<ChakraProvider theme={theme}>
+			<StoreProvider store={store}>{AppLayout(router.pathname)}</StoreProvider>
+		</ChakraProvider>
 	);
 };
 

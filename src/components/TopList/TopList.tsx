@@ -1,5 +1,5 @@
-import { fetchFavouriteSongs } from "@/react-query/fetch";
-import { favouriteSongsKey } from "@/react-query/queryKeys";
+import { fetchFeedData } from "@/react-query/fetch";
+import { favouriteSongsKey, feedKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
 import {
 	Box,
@@ -10,20 +10,21 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { Album, Artist, Song } from "@prisma/client";
+import { Song } from "@prisma/client";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import convertSeconds from "../../../lib/convertSeconds";
 import dateParser from "../../../lib/dateParser";
+import { ExtendedSong, useStoreActions } from "../../../lib/store";
 import TopListHeadings from "./TopListHeadings";
 
 interface TopListProps {
 	heading?: string | null;
-	items: (Song & { album: Album | null; artist: Artist | null })[];
+	items?: ExtendedSong[];
 	showFavourites?: boolean;
 	showAlbumCovers?: boolean;
 	showHeadings?: boolean;
@@ -51,13 +52,32 @@ function TopList({
 		item: 0,
 	});
 
-	const {
-		data: favouriteSongs,
-		isLoading,
-		error,
-	} = useQuery(favouriteSongsKey, fetchFavouriteSongs, {
+	// retrieving actions from the main store
+	const setActiveSongs = useStoreActions((store) => store.changeActiveSongs);
+	const setActiveSong = useStoreActions((store) => store.changeActiveSong);
+
+	/**
+	 * Function which dispatches actions from the store to update activeSong and activeSongs in the main store
+	 */
+	const handlePlay = (
+		singleSong: ExtendedSong,
+		songCollection: ExtendedSong[]
+	) => {
+		setActiveSongs(songCollection);
+		setActiveSong(singleSong);
+	};
+
+	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
 		staleTime: 60 * 5 * 1000,
 	});
+
+	const favouriteSongs = [...data].filter(
+		(record) => record.category.description === "song"
+	);
+
+	console.log({ data });
+	const listItems: ExtendedSong[] =
+		typeof items === "undefined" ? favouriteSongs : items;
 
 	const queryClient = useQueryClient();
 
@@ -94,12 +114,14 @@ function TopList({
 		}
 	);
 
-	const handleMouseEnter = (e: any) => {
-		updateHoveringState({ isHovering: true, item: e.target.id });
+	const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+		const id = Number(e.currentTarget.id);
+		updateHoveringState({ isHovering: true, item: id });
 	};
 
-	const handleMouseLeave = (e: any) => {
-		updateHoveringState({ isHovering: false, item: e.target.id });
+	const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+		const id = Number(e.currentTarget.id);
+		updateHoveringState({ isHovering: false, item: id });
 	};
 
 	const updateSongFavourites = async (id: string) => {
@@ -113,8 +135,8 @@ function TopList({
 
 	const orderedItems =
 		mode === "album"
-			? [...items].sort((a, b) => a.albumIndex - b.albumIndex)
-			: items;
+			? [...listItems].sort((a, b) => a.albumIndex - b.albumIndex)
+			: listItems;
 
 	const colStyles =
 		showDateAdded && showAlbumColumn
@@ -156,11 +178,10 @@ function TopList({
 					width,
 				}}
 			>
-				{orderedItems.map(
-					(
-						{ id, name, album, duration, artist, albumIndex, updatedAt },
-						index
-					) => (
+				{orderedItems?.map((song, index) => {
+					const { id, name, album, duration, artist, albumIndex, updatedAt } =
+						song;
+					return (
 						<Box
 							key={index}
 							onMouseEnter={handleMouseEnter}
@@ -183,7 +204,12 @@ function TopList({
 							>
 								<Box width="20px" marginRight="20px">
 									{isHovering && item == index ? (
-										<BsFillPlayFill />
+										<Box
+											onClick={() => handlePlay(song, orderedItems)}
+											sx={{ cursor: "pointer" }}
+										>
+											<BsFillPlayFill />
+										</Box>
 									) : mode === "album" ? (
 										albumIndex
 									) : (
@@ -298,8 +324,8 @@ function TopList({
 								</Box>
 							</ListItem>
 						</Box>
-					)
-				)}
+					);
+				})}
 			</OrderedList>
 		</Box>
 	);

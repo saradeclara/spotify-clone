@@ -13,8 +13,8 @@ import pluralise from "../../../lib/pluralise";
 import prisma from "../../../lib/prisma";
 
 const UserDashboard = ({
-	user,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    	user,
+    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	const { updateHeader } = useContext(NavBarHeaderContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const { asPath } = useRouter();
@@ -84,7 +84,7 @@ const UserDashboard = ({
 				{user.favouriteSongs && user.favouriteSongs.length > 0 ? (
 					<TopList
 						heading={`${user.firstName}'s Top Tracks`}
-						items={user.favouriteSongs}
+						// items={user.favouriteSongs}
 						showFavourites={false}
 						showAlbumCovers
 						showHeadings={false}
@@ -93,17 +93,6 @@ const UserDashboard = ({
 						showAlbumColumn={false}
 					/>
 				) : null}
-				{/* {user.favouriteSongs &&
-				user.favouriteSongs.album &&
-				user.favouriteSongs.artist &&
-				user.favouriteSongs.length > 0 ? (
-					<TopList
-						heading={`${user.firstName}'s Favourite Tracks`}
-						items={user.favouriteSongs}
-						showFavourites={false}
-						showAlbumCovers
-					/>
-				) : null} */}
 
 				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
@@ -126,7 +115,9 @@ export const getServerSideProps = async (
 			username: customQuery.username,
 		},
 		include: {
-			favouriteSongs: { include: { album: true, artist: true } },
+			favouriteSongs: {
+				include: { album: true, artist: true, category: true },
+			},
 			createdPlaylists: { include: { category: true } },
 			favouritePlaylists: { include: { category: true } },
 			userFollowers: true,

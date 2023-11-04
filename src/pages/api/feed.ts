@@ -14,7 +14,9 @@ export default validateRoute(async (req, res, user) => {
 			artistFollowing: { include: { category: true } },
 			favouriteAlbums: { include: { artist: true, category: true } },
 			favouriteShows: { include: { category: true } },
-			favouriteSongs: { include: { category: true } },
+			favouriteSongs: {
+				include: { category: true, album: true, artist: true },
+			},
 		},
 	});
 

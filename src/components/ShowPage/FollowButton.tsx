@@ -1,4 +1,4 @@
-import { Mode } from "@/enums/FollowButton";
+import { Mode, Size } from "@/enums/FollowButton";
 import { fetchFeedData } from "@/react-query/fetch";
 import { feedKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
@@ -7,6 +7,7 @@ import { Album, Artist, Category, Playlist, Show, Song } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { ExtendedSong } from "../../../lib/store";
 
 type FeedData = ((Show | Album | Artist | Song | Playlist) & {
 	category: { description: string };
@@ -16,12 +17,16 @@ const FollowButton = ({
 	categoryData,
 	categoryArray,
 	mode,
+	size,
 }: {
 	mode: Mode;
+	size?: Size;
 	categoryArray: string;
-	categoryData: (Show | Artist | Album | Playlist | Song) & {
-		category?: Category;
-	};
+	categoryData:
+		| ((Show | Artist | Album | Playlist) & {
+				category?: Category;
+		  })
+		| ExtendedSong;
 }) => {
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
 	const { data } = useQuery<FeedData>(feedKey, fetchFeedData);
@@ -85,12 +90,15 @@ const FollowButton = ({
 
 	useEffect(() => {
 		// check data from feed query to see if current show is in feed
-		if (data) {
-			const foundItem = [...data].find(
-				(feedItem) =>
+		if (data && categoryData) {
+			const foundItem = [...data].find((feedItem) => {
+				console.log("first", feedItem.id, categoryData.id);
+				return (
 					feedItem.id === categoryData.id &&
 					feedItem.category?.description === categoryData.category?.description
-			);
+				);
+			});
+			console.log({ foundItem }, { data }, { categoryData });
 			// if show is found, print 'Following'
 			if (foundItem) {
 				setFollowStatus(BtnStatus.Following);
@@ -99,7 +107,7 @@ const FollowButton = ({
 				setFollowStatus(BtnStatus.Follow);
 			}
 		}
-	}, [data]);
+	}, [data, categoryData]);
 
 	return mode === Mode.Button ? (
 		<Button
@@ -114,7 +122,6 @@ const FollowButton = ({
 	) : followStatus === BtnStatus.Follow ? (
 		<Box
 			sx={{
-				padding: "30px 30px 0px 30px",
 				color: lightGrayText,
 			}}
 		>
@@ -122,7 +129,7 @@ const FollowButton = ({
 				<Box display="inline-block" _hover={{ color: "white" }}>
 					<AiOutlineHeart
 						cursor="pointer"
-						size="50px"
+						size={size === Size.medium ? "50px" : "20px"}
 						onClick={() => handleFollowUnfollow(categoryData.id)}
 					/>
 				</Box>
@@ -131,7 +138,6 @@ const FollowButton = ({
 	) : (
 		<Box
 			sx={{
-				padding: "30px 30px 0px 30px",
 				color: spotifyGreen,
 			}}
 		>
@@ -139,7 +145,7 @@ const FollowButton = ({
 				<Box display="inline-block" _hover={{ color: spotifyGreen }}>
 					<AiFillHeart
 						cursor="pointer"
-						size="50px"
+						size={size === Size.medium ? "50px" : "20px"}
 						onClick={() => handleFollowUnfollow(categoryData.id)}
 					/>
 				</Box>
