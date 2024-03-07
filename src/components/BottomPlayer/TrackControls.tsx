@@ -42,17 +42,15 @@ const TrackControls = ({
 	activeSongs,
 	activeSong,
 	setActiveSong,
+	volume,
+	soundRef,
 }: {
 	activeSongs: ExtendedSong[] | null;
 	activeSong: ExtendedSong | null;
 	setActiveSong: ActionCreator<ExtendedSong | null>;
+	volume: number;
+	soundRef: RefObject<ReactHowler>;
 }) => {
-	enum NavMode {
-		fwd = "fwd",
-		bwd = "bwd",
-		static = "static",
-	}
-
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [seek, setSeek] = useState(0.0);
 	const [index, setIndex] = useState(-1);
@@ -64,7 +62,7 @@ const TrackControls = ({
 	const [currentHistoryIndex, updateCurrentHistoryIndex] = useState<
 		number | null
 	>(null);
-	const soundRef: RefObject<ReactHowler> = useRef(null);
+
 	const indexRef: MutableRefObject<number> = useRef(index);
 	const repeatRef: MutableRefObject<boolean> = useRef(repeat);
 
@@ -143,15 +141,6 @@ const TrackControls = ({
 			isOn: repeat,
 		},
 	];
-
-	/**
-	 * function which returns a random integer between 0 and max number
-	 * @param max number
-	 * @returns number
-	 */
-	const getRandomInt = (max: number) => {
-		return Math.floor(Math.random() * max);
-	};
 
 	/**
 	 * function which sets new index and new current song
@@ -363,6 +352,7 @@ const TrackControls = ({
 						playing={isPlaying}
 						src={activeSong.url}
 						onEnd={onEnd}
+						volume={volume}
 					/>
 				) : undefined}
 			</Box>

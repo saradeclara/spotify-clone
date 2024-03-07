@@ -4,13 +4,7 @@ import { Box, Img, Text } from "@chakra-ui/react";
 import { ExtendedSong } from "../../../lib/store";
 import FollowButton from "../ShowPage/FollowButton";
 
-const TrackDetails = ({
-	activeSongs,
-	activeSong,
-}: {
-	activeSongs: ExtendedSong[] | null;
-	activeSong: ExtendedSong | null;
-}) => {
+const TrackDetails = ({ activeSong }: { activeSong: ExtendedSong | null }) => {
 	return (
 		<Box
 			sx={{

@@ -1,11 +1,17 @@
 import { Box } from "@chakra-ui/react";
 import { State, useStoreState } from "easy-peasy";
+import { RefObject, useRef, useState } from "react";
+import ReactHowler from "react-howler";
 import { StoreModel, useStoreActions } from "../../../lib/store";
 import TrackControls from "./TrackControls";
 import TrackDetails from "./TrackDetails";
 import TrackOptions from "./TrackOptions";
 
 const MainPlayer = ({ height }: { height: string }) => {
+	const [volume, setVolume] = useState(0.5);
+	const soundRef: RefObject<ReactHowler> = useRef(null);
+	const volumeRef: RefObject<ReactHowler> = useRef(null);
+
 	const activeSong = useStoreState(
 		(store: State<StoreModel>) => store.activeSong
 	);
@@ -25,13 +31,19 @@ const MainPlayer = ({ height }: { height: string }) => {
 				justifyContent: "space-between",
 			}}
 		>
-			<TrackDetails activeSongs={activeSongs} activeSong={activeSong} />
+			<TrackDetails activeSong={activeSong} />
 			<TrackControls
 				activeSongs={activeSongs}
 				activeSong={activeSong}
 				setActiveSong={setActiveSong}
+				volume={volume}
+				soundRef={soundRef}
 			/>
-			<TrackOptions />
+			<TrackOptions
+				volume={volume}
+				setVolume={setVolume}
+				volumeRef={volumeRef}
+			/>
 		</Box>
 	);
 };
