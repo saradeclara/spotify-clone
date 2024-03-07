@@ -171,7 +171,10 @@ const TrackControls = ({
 
 		if (shuffle) {
 			// shuffle on
-			if (typeof currentHistoryIndex === "number") {
+			if (
+				typeof currentHistoryIndex === "number" &&
+				currentHistoryIndex + 1 <= shuffleHistory.length - 1
+			) {
 				const newHistoryIndex = currentHistoryIndex + 1;
 				const newIndex = shuffleHistory[newHistoryIndex];
 				const arrayOfSongs = activeSongs;
@@ -202,7 +205,10 @@ const TrackControls = ({
 		if (!activeSongs) return;
 		if (shuffle) {
 			// check currentHistoryIndex
-			if (typeof currentHistoryIndex === "number") {
+			if (
+				typeof currentHistoryIndex === "number" &&
+				currentHistoryIndex - 1 >= 0
+			) {
 				const newHistoryIndex = currentHistoryIndex - 1;
 				const newIndex = shuffleHistory[newHistoryIndex];
 				const arrayOfSongs = activeSongs;
@@ -317,6 +323,28 @@ const TrackControls = ({
 			}
 		}
 	}, [isPlaying, isSeeking]);
+
+	useEffect(() => {
+		if (!activeSongs) return;
+
+		if (repeat && currentHistoryIndex === shuffleHistory.length - 1) {
+			let tempArray: number[] = [];
+			for (let i = 0; i < activeSongs?.length; i++) {
+				tempArray.push(i);
+			}
+
+			// reshuffle elements in tempArray to generate newShufflePlaylist array
+			const newShuffleHistory = tempArray
+				.map((value) => ({
+					value,
+					sortKey: Math.random(),
+				}))
+				.sort((a, b) => a.sortKey - b.sortKey)
+				.map(({ value }) => value);
+
+			updateShuffleHistory([...shuffleHistory, ...newShuffleHistory]);
+		}
+	}, [currentHistoryIndex]);
 
 	useEffect(() => {
 		indexRef.current = index;
