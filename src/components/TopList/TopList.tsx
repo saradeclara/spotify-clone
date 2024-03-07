@@ -1,17 +1,18 @@
 import { fetchFeedData } from "@/react-query/fetch";
-import { favouriteSongsKey, feedKey } from "@/react-query/queryKeys";
+import { feedKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
 import {
 	Box,
 	Heading,
 	Img,
+	Link,
 	ListItem,
 	OrderedList,
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
 import { Song } from "@prisma/client";
-import Link from "next/link";
+import { State, useStoreState } from "easy-peasy";
 import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -19,7 +20,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import convertSeconds from "../../../lib/convertSeconds";
 import dateParser from "../../../lib/dateParser";
-import { ExtendedSong, useStoreActions } from "../../../lib/store";
+import { ExtendedSong, StoreModel, useStoreActions } from "../../../lib/store";
 import TopListHeadings from "./TopListHeadings";
 
 interface TopListProps {
@@ -52,6 +53,14 @@ function TopList({
 		item: 0,
 	});
 
+	const activeSong = useStoreState(
+		(store: State<StoreModel>) => store.activeSong
+	);
+	const activeSongs = useStoreState(
+		(store: State<StoreModel>) => store.activeSongs
+	);
+	// const foundIndex =
+
 	// retrieving actions from the main store
 	const setActiveSongs = useStoreActions((store) => store.changeActiveSongs);
 	const setActiveSong = useStoreActions((store) => store.changeActiveSong);
@@ -70,14 +79,6 @@ function TopList({
 	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
 		staleTime: 60 * 5 * 1000,
 	});
-
-	const favouriteSongs = [...data].filter(
-		(record) => record.category.description === "song"
-	);
-
-	console.log({ data });
-	const listItems: ExtendedSong[] =
-		typeof items === "undefined" ? favouriteSongs : items;
 
 	const queryClient = useQueryClient();
 
@@ -109,7 +110,7 @@ function TopList({
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries(favouriteSongsKey);
+				queryClient.invalidateQueries(feedKey);
 			},
 		}
 	);
@@ -133,17 +134,16 @@ function TopList({
 		updateSongFavourites(id);
 	};
 
-	const orderedItems =
-		mode === "album"
-			? [...listItems].sort((a, b) => a.albumIndex - b.albumIndex)
-			: listItems;
-
 	const colStyles =
 		showDateAdded && showAlbumColumn
 			? {
 					marginLeft: "auto",
 			  }
 			: {};
+
+	const isSongPlaying = (activeSong: ExtendedSong, currentSongId: string) => {
+		return activeSong.id === currentSongId;
+	};
 
 	if (isLoading) {
 		return <Box>Loading...</Box>;
@@ -153,182 +153,215 @@ function TopList({
 		return <Box>Error</Box>;
 	}
 
-	return (
-		<Box sx={{ padding: "30px" }}>
-			{heading ? (
-				<Heading size="md" sx={{ color: "white", margin: "20px 0px" }}>
-					{capitalise(heading)}
-				</Heading>
-			) : null}
+	if (data) {
+		const favouriteSongs = [...data].filter(
+			(record) => record.category.description === "song"
+		);
 
-			{showHeadings ? (
-				<TopListHeadings
-					width={width}
-					colStyles={colStyles}
-					showFavourites
-					showAlbumColumn={showAlbumColumn}
-					showDateAdded={showDateAdded}
-				/>
-			) : null}
+		const listItems: ExtendedSong[] =
+			typeof items === "undefined" ? favouriteSongs : items;
 
-			<OrderedList
-				sx={{
-					color: "white",
-					marginLeft: "0px",
-					width,
-				}}
-			>
-				{orderedItems?.map((song, index) => {
-					const { id, name, album, duration, artist, albumIndex, updatedAt } =
-						song;
-					return (
-						<Box
-							key={index}
-							onMouseEnter={handleMouseEnter}
-							onMouseLeave={handleMouseLeave}
-							id={index.toString()}
-							_hover={{
-								backgroundColor: "rgba(255,255,255,.3)",
-								transition: "background-color .2s",
-								borderRadius: "5px",
-							}}
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								padding: "10px 20px",
-							}}
-						>
-							<Tooltip
-								placement="top"
-								label={`Play ${name} by ${artist?.name}`}
-							>
-								<Box width="20px" marginRight="20px">
-									{isHovering && item == index ? (
-										<Box
-											onClick={() => handlePlay(song, orderedItems)}
-											sx={{ cursor: "pointer" }}
-										>
-											<BsFillPlayFill />
-										</Box>
-									) : mode === "album" ? (
-										albumIndex
-									) : (
-										index + 1
-									)}
-								</Box>
-							</Tooltip>
-							<ListItem
+		const orderedItems =
+			mode === "album"
+				? [...listItems].sort((a, b) => a.albumIndex - b.albumIndex)
+				: listItems;
+
+		return (
+			<Box sx={{ padding: "30px" }}>
+				{heading ? (
+					<Heading size="md" sx={{ color: "white", margin: "20px 0px" }}>
+						{capitalise(heading)}
+					</Heading>
+				) : null}
+
+				{showHeadings ? (
+					<TopListHeadings
+						width={width}
+						colStyles={colStyles}
+						showFavourites
+						showAlbumColumn={showAlbumColumn}
+						showDateAdded={showDateAdded}
+					/>
+				) : null}
+
+				<OrderedList
+					sx={{
+						color: "white",
+						marginLeft: "0px",
+						width,
+					}}
+				>
+					{orderedItems?.map((song, index) => {
+						const { id, name, album, duration, artist, albumIndex, updatedAt } =
+							song;
+						return (
+							<Box
+								key={index}
+								onMouseEnter={handleMouseEnter}
+								onMouseLeave={handleMouseLeave}
+								id={index.toString()}
+								_hover={{
+									backgroundColor: "rgba(255,255,255,.3)",
+									transition: "background-color .2s",
+									borderRadius: "5px",
+								}}
 								sx={{
 									display: "flex",
 									alignItems: "center",
-									width: "100%",
+									padding: "10px 20px",
 								}}
 							>
-								<Box
-									width="100%"
+								<Tooltip
+									placement="top"
+									label={`Play ${name} by ${artist?.name}`}
+								>
+									<Box
+										color={
+											activeSong && isSongPlaying(activeSong, id)
+												? spotifyGreen
+												: lightGrayText
+										}
+										width="20px"
+										marginRight="20px"
+									>
+										{isHovering && item == index ? (
+											<Box
+												onClick={() => handlePlay(song, orderedItems)}
+												sx={{ cursor: "pointer" }}
+											>
+												<BsFillPlayFill />
+											</Box>
+										) : mode === "album" ? (
+											albumIndex
+										) : (
+											index + 1
+										)}
+									</Box>
+								</Tooltip>
+								<ListItem
 									sx={{
-										...colStyles,
 										display: "flex",
 										alignItems: "center",
-										color: lightGrayText,
+										width: "100%",
 									}}
 								>
 									<Box
+										width="100%"
 										sx={{
-											flex: showDateAdded && showAlbumColumn ? 2 : 10,
+											...colStyles,
 											display: "flex",
+											alignItems: "center",
+											color: lightGrayText,
 										}}
 									>
-										{showAlbumCovers ? (
-											<Box marginRight="20px">
-												<Img
-													width="50px"
-													src={!album?.avatarUrl ? undefined : album.avatarUrl}
-												/>
-											</Box>
-										) : null}
 										<Box
 											sx={{
-												display: "block",
-												margin: "auto 0",
+												flex: showDateAdded && showAlbumColumn ? 2 : 10,
+												display: "flex",
 											}}
 										>
-											<Link href={`/track/${id}`}>
-												<Box _hover={{ textDecoration: "underline" }}>
-													{name}
-												</Box>
-											</Link>
-											{showArtist ? (
-												<Box sx={{ color: "gray", fontSize: "small" }}>
-													<Link href={`/artist/${artist?.id}`}>
-														<Text _hover={{ textDecoration: "underline" }}>
-															{artist?.name}
-														</Text>
-													</Link>
+											{showAlbumCovers ? (
+												<Box marginRight="20px">
+													<Img
+														width="50px"
+														src={
+															!album?.avatarUrl ? undefined : album.avatarUrl
+														}
+													/>
 												</Box>
 											) : null}
-										</Box>
-									</Box>
-									{showAlbumColumn ? (
-										<Box sx={{ flex: 1, fontSize: "sm" }}>{album?.name}</Box>
-									) : null}
-
-									{showDateAdded ? (
-										<Box sx={{ flex: 1, fontSize: "sm" }}>
-											{dateParser(updatedAt)?.month.text}{" "}
-											{dateParser(updatedAt)?.day},{" "}
-											{dateParser(updatedAt)?.year}
-										</Box>
-									) : null}
-									{showFavourites ? (
-										<Tooltip
-											placement="top"
-											label={
-												isSongInFavourites(id, favouriteSongs)
-													? "Remove from Your Library"
-													: "Save to Your Library"
-											}
-										>
 											<Box
 												sx={{
-													flex: 1,
-													display: "flex",
-													justifyContent: "center",
+													display: "block",
+													margin: "auto 0",
 												}}
-												cursor="pointer"
 											>
-												{isSongInFavourites(id, favouriteSongs) ? (
-													<AiFillHeart
-														onClick={() => handleClick(id)}
-														color={spotifyGreen}
-													/>
-												) : isHovering && item == index ? (
-													<Box _hover={{ color: "white" }}>
-														<AiOutlineHeart onClick={() => handleClick(id)} />
+												<Link href={`/track/${id}`}>
+													<Box
+														color={
+															activeSong && isSongPlaying(activeSong, id)
+																? spotifyGreen
+																: lightGrayText
+														}
+														_hover={{
+															textDecoration: "underline",
+														}}
+													>
+														{name}
+													</Box>
+												</Link>
+												{showArtist ? (
+													<Box sx={{ color: "gray", fontSize: "small" }}>
+														<Link href={`/artist/${artist?.id}`}>
+															<Text _hover={{ textDecoration: "underline" }}>
+																{artist?.name}
+															</Text>
+														</Link>
 													</Box>
 												) : null}
 											</Box>
-										</Tooltip>
-									) : null}
+										</Box>
+										{showAlbumColumn ? (
+											<Box sx={{ flex: 1, fontSize: "sm" }}>{album?.name}</Box>
+										) : null}
 
-									<Box
-										sx={{
-											flex: 1,
-											display: "flex",
-											justifyContent: "flex-end",
-											fontSize: "sm",
-										}}
-									>
-										{convertSeconds(duration)}
+										{showDateAdded ? (
+											<Box sx={{ flex: 1, fontSize: "sm" }}>
+												{dateParser(updatedAt)?.month.text}{" "}
+												{dateParser(updatedAt)?.day},{" "}
+												{dateParser(updatedAt)?.year}
+											</Box>
+										) : null}
+										{showFavourites ? (
+											<Tooltip
+												placement="top"
+												label={
+													isSongInFavourites(id, favouriteSongs)
+														? "Remove from Your Library"
+														: "Save to Your Library"
+												}
+											>
+												<Box
+													sx={{
+														flex: 1,
+														display: "flex",
+														justifyContent: "center",
+													}}
+													cursor="pointer"
+												>
+													{isSongInFavourites(id, favouriteSongs) ? (
+														<AiFillHeart
+															onClick={() => handleClick(id)}
+															color={spotifyGreen}
+														/>
+													) : isHovering && item == index ? (
+														<Box _hover={{ color: "white" }}>
+															<AiOutlineHeart onClick={() => handleClick(id)} />
+														</Box>
+													) : null}
+												</Box>
+											</Tooltip>
+										) : null}
+
+										<Box
+											sx={{
+												flex: 1,
+												display: "flex",
+												justifyContent: "flex-end",
+												fontSize: "sm",
+											}}
+										>
+											{convertSeconds(duration)}
+										</Box>
 									</Box>
-								</Box>
-							</ListItem>
-						</Box>
-					);
-				})}
-			</OrderedList>
-		</Box>
-	);
+								</ListItem>
+							</Box>
+						);
+					})}
+				</OrderedList>
+			</Box>
+		);
+	}
 }
 
 export default TopList;

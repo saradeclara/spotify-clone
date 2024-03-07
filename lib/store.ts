@@ -11,7 +11,7 @@ export interface StoreModel {
 	activeSongs: ExtendedSong[];
 	activeSong: ExtendedSong | null;
 	changeActiveSongs: Action<StoreModel, ExtendedSong[]>;
-	changeActiveSong: Action<StoreModel, ExtendedSong>;
+	changeActiveSong: Action<StoreModel, ExtendedSong | null>;
 }
 
 const storeModel: StoreModel = {

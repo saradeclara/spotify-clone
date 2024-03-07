@@ -11,8 +11,6 @@ const TrackDetails = ({
 	activeSongs: ExtendedSong[] | null;
 	activeSong: ExtendedSong | null;
 }) => {
-	console.log({ activeSong });
-
 	return (
 		<Box
 			sx={{

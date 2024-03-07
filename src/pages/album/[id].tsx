@@ -1,9 +1,9 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
 import FollowButton from "@/components/ShowPage/FollowButton";
 import TopList from "@/components/TopList/TopList";
-import { Mode } from "@/enums/FollowButton";
+import { Mode, Size } from "@/enums/FollowButton";
 import { Avatar, Box, Text } from "@chakra-ui/react";
-import { Album, Artist, Song } from "@prisma/client";
+import { Artist, Category, Song } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import convertSeconds from "../../../lib/convertSeconds";
@@ -73,11 +73,14 @@ const AlbumPage = (
 		>
 			<GradientLayoutPages {...gradientProps}>
 				<Box>
-					<FollowButton
-						mode={Mode.Heart}
-						categoryArray="favouriteAlbums"
-						categoryData={album}
-					/>
+					<Box sx={{ padding: "30px 0px 0px 30px" }}>
+						<FollowButton
+							mode={Mode.Heart}
+							categoryArray="favouriteAlbums"
+							categoryData={album}
+							size={Size.medium}
+						/>
+					</Box>
 					<TopList
 						showHeadings
 						items={album.songs}
@@ -103,7 +106,7 @@ export const getServerSideProps = async ({
 		include: {
 			category: true,
 			artist: true,
-			songs: true,
+			songs: { include: { category: true } },
 		},
 	});
 	// [artistImage, artist name, x songs, total length]
@@ -117,14 +120,32 @@ export const getServerSideProps = async ({
 			});
 
 		const newSongs: {
-			artist: Artist;
-			album: Album & {
+			artist: {
+				id: string;
+				name: string;
+				createdAt: Date;
+				updatedAt: Date;
+				avatarUrl: string | null;
+				headerUrl: string | null;
+				categoryId: string;
+			};
+			album: {
+				id: string;
+				name: string;
+				avatarUrl: string | null;
+				createdAt: Date;
+				updatedAt: Date;
+				releasedOn: Date;
+				categoryId: string;
+				artistId: string;
+				category: Category;
 				artist: Artist;
-				songs: Song[];
+				songs: (Song & { category: Category })[];
 			};
 			id: string;
 			albumIndex: number;
-			createdAt: Date;
+			createdAt: Date; // [artistImage, artist name, x songs, total length]
+			// [artistImage, artist name, x songs, total length]
 			updatedAt: Date;
 			name: string;
 			url: string;
@@ -132,6 +153,7 @@ export const getServerSideProps = async ({
 			albumId: string | null;
 			artistId: string | null;
 			categoryId: string;
+			category: Category;
 		}[] = [];
 
 		singleAlbum.songs.forEach((singleSong) => {

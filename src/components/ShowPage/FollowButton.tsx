@@ -29,6 +29,7 @@ const FollowButton = ({
 		| ExtendedSong;
 }) => {
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
+
 	const { data } = useQuery<FeedData>(feedKey, fetchFeedData);
 	const addRemoveToast = useToast();
 
@@ -38,6 +39,15 @@ const FollowButton = ({
 	}
 
 	const queryClient = useQueryClient();
+
+	const isItemInFavourites = (
+		feed: FeedData | undefined,
+		currentItem: Song | Album | Playlist | Artist | Show
+	) => {
+		return feed?.find((current) => {
+			return current.id === currentItem.id;
+		});
+	};
 
 	interface Body {
 		itemId: string;
@@ -63,51 +73,42 @@ const FollowButton = ({
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries(feedKey);
-				if (followStatus === BtnStatus.Follow) {
-					addRemoveToast({
-						title: "Added to Your Library",
-						status: "success",
-						duration: 3000,
-						isClosable: false,
-					});
-				} else if (followStatus === BtnStatus.Following) {
-					addRemoveToast({
-						title: "Removed from Your Library",
-						status: "success",
-						duration: 3000,
-						isClosable: false,
-					});
-				}
 			},
 		}
 	);
 
 	const handleFollowUnfollow = async (itemId: string) => {
 		const body = { itemId, category: categoryArray };
-		const result = await updateFeedMutation.mutate(body);
-		console.log({ result });
+		updateFeedMutation.mutate(body);
 	};
 
 	useEffect(() => {
-		// check data from feed query to see if current show is in feed
-		if (data && categoryData) {
-			const foundItem = [...data].find((feedItem) => {
-				console.log("first", feedItem.id, categoryData.id);
-				return (
-					feedItem.id === categoryData.id &&
-					feedItem.category?.description === categoryData.category?.description
-				);
-			});
-			console.log({ foundItem }, { data }, { categoryData });
-			// if show is found, print 'Following'
-			if (foundItem) {
-				setFollowStatus(BtnStatus.Following);
-			} else {
-				// if show is not found, print 'Follow'
-				setFollowStatus(BtnStatus.Follow);
-			}
+		const result = isItemInFavourites(data, categoryData);
+
+		if (result) {
+			setFollowStatus(BtnStatus.Following);
+		} else {
+			setFollowStatus(BtnStatus.Follow);
 		}
 	}, [data, categoryData]);
+
+	useEffect(() => {
+		if (followStatus === BtnStatus.Follow) {
+			// 	addRemoveToast({
+			// 		title: "Removed from Your Library",
+			// 		status: "success",
+			// 		duration: 3000,
+			// 		isClosable: false,
+			// 	});
+			// } else {
+			// 	addRemoveToast({
+			// 		title: "Added to Your Library",
+			// 		status: "success",
+			// 		duration: 3000,
+			// 		isClosable: false,
+			// 	});
+		}
+	}, [followStatus]);
 
 	return mode === Mode.Button ? (
 		<Button
