@@ -56,10 +56,7 @@ function TopList({
 	const activeSong = useStoreState(
 		(store: State<StoreModel>) => store.activeSong
 	);
-	const activeSongs = useStoreState(
-		(store: State<StoreModel>) => store.activeSongs
-	);
-	// const foundIndex =
+	console.log("activeSong", activeSong, typeof activeSong);
 
 	// retrieving actions from the main store
 	const setActiveSongs = useStoreActions((store) => store.changeActiveSongs);

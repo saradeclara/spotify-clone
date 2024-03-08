@@ -84,7 +84,6 @@ const UserDashboard = ({
 				{user.favouriteSongs && user.favouriteSongs.length > 0 ? (
 					<TopList
 						heading={`${user.firstName}'s Top Tracks`}
-						// items={user.favouriteSongs}
 						showFavourites={false}
 						showAlbumCovers
 						showHeadings={false}

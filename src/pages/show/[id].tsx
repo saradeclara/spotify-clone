@@ -1,4 +1,5 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
+import EpisodeList from "@/components/ShowPage/EpisodeList";
 import FollowButton from "@/components/ShowPage/FollowButton";
 import { Box } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
@@ -8,20 +9,18 @@ const ShowPage = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
 	const { show } = props;
+	const { episodes, avatarUrl, author, category, name } = show;
 	enum Mode {
 		Button,
 		Heart,
 	}
-
 	const gradientProps = {
-		image: show.avatarUrl,
+		image: avatarUrl,
 		roundAvatar: false,
-		description: [show.author],
+		description: [author],
 		subtitle:
-			show.category.description === "show"
-				? "Podcast"
-				: show.category.description,
-		title: show.name,
+			category.description === "show" ? "Podcast" : category.description,
+		title: name,
 		...show,
 	};
 
@@ -39,6 +38,13 @@ const ShowPage = (
 						mode={Mode.Button}
 						categoryArray="favouriteShows"
 						categoryData={show}
+					/>
+
+					<EpisodeList
+						heading={`All Episodes`}
+						episodes={episodes}
+						avatarUrl={avatarUrl}
+						showTitle={name}
 					/>
 				</Box>
 			</GradientLayoutPages>
