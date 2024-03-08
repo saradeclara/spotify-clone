@@ -1,10 +1,21 @@
 import { Mode, Size } from "@/enums/FollowButton";
 import { lightGrayText } from "@/styles/colors";
 import { Box, Img, Text } from "@chakra-ui/react";
-import { ExtendedSong } from "../../../lib/store";
+import { Track } from "../../../lib/store";
 import FollowButton from "../ShowPage/FollowButton";
 
-const TrackDetails = ({ activeSong }: { activeSong: ExtendedSong | null }) => {
+const TrackDetails = ({ activeTrack }: { activeTrack: Track | null }) => {
+	if (!activeTrack)
+		return (
+			<Box
+				sx={{
+					padding: "0px 20px",
+					width: "25%",
+				}}
+			></Box>
+		);
+	const { thumbnail, name, author } = activeTrack;
+
 	return (
 		<Box
 			sx={{
@@ -13,31 +24,27 @@ const TrackDetails = ({ activeSong }: { activeSong: ExtendedSong | null }) => {
 				width: "25%",
 			}}
 		>
-			{activeSong ? (
-				<Box sx={{ display: "flex", alignItems: "center" }}>
-					<Img
-						width="65px"
-						borderRadius="5px"
-						src={
-							!activeSong?.album?.avatarUrl
-								? undefined
-								: activeSong?.album.avatarUrl
-						}
-					/>
-					<Box sx={{ width: "150px", paddingLeft: "15px" }}>
-						<Text fontSize="sm">{activeSong?.name}</Text>
-						<Text fontSize="xs">{activeSong?.artist?.name}</Text>
-					</Box>
-					<Box>
-						<FollowButton
-							mode={Mode.Heart}
-							size={Size.small}
-							categoryArray="favouriteSongs"
-							categoryData={activeSong}
-						/>
-					</Box>
+			<Box sx={{ display: "flex", alignItems: "center" }}>
+				<Img
+					width="65px"
+					borderRadius="5px"
+					src={!thumbnail ? undefined : thumbnail}
+				/>
+				<Box sx={{ width: "150px", paddingLeft: "15px" }}>
+					<Text fontSize="sm" noOfLines={2}>
+						{name}
+					</Text>
+					<Text fontSize="xs">{author}</Text>
 				</Box>
-			) : null}
+				<Box>
+					<FollowButton
+						mode={Mode.Heart}
+						size={Size.small}
+						categoryArray="favouriteSongs"
+						categoryData={activeTrack}
+					/>
+				</Box>
+			</Box>
 		</Box>
 	);
 };

@@ -7,7 +7,7 @@ import { Album, Artist, Category, Playlist, Show, Song } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { ExtendedSong } from "../../../lib/store";
+import { ExtendedSong, Track } from "../../../lib/store";
 
 type FeedData = ((Show | Album | Artist | Song | Playlist) & {
 	category: { description: string };
@@ -26,7 +26,8 @@ const FollowButton = ({
 		| ((Show | Artist | Album | Playlist) & {
 				category?: Category;
 		  })
-		| ExtendedSong;
+		| ExtendedSong
+		| Track;
 }) => {
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
 
@@ -42,7 +43,7 @@ const FollowButton = ({
 
 	const isItemInFavourites = (
 		feed: FeedData | undefined,
-		currentItem: Song | Album | Playlist | Artist | Show
+		currentItem: Song | Album | Playlist | Artist | Show | Track
 	) => {
 		return feed?.find((current) => {
 			return current.id === currentItem.id;

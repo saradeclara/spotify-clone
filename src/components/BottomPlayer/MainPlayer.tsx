@@ -12,14 +12,14 @@ const MainPlayer = ({ height }: { height: string }) => {
 	const soundRef: RefObject<ReactHowler> = useRef(null);
 	const volumeRef: RefObject<ReactHowler> = useRef(null);
 
-	const activeSong = useStoreState(
-		(store: State<StoreModel>) => store.activeSong
+	const activeTrack = useStoreState(
+		(store: State<StoreModel>) => store.activeTrack
 	);
-	const activeSongs = useStoreState(
-		(store: State<StoreModel>) => store.activeSongs
+	const activeTracks = useStoreState(
+		(store: State<StoreModel>) => store.activeTracks
 	);
 
-	const setActiveSong = useStoreActions((store) => store.changeActiveSong);
+	const setActiveTrack = useStoreActions((store) => store.changeActiveTrack);
 	return (
 		<Box
 			sx={{
@@ -31,11 +31,11 @@ const MainPlayer = ({ height }: { height: string }) => {
 				justifyContent: "space-between",
 			}}
 		>
-			<TrackDetails activeSong={activeSong} />
+			<TrackDetails activeTrack={activeTrack} />
 			<TrackControls
-				activeSongs={activeSongs}
-				activeSong={activeSong}
-				setActiveSong={setActiveSong}
+				activeTracks={activeTracks}
+				activeTrack={activeTrack}
+				setActiveTrack={setActiveTrack}
 				volume={volume}
 				soundRef={soundRef}
 			/>

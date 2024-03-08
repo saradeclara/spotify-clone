@@ -36,18 +36,18 @@ import { BiShuffle } from "react-icons/bi";
 import { BsDot } from "react-icons/bs";
 import { SlLoop } from "react-icons/sl";
 import convertSeconds from "../../../lib/convertSeconds";
-import { ExtendedSong } from "../../../lib/store";
+import { Track } from "../../../lib/store";
 
 const TrackControls = ({
-	activeSongs,
-	activeSong,
-	setActiveSong,
+	activeTracks,
+	activeTrack,
+	setActiveTrack,
 	volume,
 	soundRef,
 }: {
-	activeSongs: ExtendedSong[] | null;
-	activeSong: ExtendedSong | null;
-	setActiveSong: ActionCreator<ExtendedSong | null>;
+	activeTracks: Track[] | null;
+	activeTrack: Track | null;
+	setActiveTrack: ActionCreator<Track | null>;
 	volume: number;
 	soundRef: RefObject<ReactHowler>;
 }) => {
@@ -81,8 +81,8 @@ const TrackControls = ({
 			icon: <BiShuffle />,
 			ariaLabel: "shuffle",
 			fontSize: "20px",
-			onClick: activeSong ? () => setShuffle(!shuffle) : undefined,
-			color: activeSong
+			onClick: activeTrack ? () => setShuffle(!shuffle) : undefined,
+			color: activeTrack
 				? shuffle
 					? spotifyGreen
 					: lightGrayText
@@ -96,8 +96,8 @@ const TrackControls = ({
 			icon: <AiOutlineStepBackward />,
 			ariaLabel: "backward",
 			fontSize: "20px",
-			onClick: activeSong ? () => handleBackward(indexRef.current) : undefined,
-			color: activeSong ? lightGrayText : darkGrayText,
+			onClick: activeTrack ? () => handleBackward(indexRef.current) : undefined,
+			color: activeTrack ? lightGrayText : darkGrayText,
 			hover: { color: "white" },
 		},
 		{
@@ -105,33 +105,33 @@ const TrackControls = ({
 			ariaLabel: "play",
 			fontSize: "39px",
 			width: "50px",
-			onClick: activeSong ? () => setIsPlaying(!isPlaying) : undefined,
-			color: activeSong ? lightGrayText : darkGrayText,
-			hover: { color: lightGrayText, fontSize: activeSong ? "41px" : "39px" },
+			onClick: activeTrack ? () => setIsPlaying(!isPlaying) : undefined,
+			color: activeTrack ? lightGrayText : darkGrayText,
+			hover: { color: lightGrayText, fontSize: activeTrack ? "41px" : "39px" },
 		},
 		{
 			icon: <AiFillPauseCircle />,
 			ariaLabel: "pause",
 			fontSize: "39px",
 			width: "50px",
-			onClick: activeSong ? () => setIsPlaying(!isPlaying) : undefined,
-			color: activeSong ? lightGrayText : darkGrayText,
-			hover: { color: lightGrayText, fontSize: activeSong ? "41px" : "39px" },
+			onClick: activeTrack ? () => setIsPlaying(!isPlaying) : undefined,
+			color: activeTrack ? lightGrayText : darkGrayText,
+			hover: { color: lightGrayText, fontSize: activeTrack ? "41px" : "39px" },
 		},
 		{
 			icon: <AiFillStepForward />,
 			ariaLabel: "forward",
 			fontSize: "20px",
-			onClick: activeSong ? () => handleForward(indexRef.current) : undefined,
-			color: activeSong ? lightGrayText : darkGrayText,
+			onClick: activeTrack ? () => handleForward(indexRef.current) : undefined,
+			color: activeTrack ? lightGrayText : darkGrayText,
 			hover: { color: "white" },
 		},
 		{
 			icon: <SlLoop />,
 			ariaLabel: "loop",
 			fontSize: "20px",
-			onClick: activeSong ? () => setRepeat(!repeat) : undefined,
-			color: activeSong
+			onClick: activeTrack ? () => setRepeat(!repeat) : undefined,
+			color: activeTrack
 				? repeat
 					? spotifyGreen
 					: lightGrayText
@@ -147,16 +147,16 @@ const TrackControls = ({
 	 * @param arrayOfSongs
 	 * @param newIndex
 	 */
-	const setNewActiveSong = (arrayOfSongs: ExtendedSong[], newIndex: number) => {
+	const setNewActiveSong = (arrayOfSongs: Track[], newIndex: number) => {
 		setIndex(newIndex);
-		setActiveSong(arrayOfSongs[newIndex]);
+		setActiveTrack(arrayOfSongs[newIndex]);
 	};
 
 	/**
 	 * function which identifies next song to play considering any shuffle/repeat state. function sets new active song in every scenario.
 	 */
 	const handleForward = (currentIndex: number) => {
-		if (!activeSongs) return;
+		if (!activeTracks) return;
 
 		if (shuffle) {
 			// shuffle on
@@ -166,22 +166,22 @@ const TrackControls = ({
 			) {
 				const newHistoryIndex = currentHistoryIndex + 1;
 				const newIndex = shuffleHistory[newHistoryIndex];
-				const arrayOfSongs = activeSongs;
+				const arrayOfSongs = activeTracks;
 				setNewActiveSong(arrayOfSongs, newIndex);
 				updateCurrentHistoryIndex(currentHistoryIndex + 1);
 			}
 		} else {
 			// shuffle off
 			// repeat on
-			if (repeat && currentIndex === activeSongs.length - 1) {
+			if (repeat && currentIndex === activeTracks.length - 1) {
 				const newIndex = 0;
-				const arrayOfSongs = activeSongs;
+				const arrayOfSongs = activeTracks;
 				setNewActiveSong(arrayOfSongs, newIndex);
 			} else {
 				// shuffle off
 				// repeat off
 				const newIndex = currentIndex + 1;
-				const arrayOfSongs = activeSongs;
+				const arrayOfSongs = activeTracks;
 				setNewActiveSong(arrayOfSongs, newIndex);
 			}
 		}
@@ -191,7 +191,7 @@ const TrackControls = ({
 	 * function which identifies previous song to play considering any shuffle/repeat state. function sets new active song in every scenario.
 	 */
 	const handleBackward = (currentIndex: number) => {
-		if (!activeSongs) return;
+		if (!activeTracks) return;
 		if (shuffle) {
 			// check currentHistoryIndex
 			if (
@@ -200,7 +200,7 @@ const TrackControls = ({
 			) {
 				const newHistoryIndex = currentHistoryIndex - 1;
 				const newIndex = shuffleHistory[newHistoryIndex];
-				const arrayOfSongs = activeSongs;
+				const arrayOfSongs = activeTracks;
 				setNewActiveSong(arrayOfSongs, newIndex);
 				updateCurrentHistoryIndex(currentHistoryIndex - 1);
 			}
@@ -208,14 +208,14 @@ const TrackControls = ({
 			// shuffle off
 			// repeat on
 			if (repeat && currentIndex === 0) {
-				const newIndex = activeSongs?.length - 1;
-				const arrayOfSongs = activeSongs;
+				const newIndex = activeTracks?.length - 1;
+				const arrayOfSongs = activeTracks;
 				setNewActiveSong(arrayOfSongs, newIndex);
 			} else {
 				// shuffle off
 				// repeat off
 				const newIndex = currentIndex - 1;
-				const arrayOfSongs = activeSongs;
+				const arrayOfSongs = activeTracks;
 				setNewActiveSong(arrayOfSongs, newIndex);
 			}
 		}
@@ -239,7 +239,7 @@ const TrackControls = ({
 
 	useEffect(() => {
 		if (shuffle) {
-			const max = activeSongs?.length;
+			const max = activeTracks?.length;
 
 			if (max) {
 				let tempArray: number[] = [];
@@ -272,27 +272,27 @@ const TrackControls = ({
 		// update duration on load
 		// reset seek value when new song is loaded
 		// always play new active song
-		if (activeSong && activeSongs) {
-			const activeSongIndex = activeSongs.findIndex(
-				(el) => el.id === activeSong.id
+		if (activeTrack && activeTracks) {
+			const activeTrackIndex = activeTracks.findIndex(
+				(el) => el.id === activeTrack.id
 			);
-			setDuration(activeSong.duration);
+			setDuration(activeTrack.duration);
 
 			setSeek(0.0);
-			setIndex(activeSongIndex);
+			setIndex(activeTrackIndex);
 			soundRef?.current?.seek(0.0);
 
 			setIsPlaying(true);
 		}
 
-		if (!activeSong && seek !== 0) {
+		if (!activeTrack && seek !== 0) {
 			setDuration(0);
 			setSeek(0.0);
 			soundRef?.current?.seek(0.0);
 
 			setIsPlaying(false);
 		}
-	}, [activeSong]);
+	}, [activeTrack]);
 
 	useEffect(() => {
 		let timerId: number | null = null;
@@ -314,11 +314,11 @@ const TrackControls = ({
 	}, [isPlaying, isSeeking]);
 
 	useEffect(() => {
-		if (!activeSongs) return;
+		if (!activeTracks) return;
 
 		if (repeat && currentHistoryIndex === shuffleHistory.length - 1) {
 			let tempArray: number[] = [];
-			for (let i = 0; i < activeSongs?.length; i++) {
+			for (let i = 0; i < activeTracks?.length; i++) {
 				tempArray.push(i);
 			}
 
@@ -346,11 +346,11 @@ const TrackControls = ({
 	return (
 		<Box sx={{ width: "50%" }}>
 			<Box>
-				{activeSong ? (
+				{activeTrack ? (
 					<ReactHowler
 						ref={soundRef}
 						playing={isPlaying}
-						src={activeSong.url}
+						src={activeTrack.url}
 						onEnd={onEnd}
 						volume={volume}
 					/>
@@ -380,7 +380,7 @@ const TrackControls = ({
 									<IconButton
 										outline="none"
 										variant="link"
-										_hover={activeSong ? hover : undefined}
+										_hover={activeTrack ? hover : undefined}
 										color={color}
 										aria-label={ariaLabel}
 										fontSize={fontSize}
