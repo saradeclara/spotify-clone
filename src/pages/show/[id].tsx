@@ -8,7 +8,6 @@ const ShowPage = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
 	const { show } = props;
-
 	enum Mode {
 		Button,
 		Heart,
@@ -59,6 +58,7 @@ export const getServerSideProps = async ({
 		include: {
 			category: true,
 			subscribers: true,
+			episodes: true,
 		},
 	});
 

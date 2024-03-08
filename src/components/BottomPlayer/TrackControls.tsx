@@ -359,21 +359,24 @@ const TrackControls = ({
 			<Center sx={{ paddingBottom: "8px" }}>
 				<ButtonGroup sx={{ alignItems: "center" }}>
 					{controls.map(
-						({
-							icon,
-							ariaLabel,
-							fontSize,
-							onClick,
-							color,
-							hover,
-							secondaryIcon,
-							isOn,
-							width,
-						}) => {
+						(
+							{
+								icon,
+								ariaLabel,
+								fontSize,
+								onClick,
+								color,
+								hover,
+								secondaryIcon,
+								isOn,
+								width,
+							},
+							index
+						) => {
 							if (isPlaying && ariaLabel === "play") return null;
 							if (!isPlaying && ariaLabel === "pause") return null;
 							return (
-								<Box>
+								<Box key={index}>
 									<IconButton
 										outline="none"
 										variant="link"
