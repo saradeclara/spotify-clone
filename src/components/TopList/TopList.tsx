@@ -20,7 +20,12 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import convertSeconds from "../../../lib/convertSeconds";
 import dateParser from "../../../lib/dateParser";
-import { ExtendedSong, StoreModel, useStoreActions } from "../../../lib/store";
+import {
+	ExtendedSong,
+	StoreModel,
+	Track,
+	useStoreActions,
+} from "../../../lib/store";
 import TopListHeadings from "./TopListHeadings";
 
 interface TopListProps {
@@ -53,24 +58,20 @@ function TopList({
 		item: 0,
 	});
 
-	const activeSong = useStoreState(
-		(store: State<StoreModel>) => store.activeSong
+	const activeTrack = useStoreState(
+		(store: State<StoreModel>) => store.activeTrack
 	);
-	console.log("activeSong", activeSong, typeof activeSong);
 
 	// retrieving actions from the main store
-	const setActiveSongs = useStoreActions((store) => store.changeActiveSongs);
-	const setActiveSong = useStoreActions((store) => store.changeActiveSong);
+	const setActiveTracks = useStoreActions((store) => store.changeActiveTracks);
+	const setActiveTrack = useStoreActions((store) => store.changeActiveTrack);
 
 	/**
 	 * Function which dispatches actions from the store to update activeSong and activeSongs in the main store
 	 */
-	const handlePlay = (
-		singleSong: ExtendedSong,
-		songCollection: ExtendedSong[]
-	) => {
-		setActiveSongs(songCollection);
-		setActiveSong(singleSong);
+	const handlePlay = (singleSong: Track, songCollection: Track[]) => {
+		setActiveTracks(songCollection);
+		setActiveTrack(singleSong);
 	};
 
 	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
@@ -138,7 +139,7 @@ function TopList({
 			  }
 			: {};
 
-	const isSongPlaying = (activeSong: ExtendedSong, currentSongId: string) => {
+	const isSongPlaying = (activeSong: Track, currentSongId: string) => {
 		return activeSong.id === currentSongId;
 	};
 
@@ -158,10 +159,30 @@ function TopList({
 		const listItems: ExtendedSong[] =
 			typeof items === "undefined" ? favouriteSongs : items;
 
-		const orderedItems =
+		const trackList: Track[] = [...listItems].map((el) => {
+			return {
+				id: el.id,
+				name: el.name,
+				author: el.artist?.name,
+				duration: el.duration,
+				thumbnail: el.album?.avatarUrl,
+				albumIndex: el.albumIndex,
+				url: el.url,
+				updatedAt: el.updatedAt,
+				authorId: el.artistId,
+				collectionName: el.album?.name,
+			};
+		});
+
+		const orderedItems: Track[] =
 			mode === "album"
-				? [...listItems].sort((a, b) => a.albumIndex - b.albumIndex)
-				: listItems;
+				? [...trackList].sort((a, b) => {
+						return typeof a.albumIndex !== "undefined" &&
+							typeof b.albumIndex !== "undefined"
+							? a.albumIndex - b.albumIndex
+							: -1;
+				  })
+				: trackList;
 
 		return (
 			<Box sx={{ padding: "30px" }}>
@@ -189,8 +210,17 @@ function TopList({
 					}}
 				>
 					{orderedItems?.map((song, index) => {
-						const { id, name, album, duration, artist, albumIndex, updatedAt } =
-							song;
+						const {
+							id,
+							name,
+							duration,
+							thumbnail,
+							author,
+							albumIndex,
+							updatedAt,
+							collectionName,
+							authorId,
+						} = song;
 						return (
 							<Box
 								key={index}
@@ -208,13 +238,10 @@ function TopList({
 									padding: "10px 20px",
 								}}
 							>
-								<Tooltip
-									placement="top"
-									label={`Play ${name} by ${artist?.name}`}
-								>
+								<Tooltip placement="top" label={`Play ${name} by ${author}`}>
 									<Box
 										color={
-											activeSong && isSongPlaying(activeSong, id)
+											activeTrack && isSongPlaying(activeTrack, id)
 												? spotifyGreen
 												: lightGrayText
 										}
@@ -261,9 +288,7 @@ function TopList({
 												<Box marginRight="20px">
 													<Img
 														width="50px"
-														src={
-															!album?.avatarUrl ? undefined : album.avatarUrl
-														}
+														src={!thumbnail ? undefined : thumbnail}
 													/>
 												</Box>
 											) : null}
@@ -276,7 +301,7 @@ function TopList({
 												<Link href={`/track/${id}`}>
 													<Box
 														color={
-															activeSong && isSongPlaying(activeSong, id)
+															activeTrack && isSongPlaying(activeTrack, id)
 																? spotifyGreen
 																: lightGrayText
 														}
@@ -289,9 +314,9 @@ function TopList({
 												</Link>
 												{showArtist ? (
 													<Box sx={{ color: "gray", fontSize: "small" }}>
-														<Link href={`/artist/${artist?.id}`}>
+														<Link href={`/artist/${authorId}`}>
 															<Text _hover={{ textDecoration: "underline" }}>
-																{artist?.name}
+																{author}
 															</Text>
 														</Link>
 													</Box>
@@ -299,7 +324,9 @@ function TopList({
 											</Box>
 										</Box>
 										{showAlbumColumn ? (
-											<Box sx={{ flex: 1, fontSize: "sm" }}>{album?.name}</Box>
+											<Box sx={{ flex: 1, fontSize: "sm" }}>
+												{collectionName}
+											</Box>
 										) : null}
 
 										{showDateAdded ? (

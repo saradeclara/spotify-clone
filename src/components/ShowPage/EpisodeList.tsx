@@ -1,6 +1,7 @@
 import { Box, Heading } from "@chakra-ui/react";
 import { Episode } from "@prisma/client";
 import capitalise from "../../../lib/capitalise";
+import { Track } from "../../../lib/store";
 import EpisodeRow from "./EpisodeRow";
 
 const EpisodeList = ({
@@ -14,6 +15,21 @@ const EpisodeList = ({
 	avatarUrl: string | null;
 	showTitle: string;
 }) => {
+	const episodeTracks: Track[] = [...episodes].map((el) => {
+		return {
+			id: el.id,
+			name: el.title,
+			author: showTitle,
+			authorId: el.showId,
+			duration: el.duration,
+			collectionName: showTitle,
+			thumbnail: avatarUrl,
+			createdAt: el.createdAt,
+			updatedAt: el.updatedAt,
+			url: el.url,
+			description: el.description,
+		};
+	});
 	return (
 		<Box>
 			{heading ? (
@@ -21,14 +37,8 @@ const EpisodeList = ({
 					{capitalise(heading)}
 				</Heading>
 			) : null}
-			{episodes.map((singleEpisode) => {
-				return (
-					<EpisodeRow
-						avatarUrl={avatarUrl}
-						showTitle={showTitle}
-						info={singleEpisode}
-					/>
-				);
+			{episodeTracks.map((singleEpisode) => {
+				return <EpisodeRow collection={episodeTracks} info={singleEpisode} />;
 			})}
 		</Box>
 	);

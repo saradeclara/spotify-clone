@@ -7,21 +7,36 @@ export type ExtendedSong = Song & {
 	category: Category | null;
 };
 
+export type Track = {
+	id: string;
+	name: string;
+	author: string | undefined;
+	authorId: string | null;
+	duration: number;
+	thumbnail: string | null | undefined;
+	albumIndex?: number;
+	url: string;
+	createdAt: Date;
+	updatedAt: Date;
+	collectionName: string | undefined;
+	description?: string;
+};
+
 export interface StoreModel {
-	activeSongs: ExtendedSong[];
-	activeSong: ExtendedSong | null;
-	changeActiveSongs: Action<StoreModel, ExtendedSong[]>;
-	changeActiveSong: Action<StoreModel, ExtendedSong | null>;
+	activeTracks: Track[];
+	activeTrack: Track | null;
+	changeActiveTracks: Action<StoreModel, Track[]>;
+	changeActiveTrack: Action<StoreModel, Track | null>;
 }
 
 const storeModel: StoreModel = {
-	activeSongs: [],
-	activeSong: null,
-	changeActiveSongs: action((state, payload) => {
-		state.activeSongs = payload;
+	activeTracks: [],
+	activeTrack: null,
+	changeActiveTracks: action((state, payload) => {
+		state.activeTracks = payload;
 	}),
-	changeActiveSong: action((state, payload) => {
-		state.activeSong = payload;
+	changeActiveTrack: action((state, payload) => {
+		state.activeTrack = payload;
 	}),
 };
 
