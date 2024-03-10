@@ -1,5 +1,5 @@
 import { fetchFeedData } from "@/react-query/fetch";
-import { feedKey } from "@/react-query/queryKeys";
+import { favouriteSongsKey, feedKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
 import {
 	Box,
@@ -11,7 +11,7 @@ import {
 	Text,
 	Tooltip,
 } from "@chakra-ui/react";
-import { Song } from "@prisma/client";
+import { Episode, Song } from "@prisma/client";
 import { State, useStoreState } from "easy-peasy";
 import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -109,6 +109,7 @@ function TopList({
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries(feedKey);
+				queryClient.invalidateQueries(favouriteSongsKey);
 			},
 		}
 	);
@@ -156,7 +157,7 @@ function TopList({
 			(record) => record.category.description === "song"
 		);
 
-		const listItems: ExtendedSong[] =
+		const listItems: (ExtendedSong & Episode & { avatarUrl: string })[] =
 			typeof items === "undefined" ? favouriteSongs : items;
 
 		const trackList: Track[] = [...listItems].map((el) => {
@@ -165,9 +166,10 @@ function TopList({
 				name: el.name,
 				author: el.artist?.name,
 				duration: el.duration,
-				thumbnail: el.album?.avatarUrl,
+				thumbnail: el.album ? el.album?.avatarUrl : el.avatarUrl,
 				albumIndex: el.albumIndex,
 				url: el.url,
+				createdAt: el.createdAt,
 				updatedAt: el.updatedAt,
 				authorId: el.artistId,
 				collectionName: el.album?.name,
@@ -183,7 +185,7 @@ function TopList({
 							: -1;
 				  })
 				: trackList;
-
+		console.log({ orderedItems });
 		return (
 			<Box sx={{ padding: "30px" }}>
 				{heading ? (
@@ -331,9 +333,9 @@ function TopList({
 
 										{showDateAdded ? (
 											<Box sx={{ flex: 1, fontSize: "sm" }}>
-												{dateParser(updatedAt)?.month.text}{" "}
-												{dateParser(updatedAt)?.day},{" "}
-												{dateParser(updatedAt)?.year}
+												{dateParser(new Date(updatedAt))?.month.text}{" "}
+												{dateParser(new Date(updatedAt))?.day},{" "}
+												{dateParser(new Date(updatedAt))?.year}
 											</Box>
 										) : null}
 										{showFavourites ? (

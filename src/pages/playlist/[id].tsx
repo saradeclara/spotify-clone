@@ -58,6 +58,7 @@ export const getServerSideProps = async ({
 				include: {
 					album: true,
 					artist: true,
+					category: true,
 				},
 			},
 		},

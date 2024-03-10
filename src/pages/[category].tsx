@@ -34,7 +34,9 @@ const CategoryFeed = (
 	);
 };
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps = async (context: {
+	params: { category: string };
+}) => {
 	const { params } = context;
 
 	let items: any[] = [];
