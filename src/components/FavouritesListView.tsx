@@ -1,9 +1,14 @@
+import { likedSongsCover } from "@/pages/favourites/liked-songs";
+import { fetchFavouriteSongs } from "@/react-query/fetch";
+import { favouriteSongsKey } from "@/react-query/queryKeys";
 import { spotifyGreen } from "@/styles/colors";
 import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
 import { Album, Artist, Category, Playlist, Show } from "@prisma/client";
 import Link from "next/link";
 import { AiFillPushpin } from "react-icons/ai";
+import { useQuery } from "react-query";
 import capitalise from "../../lib/capitalise";
+import pluralise from "../../lib/pluralise";
 import SubstringSearchText from "./SubstringSearchText";
 
 const FavouritesListView = ({
@@ -182,56 +187,46 @@ const FavouritesListView = ({
 		return component;
 	};
 
+	const { data: likedSongsData } = useQuery(
+		favouriteSongsKey,
+		fetchFavouriteSongs
+	);
 	return (
 		<Box id="favourites-wrapper">
-			{/* Liked Songs & Your Episodes - Always on Top */}
+			{/* Liked Songs - Always on Top */}
 			<List>
-				<ListItem
-					_hover={{ backgroundColor: "#1A1A1A" }}
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						padding: "10px",
-						cursor: "pointer",
-					}}
-				>
-					<Image
-						borderRadius="md"
-						boxSize="50px"
-						src="https://i.ibb.co/XJXMs6K/violator.png"
-						alt="Liked Songs"
-					/>
-					<Box sx={{ marginLeft: "10px" }}>
-						<Text color="white">Liked Songs</Text>
-						<Text fontSize="small">
-							<Icon marginRight="6px" color={spotifyGreen} as={AiFillPushpin} />
-							{`Playlist \u2022 326 songs`}
-						</Text>
-					</Box>
-				</ListItem>
-				<ListItem
-					_hover={{ backgroundColor: "#1A1A1A" }}
-					sx={{
-						display: "flex",
-						alignItems: "center",
-						padding: "10px",
-						cursor: "pointer",
-					}}
-				>
-					<Image
-						borderRadius="md"
-						boxSize="50px"
-						src="https://i.ibb.co/XJXMs6K/violator.png"
-						alt="Liked Songs"
-					/>
-					<Box sx={{ marginLeft: "10px" }}>
-						<Text color="white">Your Episodes</Text>
-						<Text fontSize="small">
-							<Icon marginRight="6px" color={spotifyGreen} as={AiFillPushpin} />
-							Saved & downloaded Episodes
-						</Text>
-					</Box>
-				</ListItem>
+				<Link href="/favourites/liked-songs">
+					<ListItem
+						_hover={{ backgroundColor: "#1A1A1A" }}
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							padding: "10px",
+							cursor: "pointer",
+						}}
+					>
+						<Image
+							borderRadius="md"
+							boxSize="50px"
+							src={likedSongsCover}
+							alt="Liked Songs"
+						/>
+						<Box sx={{ marginLeft: "10px" }}>
+							<Text color="white">Liked Songs</Text>
+							<Text fontSize="small">
+								<Icon
+									marginRight="6px"
+									color={spotifyGreen}
+									as={AiFillPushpin}
+								/>
+								{`Playlist \u2022 ${likedSongsData.length} ${pluralise(
+									likedSongsData.length,
+									"song"
+								)}`}
+							</Text>
+						</Box>
+					</ListItem>
+				</Link>
 			</List>
 
 			<List>

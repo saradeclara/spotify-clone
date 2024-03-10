@@ -9,3 +9,9 @@ export const fetchFavouriteSongs = async () => {
 	if (!response.ok) throw new Error("Failed to fetch data");
 	return response.json();
 };
+
+export const fetchFavouriteEpisodes = async () => {
+	const response = await fetch("/api/favouriteshows");
+	if (!response.ok) throw new Error("Failed to fetch data");
+	return response.json();
+};
