@@ -22,6 +22,7 @@ const FavouritesGridView = ({
 		favouriteSongsKey,
 		fetchFavouriteSongs
 	);
+	if (!likedSongsData) return null;
 
 	const listItemStyles = {
 		display: "flex",

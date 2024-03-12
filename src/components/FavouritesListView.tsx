@@ -191,6 +191,9 @@ const FavouritesListView = ({
 		favouriteSongsKey,
 		fetchFavouriteSongs
 	);
+
+	if (!likedSongsData) return null;
+
 	return (
 		<Box id="favourites-wrapper">
 			{/* Liked Songs - Always on Top */}
