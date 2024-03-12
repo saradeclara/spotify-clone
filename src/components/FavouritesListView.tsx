@@ -193,6 +193,7 @@ const FavouritesListView = ({
 	);
 
 	if (!likedSongsData) return null;
+	if (!data) return null;
 
 	return (
 		<Box id="favourites-wrapper">
@@ -233,19 +234,17 @@ const FavouritesListView = ({
 			</List>
 
 			<List>
-				{data
-					? data.map((singleFeedRecord, index: number) => {
-							if (singleFeedRecord && singleFeedRecord.category) {
-								const categoryType = singleFeedRecord.category.description;
-								const component = renderFavFeed(
-									categoryType,
-									singleFeedRecord,
-									index
-								);
-								return component;
-							}
-					  })
-					: "No Favourites"}
+				{data.map((singleFeedRecord, index: number) => {
+					if (singleFeedRecord && singleFeedRecord.category) {
+						const categoryType = singleFeedRecord.category.description;
+						const component = renderFavFeed(
+							categoryType,
+							singleFeedRecord,
+							index
+						);
+						return component;
+					}
+				})}
 			</List>
 		</Box>
 	);

@@ -5,6 +5,7 @@ import { grayMain } from "@/styles/colors";
 import { Box, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { searchText } from "../../lib/sort";
 import FavouritesGridView from "./FavouritesGridView";
 import FavouritesListView from "./FavouritesListView";
 import LibraryCarousel from "./LibraryCarousel";
@@ -36,6 +37,8 @@ const LibraryMenu = () => {
 	const { sidebarMargin, margins } = useContext(LayoutContext);
 
 	const { data, status } = useQuery(feedKey, fetchFeedData);
+
+	const filteredData = searchText(data, textInput);
 
 	useEffect(() => {
 		if (sidebarMargin === margins.l) {
@@ -93,9 +96,9 @@ const LibraryMenu = () => {
 					) : status === "error" ? (
 						<Text>Error!</Text>
 					) : favouritesViews[currentView] === "list" ? (
-						<FavouritesListView textInput={textInput} data={data} />
+						<FavouritesListView textInput={textInput} data={filteredData} />
 					) : (
-						<FavouritesGridView textInput={textInput} data={data} />
+						<FavouritesGridView textInput={textInput} data={filteredData} />
 					)}
 				</Box>
 			</Box>
