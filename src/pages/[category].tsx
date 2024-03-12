@@ -11,6 +11,7 @@ const CategoryFeed = (
 ) => {
 	const { sidebarMargin, musicPlayerHeight } = useContext(LayoutContext);
 	const { items } = props;
+	console.log({ items });
 	return (
 		<Box sx={{ height: "100%", background: "black" }}>
 			<Box

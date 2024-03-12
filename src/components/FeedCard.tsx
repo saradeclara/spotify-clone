@@ -19,8 +19,6 @@ const FeedCard = ({
 	};
 	isLast?: boolean;
 }) => {
-	if (!data.username) return null;
-
 	const url = data.category
 		? `/${data.category.description}/${data.id}`
 		: `/user/${data.username}`;

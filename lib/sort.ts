@@ -1,3 +1,5 @@
+import { libraryTags } from "@/components/LibraryMenu";
+
 /**
  * The function `sortAlphabetical` sorts an array of objects alphabetically based on the `name`
  * property.
@@ -7,8 +9,6 @@
  * based on the `name` property of the objects in the array.
  */
 const sortAlphabetical = (array: any[]) => {
-	if (typeof array !== "object") throw Error;
-
 	array.sort((a: { name: number }, b: { name: number }) => {
 		if (a.name < b.name) {
 			return -1;
@@ -32,8 +32,6 @@ const sortAlphabetical = (array: any[]) => {
  * `createdAt` property in descending order.
  */
 const sortRecents = (array: any[]) => {
-	if (typeof array !== "object") throw Error;
-
 	array.sort((a, b) => {
 		if (b.createdAt < a.createdAt) {
 			return -1;
@@ -56,7 +54,6 @@ const sortRecents = (array: any[]) => {
  * `updatedAt` property in descending order.
  */
 const sortRecentlyAdded = (array: any[]) => {
-	if (typeof array !== "object") throw Error;
 	array.sort((a, b) => {
 		if (b.updatedAt < a.updatedAt) {
 			return -1;
@@ -81,11 +78,9 @@ const sortRecentlyAdded = (array: any[]) => {
  * authors or artists in ascending order.
  */
 const sortCreator = (array: any[]) => {
-	if (typeof array !== "object") throw Error;
-
 	// remapping authors
 	const arrayOfAuthors = array.map((singleRecord, index) => {
-		switch (singleRecord.Category.description) {
+		switch (singleRecord.category.description) {
 			case "album":
 				return { index, name: singleRecord.artist?.name };
 			case "artist":
@@ -124,7 +119,36 @@ const sortCreator = (array: any[]) => {
 	return sorted;
 };
 
-// const sortingFeed = (data)
+/**
+ * The function `sortingFeed` takes an array of data and a sort option, then returns the data sorted
+ * based on the selected option.
+ * @param {any[]} data - The `data` parameter is an array containing the items that need to be sorted.
+ * @param {number} sortOption - The `sortOption` parameter determines how the `data` array should be
+ * sorted. Here are the options:
+ * @returns The function `sortingFeed` returns the sorted array based on the `sortOption` provided, like
+ * creation/update data, alphabetical order or author/creator. If none of these options match, it returns the
+ * original
+ */
+export const sortingFeed = (data: any[], sortOption: number) => {
+	let sorted = [];
+	switch (sortOption) {
+		case 0:
+			sorted = sortRecents(data);
+			break;
+		case 1:
+			sorted = sortRecentlyAdded(data);
+			break;
+		case 2:
+			sorted = sortAlphabetical(data);
+			break;
+		case 3:
+			sorted = sortCreator(data);
+			break;
+		default:
+			sorted = data;
+	}
+	return sorted;
+};
 
 /**
  * The function `searchText` filters an array of objects based on a text input and specific properties
@@ -139,8 +163,6 @@ const sortCreator = (array: any[]) => {
  * by the function.
  */
 const searchText = (array: any[], textInput: string) => {
-	if (typeof array !== "object") throw Error;
-
 	let filtered;
 	textInput = textInput.toLowerCase();
 	if (textInput.length === 0) {
@@ -175,7 +197,53 @@ const searchText = (array: any[], textInput: string) => {
 	return filtered;
 };
 
+/**
+ * The function `filterAndSort` filters, sorts, and categorizes data based on text input, sort option,
+ * and current category.
+ * @param {any[]} data - The `data` parameter is an array containing the items to be filtered and
+ * sorted.
+ * @param {string} textInput - The `textInput` parameter is a string that represents the text input
+ * used for filtering the data.
+ * @param {number} sortOption - The `sortOption` parameter determines how the data will be sorted. It
+ * is a number that represents a specific sorting option.
+ * @param {number | null} currentCategory - The `currentCategory` parameter in the `filterAndSort`
+ * function is used to filter the data based on a specific category. It is a number or `null`
+ * indicating the current category selected by the user. If it is a number, the function filters the
+ * data to include only items that belong
+ * @returns The function `filterAndSort` returns the `filteredAndSortedData` array after applying
+ * filtering based on text input, sorting based on the sort option, and optionally filtering based on
+ * the current category.
+ */
+const filterAndSort = (
+	data: any[],
+	textInput: string,
+	sortOption: number,
+	currentCategory: number | null
+) => {
+	let filteredAndSortedData = [];
+	if (!data) return [];
+
+	// filter, text input
+	filteredAndSortedData = searchText(data, textInput);
+
+	// sort option
+	filteredAndSortedData = sortingFeed(filteredAndSortedData, sortOption);
+
+	// categories
+	if (typeof currentCategory === "number") {
+		filteredAndSortedData = filteredAndSortedData.filter((el) => {
+			console.log("desc", el.category.description);
+			return (
+				el.category.description.toLowerCase() ===
+				libraryTags[currentCategory].label.toLowerCase()
+			);
+		});
+	}
+	return filteredAndSortedData;
+};
+
 export {
+	filterAndSort,
 	searchText,
 	sortAlphabetical,
 	sortCreator,

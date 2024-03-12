@@ -5,7 +5,7 @@ import { grayMain } from "@/styles/colors";
 import { Box, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { searchText } from "../../lib/sort";
+import { filterAndSort } from "../../lib/sort";
 import FavouritesGridView from "./FavouritesGridView";
 import FavouritesListView from "./FavouritesListView";
 import LibraryCarousel from "./LibraryCarousel";
@@ -20,7 +20,7 @@ const filters: string[] = [
 	"Creator",
 ];
 
-const libraryTags: { name: string; label: string }[] = [
+export const libraryTags: { name: string; label: string }[] = [
 	{ name: "Playlists", label: "playlist" },
 	{ name: "Artists", label: "artist" },
 	{ name: "Albums", label: "album" },
@@ -35,11 +35,15 @@ const LibraryMenu = () => {
 	const favouritesViews: string[] = ["list", "grid"];
 
 	const { sidebarMargin, margins } = useContext(LayoutContext);
+	console.log({ sidebarMargin });
+	const { data: queryData, status } = useQuery(feedKey, fetchFeedData);
 
-	const { data, status } = useQuery(feedKey, fetchFeedData);
-
-	const filteredData = searchText(data, textInput);
-
+	// if (!queryData) return null;
+	const data = filterAndSort(queryData, textInput, currentOption, currentCat);
+	// const data = queryData;
+	// const filteredData = searchText(data, textInput);
+	// // const sortedData = [];
+	// const sortedData = data;
 	useEffect(() => {
 		if (sidebarMargin === margins.l) {
 			toggleView(1);
@@ -96,9 +100,9 @@ const LibraryMenu = () => {
 					) : status === "error" ? (
 						<Text>Error!</Text>
 					) : favouritesViews[currentView] === "list" ? (
-						<FavouritesListView textInput={textInput} data={filteredData} />
+						<FavouritesListView textInput={textInput} data={data} />
 					) : (
-						<FavouritesGridView textInput={textInput} data={filteredData} />
+						<FavouritesGridView textInput={textInput} data={data} />
 					)}
 				</Box>
 			</Box>

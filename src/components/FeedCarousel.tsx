@@ -11,8 +11,8 @@ function FeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
 			</Heading>
 			<Box sx={{ display: "flex" }}>
 				{feed.data.map((singleElement: any, index, array) => {
-					const url = singleElement.Category
-						? `/${singleElement.Category.description}/${singleElement.id}`
+					const url = singleElement.category
+						? `/${singleElement.category.description}/${singleElement.id}`
 						: `/${singleElement.id}`;
 					return (
 						<Link href={url}>
