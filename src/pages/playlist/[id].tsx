@@ -1,18 +1,41 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
 import TopList from "@/components/TopList/TopList";
-import { Box } from "@chakra-ui/react";
+import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Song } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
+import convertSeconds from "../../../lib/convertSeconds";
+import pluralise from "../../../lib/pluralise";
 import prisma from "../../../lib/prisma";
 
 const PlaylistPage = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
 	const { playlist } = props;
+	let totalLength: number = 0;
+	playlist.songs.forEach(
+		(el: Song) => (totalLength = totalLength + el.duration)
+	);
 
 	const gradientProps = {
 		image: playlist.avatarUrl,
 		roundAvatar: false,
-		description: ["description"],
+		description: [
+			<Avatar
+				size="xs"
+				sx={{ border: "2px solid black", marginRight: "5px" }}
+				src={playlist.createdBy.avatarUrl ?? undefined}
+			/>,
+			<Text fontWeight="bold">
+				{`${playlist.createdBy.firstName} ${playlist.createdBy.lastName}`}
+			</Text>,
+			<Text margin="0px 5px">{"\u2022"}</Text>,
+			<Text>
+				{playlist.songs.length} {pluralise(playlist.songs.length, "song")},
+			</Text>,
+			<Text marginLeft="5px">
+				{convertSeconds(totalLength, "hhhh mmmm ssss")}
+			</Text>,
+		],
 		subtitle: playlist.category.description,
 		title: playlist.name,
 		...playlist,
@@ -53,6 +76,7 @@ export const getServerSideProps = async ({
 			id: query.id,
 		},
 		include: {
+			createdBy: true,
 			category: true,
 			songs: {
 				include: {
