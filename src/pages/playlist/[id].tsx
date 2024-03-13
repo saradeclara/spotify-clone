@@ -1,6 +1,7 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
 import TopList from "@/components/TopList/TopList";
 import { Avatar, Box, Text } from "@chakra-ui/react";
+import { Song } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
 import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
@@ -11,7 +12,9 @@ const PlaylistPage = (
 ) => {
 	const { playlist } = props;
 	let totalLength: number = 0;
-	playlist.songs.forEach((el) => (totalLength = totalLength + el.duration));
+	playlist.songs.forEach(
+		(el: Song) => (totalLength = totalLength + el.duration)
+	);
 
 	const gradientProps = {
 		image: playlist.avatarUrl,
