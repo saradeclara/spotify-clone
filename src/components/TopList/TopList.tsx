@@ -5,7 +5,6 @@ import {
 	Box,
 	Heading,
 	Img,
-	Link,
 	ListItem,
 	OrderedList,
 	Text,
@@ -13,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Episode, Song } from "@prisma/client";
 import { State, useStoreState } from "easy-peasy";
+import Link from "next/link";
 import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -300,7 +300,7 @@ function TopList({
 													margin: "auto 0",
 												}}
 											>
-												<Link href={`/track/${id}`}>
+												<Link href="/track/[id]" as={`/track/${id}`}>
 													<Box
 														color={
 															activeTrack && isSongPlaying(activeTrack, id)
@@ -316,7 +316,10 @@ function TopList({
 												</Link>
 												{showArtist ? (
 													<Box sx={{ color: "gray", fontSize: "small" }}>
-														<Link href={`/artist/${authorId}`}>
+														<Link
+															href="/artist/[id]"
+															as={`/artist/${authorId}`}
+														>
 															<Text _hover={{ textDecoration: "underline" }}>
 																{author}
 															</Text>

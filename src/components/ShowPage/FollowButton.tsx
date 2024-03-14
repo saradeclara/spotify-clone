@@ -1,8 +1,8 @@
 import { Mode, Size } from "@/enums/FollowButton";
 import { fetchFeedData } from "@/react-query/fetch";
-import { feedKey } from "@/react-query/queryKeys";
+import { favouriteSongsKey, feedKey } from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
-import { Box, Button, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Box, Button, Text, Tooltip } from "@chakra-ui/react";
 import { Album, Artist, Category, Playlist, Show, Song } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -32,7 +32,7 @@ const FollowButton = ({
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
 
 	const { data } = useQuery<FeedData>(feedKey, fetchFeedData);
-	const addRemoveToast = useToast();
+	// const addRemoveToast = useToast();
 
 	enum BtnStatus {
 		Follow = "Follow",
@@ -74,6 +74,7 @@ const FollowButton = ({
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries(feedKey);
+				queryClient.invalidateQueries(favouriteSongsKey);
 			},
 		}
 	);
