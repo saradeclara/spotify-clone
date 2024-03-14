@@ -35,15 +35,10 @@ const LibraryMenu = () => {
 	const favouritesViews: string[] = ["list", "grid"];
 
 	const { sidebarMargin, margins } = useContext(LayoutContext);
-	console.log({ sidebarMargin });
 	const { data: queryData, status } = useQuery(feedKey, fetchFeedData);
 
-	// if (!queryData) return null;
 	const data = filterAndSort(queryData, textInput, currentOption, currentCat);
-	// const data = queryData;
-	// const filteredData = searchText(data, textInput);
-	// // const sortedData = [];
-	// const sortedData = data;
+
 	useEffect(() => {
 		if (sidebarMargin === margins.l) {
 			toggleView(1);

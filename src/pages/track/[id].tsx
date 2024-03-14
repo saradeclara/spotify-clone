@@ -1,17 +1,25 @@
 import GradientLayoutPages from "@/components/GradientLayoutPages";
 import FollowButton from "@/components/ShowPage/FollowButton";
-import { Mode } from "@/enums/FollowButton";
+import { Mode, Size } from "@/enums/FollowButton";
 import { Avatar, Box, Text } from "@chakra-ui/react";
+import { State } from "easy-peasy";
 import { InferGetServerSidePropsType } from "next";
 import Link from "next/link";
+import { AiFillPlayCircle } from "react-icons/ai";
 import convertSeconds from "../../../lib/convertSeconds";
 import prisma from "../../../lib/prisma";
+import {
+	StoreModel,
+	Track,
+	useStoreActions,
+	useStoreState,
+} from "../../../lib/store";
 
 const TrackPage = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-	const { song } = props;
-
+	const { singleTrack, stats } = props;
+	console.log({ props });
 	const renderDescription = ({
 		songAvatar,
 		artistName,
@@ -38,7 +46,7 @@ const TrackPage = (
 
 		return [
 			artistImage,
-			<Link href={`/artist/${song.artist?.id}`}>
+			<Link href={`/artist/${singleTrack.artist?.id}`}>
 				<Text
 					sx={{ display: "inline", fontWeight: "bold", marginRight: "4px" }}
 					_hover={{ textDecoration: "underline" }}
@@ -47,7 +55,7 @@ const TrackPage = (
 				</Text>
 			</Link>,
 			" \u2022 ",
-			<Link href={`/album/${song.album?.id}`}>
+			<Link href={`/album/${singleTrack.album?.id}`}>
 				<Text
 					sx={{ display: "inline", margin: "0px 4px" }}
 					_hover={{ textDecoration: "underline" }}
@@ -61,14 +69,35 @@ const TrackPage = (
 	};
 
 	const gradientProps = {
-		image: song.album?.avatarUrl,
+		image: singleTrack.album?.avatarUrl,
 		roundAvatar: false,
-		description: renderDescription(song.stats),
-		subtitle: song.category.description,
-		title: song.name,
-		...song,
+		description: stats ? renderDescription(stats) : [""],
+		subtitle: singleTrack.category.description,
+		title: singleTrack.name,
+		...singleTrack,
 	};
 
+	const activeTrack = useStoreState(
+		(store: State<StoreModel>) => store.activeTrack
+	);
+	const activeTracks = useStoreState(
+		(store: State<StoreModel>) => store.activeTracks
+	);
+
+	const setActiveTrack = useStoreActions((store) => store.changeActiveTrack);
+	const setActiveTracks = useStoreActions((store) => store.changeActiveTracks);
+
+	const setCurrentTrack = () => {
+		const newTrack: Track = {
+			...singleTrack,
+			thumbnail: singleTrack.album?.avatarUrl,
+			author: singleTrack.artist?.name,
+			authorId: singleTrack.artist?.id ?? null,
+			collectionName: singleTrack.album?.name,
+		};
+		setActiveTrack(newTrack);
+		setActiveTracks([newTrack]);
+	};
 	return (
 		<Box
 			sx={{
@@ -78,19 +107,19 @@ const TrackPage = (
 			}}
 		>
 			<GradientLayoutPages {...gradientProps}>
-				<Box>
+				<Box sx={{ display: "flex", padding: "20px" }}>
+					<Box
+						onClick={setCurrentTrack}
+						sx={{ marginRight: "20px", cursor: "pointer" }}
+					>
+						<AiFillPlayCircle color="black" fontSize="55px" />
+					</Box>
 					<FollowButton
+						size={Size.medium}
 						mode={Mode.Heart}
 						categoryArray="favouriteSongs"
-						categoryData={song}
+						categoryData={singleTrack}
 					/>
-					{/* <TopList
-						showHeadings
-						items={album.songs}
-						mode="album"
-						showArtist
-						showFavourites
-					/> */}
 				</Box>
 			</GradientLayoutPages>
 		</Box>
@@ -121,14 +150,10 @@ export const getServerSideProps = async ({
 			duration: convertSeconds(singleTrack.duration),
 		};
 
-		const songWithStats = {
-			...singleTrack,
-			stats,
-		};
-
 		return {
 			props: {
-				song: songWithStats,
+				singleTrack,
+				stats,
 			},
 		};
 	}
