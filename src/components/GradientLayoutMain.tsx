@@ -4,11 +4,9 @@ import { ReactNode } from "react";
 const GradientLayoutMain = ({
 	color,
 	children,
-	image,
 }: {
 	color: string;
 	children: ReactNode;
-	image: string;
 }) => {
 	return (
 		<Box

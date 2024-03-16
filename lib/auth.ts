@@ -32,10 +32,11 @@ export const validateRoute = (
 						where: { id: decodedToken.id },
 						include: {
 							favouriteShows: { include: { category: true } },
-							favouriteAlbums: true,
-							favouritePlaylists: true,
-							favouriteSongs: true,
-							artistFollowing: true,
+							favouriteAlbums: { include: { category: true } },
+							favouritePlaylists: { include: { category: true } },
+							createdPlaylists: { include: { category: true } },
+							favouriteSongs: { include: { category: true } },
+							artistFollowing: { include: { category: true } },
 						},
 					});
 
