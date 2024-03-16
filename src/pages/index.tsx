@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { InferGetServerSidePropsType } from "next";
 import capitalise from "../../lib/capitalise";
 import prisma from "../../lib/prisma";
+
 const Home = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {

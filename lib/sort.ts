@@ -1,4 +1,4 @@
-import { libraryTags } from "@/components/LibraryMenu";
+import { libraryTags } from "@/components/Sidebar/LibraryMenu";
 
 /**
  * The function `sortAlphabetical` sorts an array of objects alphabetically based on the `name`
