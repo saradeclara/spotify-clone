@@ -1,15 +1,55 @@
+import RecentlyAddedGrid from "@/components/Dashboard/RecentlyAddedGrid";
 import FeedCarousel from "@/components/FeedCarousel";
 import GradientLayoutMain from "@/components/GradientLayoutMain";
 import { Box } from "@chakra-ui/react";
+import { Album, Artist, Category, Playlist, Song } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { InferGetServerSidePropsType } from "next";
 import capitalise from "../../lib/capitalise";
 import prisma from "../../lib/prisma";
+import { sortRecentlyAdded } from "../../lib/sort";
+
+export type RecentlyAddedType = (Album & Song & Artist & Playlist & Album) & {
+	category: Category;
+	album: Album;
+};
+// | (Album & { category: Category })
+// | (Song & { category: Category })
+// | (Artist & { category: Category })
+// | (Playlist & { category: Category });
 
 const Home = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-	const { feed } = props;
+	const { carouselFeed, mainFeed } = props;
+
+	/**
+	 * The function `generateGridArray` takes an array of `RecentlyAddedType` elements and organizes them
+	 * into a grid with each row containing up to 4 elements.
+	 * @param {RecentlyAddedType[]} array - The `array` parameter in the `generateGridArray` function is
+	 * an array of elements of type `RecentlyAddedType`. The function takes this array and organizes its
+	 * elements into a grid structure where each row contains up to 4 elements.
+	 * @returns The `generateGridArray` function returns a 2D array where each sub-array contains up to 4
+	 * elements from the input `array`.
+	 */
+	const generateGridArray = (array: RecentlyAddedType[]) => {
+		let result: RecentlyAddedType[][] = [];
+		let newRow: RecentlyAddedType[] = [];
+		array.map((el) => {
+			newRow.push(el);
+			if (newRow.length === 4) {
+				result.push(newRow);
+				newRow = [];
+			}
+		});
+
+		return result;
+	};
+
+	const recentlyAddedData: RecentlyAddedType[] = sortRecentlyAdded(
+		mainFeed
+	).filter((_item, index) => index <= 8);
+	const gridData = generateGridArray(recentlyAddedData);
 
 	return (
 		<Box
@@ -21,7 +61,8 @@ const Home = (
 		>
 			<GradientLayoutMain color="red">
 				<Box sx={{ display: "flex", flexDirection: "column" }}>
-					{Object.values(feed).map(({ label, data }, index) => (
+					<RecentlyAddedGrid data={gridData} />
+					{Object.values(carouselFeed).map(({ label, data }, index) => (
 						<Box sx={{ display: "block" }}>
 							<FeedCarousel
 								key={index}
@@ -74,7 +115,14 @@ export const getServerSideProps = async (context: any) => {
 			if (!user) return;
 			return {
 				props: {
-					feed: {
+					mainFeed: [
+						...user?.favouriteAlbums,
+						...user?.favouritePlaylists,
+						...user?.favouriteSongs,
+						...user?.artistFollowing,
+						...user?.createdPlaylists,
+					],
+					carouselFeed: {
 						favouriteSongs: {
 							label: `${user.firstName}'s top tracks`,
 							data: user.favouriteSongs,
@@ -87,7 +135,10 @@ export const getServerSideProps = async (context: any) => {
 							label: `${user.firstName}'s favourite podcasts`,
 							data: user?.favouriteShows,
 						},
-
+						favouriteAlbums: {
+							label: "Top 5 Albums",
+							data: user?.favouriteAlbums,
+						},
 						favouritePlaylists: {
 							label: "Your Playlists",
 							data: [...user.favouritePlaylists, ...user.createdPlaylists],
