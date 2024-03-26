@@ -8,7 +8,6 @@
  * is not equal to 1, otherwise it returns the input string as is.
  */
 const pluralise = (total: number, string: string) => {
-	console.log({ total });
 	return total === 1 ? string : `${string}s`;
 };
 

@@ -2,26 +2,39 @@ import { Avatar, Box, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import capitalise from "../../lib/capitalise";
 import dateParser from "../../lib/dateParser";
+import { Track } from "../../lib/store";
 
 const FeedCard = ({
 	data,
 	isLast,
 }: {
-	data: {
-		id: string;
-		name: string;
+	data: Track & {
+		avatarUrl: string;
 		firstName?: string;
 		lastName?: string;
-		avatarUrl?: string;
-		username?: string;
 		releasedOn?: Date;
+		album?: { avatarUrl: string };
+		username?: string;
 		category: { description: string };
 	};
 	isLast?: boolean;
 }) => {
+	/**
+	 * The function `getCategory` takes a category description as input and returns "track" if the
+	 * description is "song".
+	 * @param {string} catDescription - catDescription is a parameter of type string that represents the
+	 * description of a category.
+	 * @returns The function `getCategory` returns "track" if the `catDescription` parameter is equal to
+	 * "song", otherwise it returns the `catDescription` parameter as is.
+	 */
+	const getCategory = (catDescription: string) => {
+		return catDescription === "song" ? "track" : catDescription;
+	};
+
 	const url = data.category
-		? `/${data.category.description}/${data.id}`
+		? `/${getCategory(data.category.description)}/${data.id}`
 		: `/user/${data.username}`;
+
 	return (
 		<Link href={url}>
 			<Box
@@ -50,7 +63,11 @@ const FeedCard = ({
 							? "full"
 							: "5px"
 					}
-					src={data.avatarUrl}
+					src={
+						data.category.description === "song"
+							? data.album?.avatarUrl
+							: data.avatarUrl
+					}
 				/>
 				<Text fontWeight="bold" fontSize="sm" color="white">
 					{data.category ? data.name : `${data.firstName} ${data.lastName}`}

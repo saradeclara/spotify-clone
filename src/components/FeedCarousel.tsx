@@ -1,5 +1,4 @@
 import { Box, Heading } from "@chakra-ui/react";
-import Link from "next/link";
 import capitalise from "../../lib/capitalise";
 import FeedCard from "./FeedCard";
 
@@ -11,17 +10,12 @@ function FeedCarousel({ feed }: { feed: { label: string; data: any[] } }) {
 			</Heading>
 			<Box sx={{ display: "flex" }}>
 				{feed.data.map((singleElement: any, index, array) => {
-					const url = singleElement.category
-						? `/${singleElement.category.description}/${singleElement.id}`
-						: `/${singleElement.id}`;
 					return (
-						<Link href={url}>
-							<FeedCard
-								key={index}
-								data={singleElement}
-								isLast={index === array.length - 1}
-							/>
-						</Link>
+						<FeedCard
+							key={index}
+							data={singleElement}
+							isLast={index === array.length - 1}
+						/>
 					);
 				})}
 			</Box>

@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
+import NavMenu from "../NavMenu";
 import LibraryMenu from "./LibraryMenu";
-import NavMenu from "./NavMenu";
 
 const Sidebar = () => {
 	return (

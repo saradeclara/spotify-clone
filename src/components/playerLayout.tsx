@@ -12,7 +12,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { useMe } from "../../lib/hooks";
 import MainPlayer from "./BottomPlayer/MainPlayer";
 import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar/Sidebar";
 
 const fac = new FastAverageColor();
 
