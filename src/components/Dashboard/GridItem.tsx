@@ -3,9 +3,26 @@ import { Box, Img } from "@chakra-ui/react";
 import Link from "next/link";
 
 const GridItem = ({ item }: { item: RecentlyAddedType }) => {
+	console.log({ item });
+
+	/**
+	 * The function `generateItemUrl` takes a `RecentlyAddedType` item and returns a URL based on its
+	 * category and ID.
+	 * @param {RecentlyAddedType} item - RecentlyAddedType
+	 * @returns `/{category}/{item.id}` url string
+	 */
+	const generateItemUrl = (item: RecentlyAddedType) => {
+		const category =
+			item.category.description === "song" ||
+			item.category.description === "episode"
+				? "track"
+				: item.category.description;
+		return `/${category}/${item.id}`;
+	};
+
 	return (
 		<Box sx={{ flex: "1" }}>
-			<Link href="">
+			<Link href={generateItemUrl(item)}>
 				<Box
 					sx={{
 						background: "rgba(255,255,255,.3)",

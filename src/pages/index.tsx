@@ -13,10 +13,6 @@ export type RecentlyAddedType = (Album & Song & Artist & Playlist & Album) & {
 	category: Category;
 	album: Album;
 };
-// | (Album & { category: Category })
-// | (Song & { category: Category })
-// | (Artist & { category: Category })
-// | (Playlist & { category: Category });
 
 const Home = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
@@ -33,17 +29,17 @@ const Home = (
 	 * elements from the input `array`.
 	 */
 	const generateGridArray = (array: RecentlyAddedType[]) => {
-		let result: RecentlyAddedType[][] = [];
+		let grid: RecentlyAddedType[][] = [];
 		let newRow: RecentlyAddedType[] = [];
 		array.map((el) => {
 			newRow.push(el);
 			if (newRow.length === 4) {
-				result.push(newRow);
+				grid.push(newRow);
 				newRow = [];
 			}
 		});
 
-		return result;
+		return grid;
 	};
 
 	const recentlyAddedData: RecentlyAddedType[] = sortRecentlyAdded(
@@ -60,7 +56,7 @@ const Home = (
 			}}
 		>
 			<GradientLayoutMain color="red">
-				<Box sx={{ display: "flex", flexDirection: "column" }}>
+				<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 					<RecentlyAddedGrid data={gridData} />
 					{Object.values(carouselFeed).map(({ label, data }, index) => (
 						<Box sx={{ display: "block" }}>
