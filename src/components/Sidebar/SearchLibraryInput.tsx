@@ -27,8 +27,8 @@ const SearchLibraryInput = ({
 					children={<MdSearch />}
 				/>
 				<Input
-					_focusVisible={{ border: "0px" }}
-					_hover={{ border: "0px" }}
+					_focusVisible={{ border: "1px" }}
+					_hover={{ border: "1px" }}
 					_placeholder={{
 						opacity: 1,
 						color: "#8E8E8E",
