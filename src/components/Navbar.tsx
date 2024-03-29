@@ -220,7 +220,7 @@ const Navbar = ({
 										_hover={{ background: "#272727" }}
 										sx={{ marginBottom: "8px", padding: "7px" }}
 									>
-										Logout
+										<Link href="/api/signout">Logout</Link>
 									</ListItem>
 								</UnorderedList>{" "}
 							</PopoverBody>
