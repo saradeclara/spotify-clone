@@ -25,6 +25,7 @@ import {
 } from "react-icons/io5";
 
 import { NavBarHeaderContext } from "@/context/NavBarHeader";
+import { backgroundFeedCard } from "@/styles/colors";
 import { MdSearch } from "react-icons/md";
 import lumaTextColor from "../../lib/lumaTextColor";
 
@@ -40,14 +41,11 @@ const Navbar = ({
 	const router = useRouter();
 
 	const { pathname } = useRouter();
-	// const reqElements = asPath.split("/").filter((el) => el !== "");
 	const [searchText, updateSearchText] = useState("");
 	const { sidebarMargin } = useContext(LayoutContext);
 	const { header } = useContext(NavBarHeaderContext);
 	const whiteNavIcons =
 		pathname.includes("search") || pathname.includes("[category]");
-
-	// const result = useNavHeader(reqElements);
 
 	const pushPrevHistoryPos = () => {
 		window.history.back();
@@ -134,10 +132,6 @@ const Navbar = ({
 					fontSize: "20px",
 					fontWeight: "bold",
 					width: "100%",
-					// color:
-					// 	scrollPosition > 400
-					// 		? `rgba(${lumaColor.r}, ${lumaColor.g}, ${lumaColor.b}, 1)`
-					// 		: `rgba(${lumaColor.r}, ${lumaColor.g}, ${lumaColor.b}, 0)`,
 					marginLeft: "10px",
 					transition: "all .4s",
 				}}
@@ -177,7 +171,10 @@ const Navbar = ({
 				)}
 			</Box>
 			<Box>
-				<Tooltip label={`${loggedInUser.firstName} ${loggedInUser.lastName}`}>
+				<Tooltip
+					_focusVisible={{ outline: "none" }}
+					label={`${loggedInUser.firstName} ${loggedInUser.lastName}`}
+				>
 					<Popover placement="bottom-end">
 						<PopoverTrigger>
 							<Avatar
@@ -186,13 +183,45 @@ const Navbar = ({
 								src={loggedInUser.avatarUrl}
 							/>
 						</PopoverTrigger>
-						<PopoverContent>
-							<PopoverBody>
-								<UnorderedList>
-									<ListItem>
+						<PopoverContent
+							_focusVisible={{ outline: "none" }}
+							sx={{
+								border: "0px",
+								borderRadius: "5px",
+								background: "rgba(0,0,0,0)",
+							}}
+						>
+							<PopoverBody
+								_focusVisible={{ outline: "none" }}
+								sx={{
+									background: backgroundFeedCard,
+									border: "1px solid black",
+									color: "white",
+									fontSize: "sm",
+									boxShadow: "-1px 5px 23px 5px rgba(0,0,0,0.75);",
+									borderColor: "rgba(0,0,0,0)",
+									borderRadius: "5px",
+								}}
+							>
+								<UnorderedList
+									sx={{
+										listStyleType: "none",
+										marginInlineStart: ".5em",
+										margin: "2px 0px",
+									}}
+								>
+									<ListItem
+										_hover={{ background: "#272727" }}
+										sx={{ marginBottom: "8px", padding: "7px" }}
+									>
 										<Link href={`/user/${loggedInUser.username}`}>Profile</Link>
 									</ListItem>
-									<ListItem>Logout</ListItem>
+									<ListItem
+										_hover={{ background: "#272727" }}
+										sx={{ marginBottom: "8px", padding: "7px" }}
+									>
+										Logout
+									</ListItem>
 								</UnorderedList>{" "}
 							</PopoverBody>
 						</PopoverContent>

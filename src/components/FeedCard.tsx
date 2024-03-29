@@ -1,3 +1,4 @@
+import { backgroundFeedCard } from "@/styles/colors";
 import { Avatar, Box, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import capitalise from "../../lib/capitalise";
@@ -44,7 +45,7 @@ const FeedCard = ({
 				}}
 				sx={{
 					padding: "15px",
-					background: "#181818",
+					background: backgroundFeedCard,
 					width: "180px",
 					height: "250px",
 					borderRadius: "10px",
