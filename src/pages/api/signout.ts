@@ -1,7 +1,7 @@
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (_req: NextApiRequest, res: NextApiResponse) => {
 	// clear cookie
 	res.setHeader(
 		"Set-Cookie",

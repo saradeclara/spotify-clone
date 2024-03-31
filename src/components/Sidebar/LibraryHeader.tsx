@@ -11,6 +11,7 @@ import {
 	Tooltip,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { useContext } from "react";
 import {
 	MdAdd,
@@ -26,6 +27,8 @@ function LibraryHeader({
 	toggleView,
 	favouritesViews,
 }: LibraryHeaderProps) {
+	const router = useRouter();
+
 	const libraryListItem: menuDataType = {
 		name: "Your Library",
 		icon: MdLibraryBooks,
@@ -34,6 +37,10 @@ function LibraryHeader({
 	const { sidebarMargin, updateSidebarMargin, margins } =
 		useContext(LayoutContext);
 
+	/**
+	 * The function `handleExpandReduceLibrary` toggles between two sidebar margin sizes and forces a list
+	 * view on a specific margin size.
+	 */
 	const handleExpandReduceLibrary = () => {
 		if (sidebarMargin === margins.md) {
 			updateSidebarMargin(margins.l);
@@ -44,8 +51,33 @@ function LibraryHeader({
 		}
 	};
 
+	/**
+	 * The function `handleToggleView` toggles between two views by updating the current view state.
+	 */
 	const handleToggleView = () => {
 		toggleView(currentView === 0 ? 1 : 0);
+	};
+
+	/**
+	 * The function `handleCreatePlaylist` sends a POST request to create a new playlist via an API
+	 * endpoint and redirects to the newly created playlist's page upon success.
+	 */
+	const handleCreatePlaylist = async () => {
+		const newPlaylist = await fetch("/api/playlist", {
+			method: "POST",
+			mode: "cors",
+			cache: "no-cache",
+			credentials: "same-origin",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			referrerPolicy: "no-referrer",
+		});
+		const newPlaylistJson = await newPlaylist.json();
+
+		if (newPlaylistJson) {
+			router.push(`/playlist/${newPlaylistJson.id}`);
+		}
 	};
 
 	return (
@@ -69,17 +101,14 @@ function LibraryHeader({
 					</Box>
 				</Link>
 				<Box display="flex">
-					<Tooltip
-						boxShadow="md"
-						label="Create playlist or folder"
-						placement="top"
-					>
+					<Tooltip boxShadow="md" label="Create playlist" placement="top">
 						<Box>
 							<ListIcon
 								_hover={{ color: "white" }}
 								fontSize={30}
 								cursor="pointer"
 								as={MdAdd}
+								onClick={handleCreatePlaylist}
 							/>
 						</Box>
 					</Tooltip>
