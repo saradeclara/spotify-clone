@@ -1,4 +1,5 @@
 import { LayoutContext } from "@/context/LayoutContext";
+import { feedKey } from "@/react-query/queryKeys";
 import { menuDataType } from "@/types";
 import { LibraryHeaderProps } from "@/types/libraryMenu";
 import {
@@ -21,6 +22,7 @@ import {
 	MdGridView,
 	MdLibraryBooks,
 } from "react-icons/md";
+import { useQueryClient } from "react-query";
 
 function LibraryHeader({
 	currentView,
@@ -36,6 +38,7 @@ function LibraryHeader({
 	};
 	const { sidebarMargin, updateSidebarMargin, margins } =
 		useContext(LayoutContext);
+	const queryClient = useQueryClient();
 
 	/**
 	 * The function `handleExpandReduceLibrary` toggles between two sidebar margin sizes and forces a list
@@ -59,8 +62,8 @@ function LibraryHeader({
 	};
 
 	/**
-	 * The function `handleCreatePlaylist` sends a POST request to create a new playlist via an API
-	 * endpoint and redirects to the newly created playlist's page upon success.
+	 * The function `handleCreatePlaylist` sends a POST request to create a new playlist via an API, then
+	 * redirects to the newly created playlist and invalidates the main feed query..
 	 */
 	const handleCreatePlaylist = async () => {
 		const newPlaylist = await fetch("/api/playlist", {
@@ -77,6 +80,7 @@ function LibraryHeader({
 
 		if (newPlaylistJson) {
 			router.push(`/playlist/${newPlaylistJson.id}`);
+			queryClient.invalidateQueries(feedKey);
 		}
 	};
 

@@ -19,7 +19,6 @@ const TrackPage = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
 	const { singleTrack, stats } = props;
-	console.log({ props });
 	const renderDescription = ({
 		songAvatar,
 		artistName,

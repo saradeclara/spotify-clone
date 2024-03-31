@@ -185,7 +185,6 @@ function TopList({
 							: -1;
 				  })
 				: trackList;
-		console.log({ orderedItems });
 		return (
 			<Box sx={{ padding: "30px" }}>
 				{heading ? (

@@ -2,7 +2,15 @@ import { likedSongsCover } from "@/pages/favourites/liked-songs";
 import { fetchFavouriteSongs } from "@/react-query/fetch";
 import { favouriteSongsKey } from "@/react-query/queryKeys";
 import { spotifyGreen } from "@/styles/colors";
-import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
+import {
+	Avatar,
+	Box,
+	Icon,
+	Image,
+	List,
+	ListItem,
+	Text,
+} from "@chakra-ui/react";
 import { Album, Artist, Category, Playlist, Show } from "@prisma/client";
 import Link from "next/link";
 import { AiFillPushpin } from "react-icons/ai";
@@ -118,12 +126,17 @@ const FavouritesListView = ({
 								cursor: "pointer",
 							}}
 						>
-							<Image
-								borderRadius="md"
-								boxSize="50px"
-								src={feedRecord.avatarUrl}
-								alt={feedRecord.name}
-							/>
+							{feedRecord.avatarUrl ? (
+								<Image
+									borderRadius="md"
+									boxSize="50px"
+									src={feedRecord.avatarUrl}
+									alt={feedRecord.name}
+								/>
+							) : (
+								<Avatar src={feedRecord.avatarUrl} />
+							)}
+
 							<Box sx={{ marginLeft: "10px" }}>
 								<Text color="white">
 									<SubstringSearchText
