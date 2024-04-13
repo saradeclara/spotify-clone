@@ -15,3 +15,17 @@ export const fetchFavouriteEpisodes = async () => {
 	if (!response.ok) throw new Error("Failed to fetch data");
 	return response.json();
 };
+
+export const fetchSongs = async () => {
+	const response = await fetch("/api/songs");
+	if (!response.ok) throw new Error("Failed to fetch data");
+	return response.json();
+};
+
+export const fetchPlaylist = async (id: string) => {
+	const response = await fetch(`/api/playlist/${id}`, {
+		method: "GET",
+	});
+	if (!response.ok) throw new Error("Failed to fetch data");
+	return response.json();
+};

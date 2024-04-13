@@ -5,16 +5,16 @@ export default validateRoute(async (_req, res, user) => {
 	const currentUserWithArtists = await prisma.user.findUnique({
 		where: { id: user?.id },
 		include: {
-			followingArtist: {
+			artistFollowing: {
 				include: {
-					Category: true,
+					category: true,
 				},
 			},
 		},
 	});
 
 	if (currentUserWithArtists) {
-		const firstFiveArtists = currentUserWithArtists.followingArtist.slice(0, 4);
+		const firstFiveArtists = currentUserWithArtists.artistFollowing.slice(0, 4);
 		res.json(firstFiveArtists);
 	}
 });
