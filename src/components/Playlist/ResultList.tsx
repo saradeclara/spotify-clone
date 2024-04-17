@@ -19,7 +19,7 @@ function ResultList({
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ newSongId }),
+			body: JSON.stringify({ newSongId, flag: "add" }),
 		}).then(() => {
 			queryClient.invalidateQueries(playlistKey);
 		});

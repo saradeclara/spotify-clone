@@ -8,12 +8,14 @@ const TopListHeadings = ({
 	showFavourites,
 	showAlbumColumn,
 	showDateAdded,
+	showDeleteCol,
 }: {
 	width: string;
 	colStyles: { marginLeft?: string };
 	showFavourites: boolean;
 	showAlbumColumn?: boolean;
 	showDateAdded?: boolean;
+	showDeleteCol?: boolean;
 }) => {
 	return (
 		<OrderedList
@@ -67,8 +69,8 @@ const TopListHeadings = ({
 								<Box>Title</Box>
 							</Box>
 						</Box>
-						{showAlbumColumn ? <Box sx={{ flex: 1 }}>Album</Box> : null}
-						{showDateAdded ? <Box sx={{ flex: 1 }}>Date added</Box> : null}
+						{showAlbumColumn ? <Box flex="1">Album</Box> : null}
+						{showDateAdded ? <Box flex="1">Date added</Box> : null}
 
 						{showFavourites ? (
 							<Box
@@ -76,8 +78,8 @@ const TopListHeadings = ({
 									flex: 1,
 									display: "flex",
 									justifyContent: "center",
+									cursor: "pointer",
 								}}
-								cursor="pointer"
 							></Box>
 						) : null}
 
@@ -90,6 +92,15 @@ const TopListHeadings = ({
 						>
 							<BiTimeFive />
 						</Box>
+
+						{showDeleteCol ? (
+							<Box
+								sx={{
+									flex: 0.5,
+									cursor: "pointer",
+								}}
+							></Box>
+						) : null}
 					</Box>
 				</ListItem>
 			</Box>

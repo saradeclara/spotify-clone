@@ -10,7 +10,7 @@ import { useQuery } from "react-query";
 import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
 
-const PlaylistPage = (props: any) => {
+const PlaylistPage = (_props) => {
 	const {
 		query: { id },
 	} = useRouter();
@@ -21,7 +21,6 @@ const PlaylistPage = (props: any) => {
 		fetchPlaylist(id)
 	);
 
-	console.log({ data });
 	if (!data) return;
 
 	let totalLength: number = 0;
@@ -64,12 +63,14 @@ const PlaylistPage = (props: any) => {
 				<Box>
 					<TopList
 						items={data.songs}
+						playlistId={data.id}
 						showArtist
 						showFavourites
 						showAlbumCovers
 						showDateAdded
 						showAlbumColumn
 						showHeadings
+						showDeleteCol
 					/>
 					<AddSongsToPlaylist playlistId={data.id} />
 				</Box>
