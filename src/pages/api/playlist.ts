@@ -38,8 +38,8 @@ export default validateRoute(async (req, res, user) => {
 				return dateB > dateA ? 1 : dateB < dateA ? -1 : 0;
 			});
 
-			const mostRecentPlaylist = orderedPlaylists[orderedPlaylists.length - 1];
-
+			const mostRecentPlaylist = orderedPlaylists[0];
+			console.log({ mostRecentPlaylist });
 			newPlaylistNumber = Number(mostRecentPlaylist.name.split("#")[1]) + 1;
 		}
 
