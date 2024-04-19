@@ -232,7 +232,6 @@ const filterAndSort = (
 	// categories
 	if (typeof currentCategory === "number") {
 		filteredAndSortedData = filteredAndSortedData.filter((el) => {
-			console.log("desc", el.category.description);
 			return (
 				el.category.description.toLowerCase() ===
 				libraryTags[currentCategory].label.toLowerCase()

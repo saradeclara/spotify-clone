@@ -1,5 +1,9 @@
 import { fetchFeedData } from "@/react-query/fetch";
-import { favouriteSongsKey, feedKey } from "@/react-query/queryKeys";
+import {
+	favouriteSongsKey,
+	feedKey,
+	playlistKey,
+} from "@/react-query/queryKeys";
 import { lightGrayText, spotifyGreen } from "@/styles/colors";
 import {
 	Box,
@@ -16,6 +20,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
+import { MdDelete } from "react-icons/md";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import convertSeconds from "../../../lib/convertSeconds";
@@ -27,7 +32,6 @@ import {
 	useStoreActions,
 } from "../../../lib/store";
 import TopListHeadings from "./TopListHeadings";
-
 interface TopListProps {
 	heading?: string | null;
 	items?: ExtendedSong[];
@@ -35,10 +39,12 @@ interface TopListProps {
 	showAlbumCovers?: boolean;
 	showHeadings?: boolean;
 	showArtist?: boolean;
+	showDeleteCol?: boolean;
 	mode?: string;
 	width?: string;
 	showDateAdded?: boolean;
 	showAlbumColumn?: boolean;
+	playlistId?: string;
 }
 
 function TopList({
@@ -46,11 +52,13 @@ function TopList({
 	items,
 	showAlbumColumn,
 	showDateAdded,
+	showDeleteCol,
 	showFavourites,
 	showAlbumCovers,
 	showHeadings,
 	showArtist,
 	mode,
+	playlistId,
 	width = "100%",
 }: TopListProps) {
 	const [{ isHovering, item }, updateHoveringState] = useState({
@@ -67,11 +75,32 @@ function TopList({
 	const setActiveTrack = useStoreActions((store) => store.changeActiveTrack);
 
 	/**
-	 * Function which dispatches actions from the store to update activeSong and activeSongs in the main store
+	 * The `handlePlay` function sets a single song as the active track and updates the collection of
+	 * active tracks.
+	 * @param {Track} singleSong - The `singleSong` parameter is a single track object that represents a
+	 * song to be played.
+	 * @param {Track[]} songCollection - The `songCollection` parameter is an array of `Track` objects
+	 * that likely represents a collection of songs or tracks.
 	 */
 	const handlePlay = (singleSong: Track, songCollection: Track[]) => {
 		setActiveTracks(songCollection);
 		setActiveTrack(singleSong);
+	};
+
+	const handleDeleteSong = async (playlistId: string, newSongId: string) => {
+		console.log({ playlistId, newSongId });
+		const response = await fetch(`/api/playlist/${playlistId}`, {
+			method: "PUT",
+			cache: "no-cache",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ newSongId, flag: "remove" }),
+		});
+		const json = await response.json();
+		console.log({ json });
+
+		queryClient.invalidateQueries(playlistKey);
 	};
 
 	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
@@ -152,66 +181,67 @@ function TopList({
 		return <Box>Error</Box>;
 	}
 
-	if (data) {
-		const favouriteSongs = [...data].filter(
-			(record) => record.category.description === "song"
-		);
+	if (!data) return;
 
-		const listItems: (ExtendedSong & Episode & { avatarUrl: string })[] =
-			typeof items === "undefined" ? favouriteSongs : items;
+	const favouriteSongs = [...data].filter(
+		(record) => record.category.description === "song"
+	);
 
-		const trackList: Track[] = [...listItems].map((el) => {
-			return {
-				id: el.id,
-				name: el.name,
-				author: el.artist?.name,
-				duration: el.duration,
-				thumbnail: el.album ? el.album?.avatarUrl : el.avatarUrl,
-				albumIndex: el.albumIndex,
-				url: el.url,
-				createdAt: el.createdAt,
-				updatedAt: el.updatedAt,
-				authorId: el.artistId,
-				collectionName: el.album?.name,
-			};
-		});
+	const listItems: (ExtendedSong & Episode & { avatarUrl: string })[] =
+		typeof items === "undefined" ? favouriteSongs : items;
 
-		const orderedItems: Track[] =
-			mode === "album"
-				? [...trackList].sort((a, b) => {
-						return typeof a.albumIndex !== "undefined" &&
-							typeof b.albumIndex !== "undefined"
-							? a.albumIndex - b.albumIndex
-							: -1;
-				  })
-				: trackList;
-		console.log({ orderedItems });
-		return (
-			<Box sx={{ padding: "30px" }}>
-				{heading ? (
-					<Heading size="md" sx={{ color: "white", margin: "20px 0px" }}>
-						{capitalise(heading)}
-					</Heading>
-				) : null}
+	const trackList: Track[] = [...listItems].map((el) => {
+		return {
+			id: el.id,
+			name: el.name,
+			author: el.artist?.name,
+			duration: el.duration,
+			thumbnail: el.album ? el.album?.avatarUrl : el.avatarUrl,
+			albumIndex: el.albumIndex,
+			url: el.url,
+			createdAt: el.createdAt,
+			updatedAt: el.updatedAt,
+			authorId: el.artistId,
+			collectionName: el.album?.name,
+		};
+	});
 
-				{showHeadings ? (
-					<TopListHeadings
-						width={width}
-						colStyles={colStyles}
-						showFavourites
-						showAlbumColumn={showAlbumColumn}
-						showDateAdded={showDateAdded}
-					/>
-				) : null}
+	const orderedItems: Track[] =
+		mode === "album"
+			? [...trackList].sort((a, b) => {
+					return typeof a.albumIndex !== "undefined" &&
+						typeof b.albumIndex !== "undefined"
+						? a.albumIndex - b.albumIndex
+						: -1;
+			  })
+			: trackList;
+	return (
+		<Box sx={{ padding: "30px" }}>
+			{heading ? (
+				<Heading size="md" sx={{ color: "white", margin: "20px 0px" }}>
+					{capitalise(heading)}
+				</Heading>
+			) : null}
+			{showHeadings && orderedItems.length > 0 ? (
+				<TopListHeadings
+					width={width}
+					colStyles={colStyles}
+					showFavourites
+					showAlbumColumn={showAlbumColumn}
+					showDateAdded={showDateAdded}
+					showDeleteCol={showDeleteCol}
+				/>
+			) : null}
 
-				<OrderedList
-					sx={{
-						color: "white",
-						marginLeft: "0px",
-						width,
-					}}
-				>
-					{orderedItems?.map((song, index) => {
+			<OrderedList
+				sx={{
+					color: "white",
+					marginLeft: "0px",
+					width,
+				}}
+			>
+				{orderedItems.length > 0 ? (
+					orderedItems.map((song, index) => {
 						const {
 							id,
 							name,
@@ -300,20 +330,15 @@ function TopList({
 													margin: "auto 0",
 												}}
 											>
-												<Link href="/track/[id]" as={`/track/${id}`}>
-													<Box
-														color={
-															activeTrack && isSongPlaying(activeTrack, id)
-																? spotifyGreen
-																: lightGrayText
-														}
-														_hover={{
-															textDecoration: "underline",
-														}}
-													>
-														{name}
-													</Box>
-												</Link>
+												<Box
+													color={
+														activeTrack && isSongPlaying(activeTrack, id)
+															? spotifyGreen
+															: lightGrayText
+													}
+												>
+													{name}
+												</Box>
 												{showArtist ? (
 													<Box sx={{ color: "gray", fontSize: "small" }}>
 														<Link
@@ -382,15 +407,48 @@ function TopList({
 										>
 											{convertSeconds(duration)}
 										</Box>
+										{showDeleteCol && playlistId ? (
+											<Tooltip
+												placement="top"
+												label={`Remove ${name} from this playlist`}
+											>
+												<Box
+													_hover={{
+														color: spotifyGreen,
+														transition: "all .3s",
+													}}
+													sx={{
+														flex: 0.5,
+														display: "flex",
+														justifyContent: "flex-end",
+														fontSize: "sm",
+														cursor: "pointer",
+													}}
+													onClick={() => handleDeleteSong(playlistId, song.id)}
+												>
+													<MdDelete />
+												</Box>
+											</Tooltip>
+										) : null}
 									</Box>
 								</ListItem>
 							</Box>
 						);
-					})}
-				</OrderedList>
-			</Box>
-		);
-	}
+					})
+				) : (
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "center",
+							color: lightGrayText,
+						}}
+					>
+						There are no tracks in this collection
+					</Box>
+				)}
+			</OrderedList>
+		</Box>
+	);
 }
 
 export default TopList;

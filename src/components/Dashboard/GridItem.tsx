@@ -3,8 +3,6 @@ import { Box, Img } from "@chakra-ui/react";
 import Link from "next/link";
 
 const GridItem = ({ item }: { item: RecentlyAddedType }) => {
-	console.log({ item });
-
 	/**
 	 * The function `generateItemUrl` takes a `RecentlyAddedType` item and returns a URL based on its
 	 * category and ID.
