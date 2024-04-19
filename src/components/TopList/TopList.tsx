@@ -330,20 +330,15 @@ function TopList({
 													margin: "auto 0",
 												}}
 											>
-												<Link href="/track/[id]" as={`/track/${id}`}>
-													<Box
-														color={
-															activeTrack && isSongPlaying(activeTrack, id)
-																? spotifyGreen
-																: lightGrayText
-														}
-														_hover={{
-															textDecoration: "underline",
-														}}
-													>
-														{name}
-													</Box>
-												</Link>
+												<Box
+													color={
+														activeTrack && isSongPlaying(activeTrack, id)
+															? spotifyGreen
+															: lightGrayText
+													}
+												>
+													{name}
+												</Box>
 												{showArtist ? (
 													<Box sx={{ color: "gray", fontSize: "small" }}>
 														<Link

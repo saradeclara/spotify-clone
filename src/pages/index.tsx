@@ -1,6 +1,7 @@
 import RecentlyAddedGrid from "@/components/Dashboard/RecentlyAddedGrid";
 import FeedCarousel from "@/components/FeedCarousel";
 import GradientLayoutMain from "@/components/GradientLayoutMain";
+import { getTopItems } from "@/helpers";
 import { Box } from "@chakra-ui/react";
 import { Album, Artist, Category, Playlist, Song } from "@prisma/client";
 import jwt from "jsonwebtoken";
@@ -121,23 +122,26 @@ export const getServerSideProps = async (context: any) => {
 					carouselFeed: {
 						favouriteSongs: {
 							label: `${user.firstName}'s top tracks`,
-							data: user.favouriteSongs,
+							data: getTopItems(user.favouriteSongs, 6),
 						},
 						artistFollowing: {
 							label: "Your Favourite Artists",
-							data: user.artistFollowing,
+							data: getTopItems(user.artistFollowing, 6),
 						},
 						favouriteShows: {
 							label: `${user.firstName}'s favourite podcasts`,
-							data: user?.favouriteShows,
+							data: getTopItems(user?.favouriteShows, 6),
 						},
 						favouriteAlbums: {
 							label: "Top 5 Albums",
-							data: user?.favouriteAlbums,
+							data: getTopItems(user?.favouriteAlbums, 6),
 						},
 						favouritePlaylists: {
 							label: "Your Playlists",
-							data: [...user.favouritePlaylists, ...user.createdPlaylists],
+							data: getTopItems(
+								[...user.favouritePlaylists, ...user.createdPlaylists],
+								6
+							),
 						},
 					},
 				},

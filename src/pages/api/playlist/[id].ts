@@ -52,6 +52,20 @@ export default validateRoute(async (req, res, user) => {
 				});
 			}
 			res.status(200).json({ message: "Playlist updated successfully" });
+		} else if (flag === "edit") {
+			const { flag, ...restOfBody } = req.body;
+			const updatedPlaylist = await prisma.playlist.update({
+				where: {
+					id,
+				},
+				data: {
+					...restOfBody,
+				},
+			});
+
+			res
+				.status(200)
+				.json({ message: "Playlist updated successfully", updatedPlaylist });
 		}
 	} else if (req.method === "GET") {
 		// /api/playlist/[id] get all data regarding current playlist
@@ -63,6 +77,7 @@ export default validateRoute(async (req, res, user) => {
 				songs: {
 					include: {
 						album: true,
+						artist: true,
 					},
 				},
 				createdBy: true,
@@ -70,7 +85,17 @@ export default validateRoute(async (req, res, user) => {
 			},
 		});
 
-		res.status(200).json(currentPlaylist);
+		if (currentPlaylist) {
+			let totalLength: number = 0;
+			currentPlaylist.songs.forEach((song) => (totalLength += song.duration));
+
+			const playlistWithTotalLength = {
+				...currentPlaylist,
+				totalLength,
+			};
+
+			res.status(200).json(playlistWithTotalLength);
+		}
 	} else {
 		res.setHeader("Allow", ["PUT", "GET"]);
 		res.status(405).end(`Method ${req.method} Not Allowed`);

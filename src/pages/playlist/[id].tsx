@@ -4,31 +4,28 @@ import TopList from "@/components/TopList/TopList";
 import { fetchPlaylist } from "@/react-query/fetch";
 import { playlistKey } from "@/react-query/queryKeys";
 import { Avatar, Box, Text } from "@chakra-ui/react";
-import { Song } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
 
-const PlaylistPage = (_props) => {
+const PlaylistPage = () => {
 	const {
 		query: { id },
 	} = useRouter();
 
 	if (!id || typeof id !== "string") return;
 
-	const { data, isLoading, error } = useQuery([playlistKey, id], () =>
+	const { data, isLoading } = useQuery([playlistKey, id], () =>
 		fetchPlaylist(id)
 	);
 
-	if (!data) return;
-
-	let totalLength: number = 0;
-	data.songs.forEach((el: Song) => (totalLength = totalLength + el.duration));
+	if (isLoading) return <Box>Loading data...</Box>;
 
 	const gradientProps = {
 		image: data.avatarUrl,
 		roundAvatar: false,
+		isTitleEditable: true,
 		description: [
 			<Avatar
 				size="xs"
@@ -43,7 +40,7 @@ const PlaylistPage = (_props) => {
 				{data.songs.length} {pluralise(data.songs.length, "song")},
 			</Text>,
 			<Text marginLeft="5px">
-				{convertSeconds(totalLength, "hhhh mmmm ssss")}
+				{convertSeconds(data.totalLength, "hhhh mmmm ssss")}
 			</Text>,
 		],
 		subtitle: data.category.description,

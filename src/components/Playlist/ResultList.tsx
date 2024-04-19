@@ -27,9 +27,10 @@ function ResultList({
 
 	return (
 		<Box paddingTop="30px">
-			{results.map((song, index, array) => {
+			{results.map((song, index) => {
 				return (
 					<Box
+						key={index}
 						width="100%"
 						color="white"
 						padding="10px 10px"
