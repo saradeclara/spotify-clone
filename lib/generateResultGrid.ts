@@ -8,16 +8,6 @@ import {
 	User,
 } from "@prisma/client";
 
-// type FeedElement = Show &
-// 	Artist &
-// 	Album &
-// 	User &
-// 	Song & {
-// 		category?: { description?: string };
-// 		artist?: { name?: string };
-// 		album?: { avatarUrl?: string };
-// 		author?: string;
-// 	};
 type FeedElement = (Artist | Album | User | Playlist | Show | Song) & {
 	category?: Category;
 	artist?: Artist;
