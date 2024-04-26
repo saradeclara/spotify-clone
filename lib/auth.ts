@@ -10,12 +10,23 @@ export type ExtendedUser = User & {
 	favouriteSongs: Song[];
 	artistFollowing: Artist[];
 };
+/**
+ * The `validateRoute` function validates a route handler by checking for an
+ * access token in the request cookies and verifying it before executing the handler with the user
+ * information.
+ * @param handler - The `handler` parameter in the `validateRoute` function is a function that takes
+ * three arguments:
+ * @returns The `validateRoute` function is returning an asynchronous function that checks for a token
+ * in the request cookies. If a token is found, it decodes the token using jwt.verify and then attempts
+ * to find a user in the database using the decoded token's id. If a user is found, it calls the
+ * `handler` function with the request, response, and user as arguments.
+ */
 
 export const validateRoute = (
 	handler: (
 		arg0: NextApiRequest,
 		arg1: NextApiResponse,
-		arg2: ExtendedUser | undefined | null
+		arg2: ExtendedUser
 	) => any
 ) => {
 	return async (req: NextApiRequest, res: NextApiResponse) => {
@@ -46,7 +57,9 @@ export const validateRoute = (
 					res.json({ error });
 				}
 			}
-			return handler(req, res, user);
+			if (user) {
+				return handler(req, res, user);
+			}
 		}
 	};
 };
