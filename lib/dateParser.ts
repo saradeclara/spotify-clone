@@ -53,6 +53,17 @@ interface dictionaryType {
 	number: number;
 }
 
+/**
+ * The function `monthParsed` takes a number representing a month and a dictionary of month mappings,
+ * then returns the corresponding month text if found.
+ * @param {number} number - The `number` parameter is the numerical value of the month that you want to
+ * parse. It should be a number between 1 and 12 representing the month of the year.
+ * @param {dictionaryType[]} dictionary - The `dictionary` parameter is an array of objects with the
+ * following structure: { text: string; number: number }.
+ * @returns The function `monthParsed` returns the text value of the month corresponding to the input
+ * number if it is found in the provided `dictionary` array. If the number is not within the range of 1
+ * to 12 or if the month is not found in the `dictionary`, an Error is thrown.
+ */
 const monthParsed = (number: number, dictionary: dictionaryType[]) => {
 	if (number < 1 || number > 12) throw Error;
 
