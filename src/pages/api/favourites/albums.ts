@@ -1,5 +1,5 @@
-import { validateRoute } from "../../../lib/auth";
-import prisma from "../../../lib/prisma";
+import { validateRoute } from "../../../../lib/auth";
+import prisma from "../../../../lib/prisma";
 
 export default validateRoute(async (_req, res, user) => {
 	const currentUserWithAlbums = await prisma.user.findUnique({

@@ -48,6 +48,8 @@ const AuthForm = ({
 			case "lastName":
 				updateForm({ ...form, lastName: e.currentTarget.value });
 				break;
+			case "username":
+				updateForm({ ...form, username: e.currentTarget.value });
 			default:
 				break;
 		}
@@ -60,7 +62,7 @@ const AuthForm = ({
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
 		setIsLoading(true);
-
+		console.log({ form });
 		const response = await auth(mode, form);
 		setIsLoading(false);
 		router.push("/");

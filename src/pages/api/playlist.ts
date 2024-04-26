@@ -25,9 +25,19 @@ export default validateRoute(async (req, res, user) => {
 
 		const allMyPlaylists = await prisma.playlist.findMany({
 			where: {
-				name: {
-					contains: "My Playlist #",
-				},
+				AND: [
+					{
+						name: {
+							contains: "My Playlist #",
+						},
+					},
+					{
+						userId: user?.id,
+					},
+					// {
+					// 	createdBy: user,
+					// },
+				],
 			},
 		});
 

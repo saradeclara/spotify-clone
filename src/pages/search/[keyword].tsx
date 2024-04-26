@@ -4,13 +4,14 @@ import { grayMain } from "@/styles/colors";
 import { Box } from "@chakra-ui/react";
 import { InferGetServerSidePropsType } from "next";
 import { useContext } from "react";
+import { FeedElement } from "../../../lib/generateResultGrid";
 import prisma from "../../../lib/prisma";
 
 const Search = (
 	props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
 	const {
-		result: { allAlbums, allArtists, allPlaylists, allShows },
+		result: { allAlbums, allArtists, allPlaylists, allShows, allUsers },
 	} = props;
 	const { sidebarMargin, musicPlayerHeight } = useContext(LayoutContext);
 
@@ -45,13 +46,41 @@ const Search = (
 				{allShows.length > 0 ? (
 					<FeedCarousel feed={{ label: "shows", data: allShows }} />
 				) : null}
+				{allUsers.length > 0 ? (
+					<FeedCarousel feed={{ label: "users", data: allUsers }} />
+				) : null}
 			</Box>
 		</Box>
 	);
 };
 
 export const getServerSideProps = async ({ query }: { query: any }) => {
-	let allArtists = await prisma.artist.findMany({
+	let allUsers: FeedElement[] = await prisma.user.findMany({
+		where: {
+			OR: [
+				{
+					firstName: {
+						contains: query.keyword,
+						mode: "insensitive",
+					},
+				},
+				{
+					lastName: {
+						contains: query.keyword,
+						mode: "insensitive",
+					},
+				},
+				{
+					username: {
+						contains: query.keyword,
+						mode: "insensitive",
+					},
+				},
+			],
+		},
+	});
+
+	let allArtists: FeedElement[] = await prisma.artist.findMany({
 		include: {
 			category: true,
 		},
@@ -63,7 +92,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 		},
 	});
 
-	let allAlbums = await prisma.album.findMany({
+	let allAlbums: FeedElement[] = await prisma.album.findMany({
 		include: {
 			artist: true,
 			category: true,
@@ -88,7 +117,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 		},
 	});
 
-	let allShows = await prisma.show.findMany({
+	let allShows: FeedElement[] = await prisma.show.findMany({
 		include: {
 			category: true,
 		},
@@ -110,7 +139,7 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 		},
 	});
 
-	let allPlaylists = await prisma.playlist.findMany({
+	let allPlaylists: FeedElement[] = await prisma.playlist.findMany({
 		include: {
 			createdBy: true,
 			category: true,
@@ -145,8 +174,14 @@ export const getServerSideProps = async ({ query }: { query: any }) => {
 		},
 	});
 
-	if (allAlbums && allArtists && allPlaylists && allShows) {
-		const result = { allAlbums, allArtists, allPlaylists, allShows };
+	if (allAlbums && allArtists && allPlaylists && allShows && allUsers) {
+		const result = {
+			allAlbums,
+			allArtists,
+			allPlaylists,
+			allShows,
+			allUsers,
+		};
 		return {
 			props: {
 				result,

@@ -121,8 +121,8 @@ function TopList({
 
 	const updateFeedMutation = useMutation<Body, Error, Partial<Body>>(
 		async (newItem) => {
-			const response = await fetch("/api/updatefeed", {
-				method: "POST",
+			const response = await fetch("/api/feed", {
+				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
 				},

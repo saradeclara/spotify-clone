@@ -3,21 +3,22 @@ import { Avatar, Box, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import capitalise from "../../lib/capitalise";
 import dateParser from "../../lib/dateParser";
-import { Track } from "../../lib/store";
+import { FeedElement } from "../../lib/generateResultGrid";
 
 const FeedCard = ({
 	data,
 	isLast,
 }: {
-	data: Track & {
-		avatarUrl: string;
-		firstName?: string;
-		lastName?: string;
-		releasedOn?: Date;
-		album?: { avatarUrl: string };
-		username?: string;
-		category: { description: string };
-	};
+	data: FeedElement;
+	// data: Track & {
+	// 	avatarUrl: string;
+	// 	firstName?: string;
+	// 	lastName?: string;
+	// 	releasedOn?: Date;
+	// 	album?: { avatarUrl: string };
+	// 	username?: string;
+	// 	category?: { description: string };
+	// };
 	isLast?: boolean;
 }) => {
 	/**
@@ -32,12 +33,18 @@ const FeedCard = ({
 		return catDescription === "song" ? "track" : catDescription;
 	};
 
-	const url = data.category
-		? `/${getCategory(data.category.description)}/${data.id}`
-		: `/user/${data.username}`;
+	const linkUrl =
+		data.category && data.category.description
+			? `/${getCategory(data.category.description)}/${data.id}`
+			: `/user/${data.username}`;
+
+	const avatarUrl =
+		data.album && data.album.avatarUrl
+			? data.album.avatarUrl
+			: data.avatarUrl ?? undefined;
 
 	return (
-		<Link href={url}>
+		<Link href={linkUrl}>
 			<Box
 				_hover={{
 					background: "#272727",
@@ -64,11 +71,7 @@ const FeedCard = ({
 							? "full"
 							: "5px"
 					}
-					src={
-						data.category.description === "song"
-							? data.album?.avatarUrl
-							: data.avatarUrl
-					}
+					src={avatarUrl}
 				/>
 				<Text fontWeight="bold" fontSize="sm" color="white">
 					{data.category ? data.name : `${data.firstName} ${data.lastName}`}
@@ -77,7 +80,9 @@ const FeedCard = ({
 					{data.category && data.category.description === "album"
 						? `${dateParser(data.releasedOn)?.year} \u2022 `
 						: ""}
-					{data.category ? capitalise(data.category.description) : "Profile"}
+					{data.category && data.category.description
+						? capitalise(data.category.description)
+						: "Profile"}
 				</Text>
 			</Box>
 		</Link>
