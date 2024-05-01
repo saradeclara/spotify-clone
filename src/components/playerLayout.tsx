@@ -33,8 +33,8 @@ const PlayerLayout = ({ children }: { children: ReactNode }) => {
 		username: "",
 		avatarUrl: "",
 	};
+
 	const [loggedInUser, updateLoggedInUser] = useState<User>(defaultUser);
-	const [queryStatus, updateQueryStatus] = useState(false);
 	const [header, updateHeader] = useState("");
 	const [currentColor, updateCurrentColor] = useState({ r: 18, g: 18, b: 18 });
 	const [scrollPosition, updateScrollPosition] = useState(0);
@@ -83,7 +83,9 @@ const PlayerLayout = ({ children }: { children: ReactNode }) => {
 		}
 	}, [user]);
 
-	return user ? (
+	if (!user) return null;
+
+	return (
 		<QueryClientProvider client={queryClient}>
 			<LoggedInUserContext.Provider
 				value={{ ...loggedInUser, updateLoggedInUser }}
@@ -136,7 +138,7 @@ const PlayerLayout = ({ children }: { children: ReactNode }) => {
 				</NavBarHeaderContext.Provider>
 			</LoggedInUserContext.Provider>
 		</QueryClientProvider>
-	) : null;
+	);
 };
 
 export default PlayerLayout;

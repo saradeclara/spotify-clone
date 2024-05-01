@@ -62,7 +62,7 @@ const AuthForm = ({
 	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
 		setIsLoading(true);
-		console.log({ form });
+
 		const response = await auth(mode, form);
 		setIsLoading(false);
 		router.push("/");

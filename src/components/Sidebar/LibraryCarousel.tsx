@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
-import TagCarousel from "../tagCarousel";
+import TagCarousel from "../TagCarousel";
 
 function LibraryCarousel({
 	currentCat,

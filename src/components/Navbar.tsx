@@ -18,7 +18,13 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import {
+	ChangeEvent,
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useState,
+} from "react";
 import {
 	IoChevronBackCircleSharp,
 	IoChevronForwardCircleSharp,
@@ -47,6 +53,10 @@ const Navbar = ({
 	const whiteNavIcons =
 		pathname.includes("search") || pathname.includes("[category]");
 
+	/**
+	 * The function `pushPrevHistoryPos` navigates to the previous page in the browser's history and
+	 * updates the current history position if it's not already at the beginning.
+	 */
 	const pushPrevHistoryPos = () => {
 		window.history.back();
 		if (currentHistoryPos.current !== 0) {
@@ -57,6 +67,10 @@ const Navbar = ({
 		}
 	};
 
+	/**
+	 * The function `pushNextHistoryPos` pushes the browser forward in history and updates the current
+	 * history position if it's not at the end.
+	 */
 	const pushNextHistoryPos = () => {
 		window.history.forward();
 		if (currentHistoryPos.current !== currentHistoryPos.len - 1) {
@@ -67,7 +81,14 @@ const Navbar = ({
 		}
 	};
 
-	const handleSearch = (e: any) => {
+	/**
+	 * The `handleSearch` function updates the search text and navigates to a search page after a short
+	 * delay.
+	 * @param e - The parameter `e` in the `handleSearch` function is of type
+	 * `ChangeEvent<HTMLInputElement>`. This means it is an event object that is triggered when the input
+	 * value in an HTMLInputElement changes.
+	 */
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		updateSearchText(e.target.value);
 		setTimeout(() => {
 			router.push(`/search/${e.target.value}`);

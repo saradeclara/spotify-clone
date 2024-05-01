@@ -10,15 +10,6 @@ const FeedCard = ({
 	isLast,
 }: {
 	data: FeedElement;
-	// data: Track & {
-	// 	avatarUrl: string;
-	// 	firstName?: string;
-	// 	lastName?: string;
-	// 	releasedOn?: Date;
-	// 	album?: { avatarUrl: string };
-	// 	username?: string;
-	// 	category?: { description: string };
-	// };
 	isLast?: boolean;
 }) => {
 	/**
