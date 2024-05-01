@@ -6,8 +6,15 @@ import {
 	ToastMessagesType,
 } from "@/types/authForm";
 
-const Signup = () => {
+const Signup = (props) => {
 	const formData: FormDataType[] = [
+		{
+			type: "text",
+			key: "username",
+			label: "Username",
+			defaultValue: "",
+			isRequired: true,
+		},
 		{
 			type: "text",
 			key: "firstName",
@@ -39,6 +46,7 @@ const Signup = () => {
 	];
 
 	const defaultForm: DefaultRegister = {
+		username: "",
 		email: "",
 		password: "",
 		firstName: "",

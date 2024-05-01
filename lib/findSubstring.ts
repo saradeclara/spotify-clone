@@ -1,5 +1,6 @@
 /**
- * Function which searches for substring within original string and returns an array of segments (matches and non matches)
+ * Function which searches for substring within original string and returns an array of segments
+ * (matches and non matches)
  * @param string original string
  * @param substring substring
  * @returns array of segments containing matches for substring

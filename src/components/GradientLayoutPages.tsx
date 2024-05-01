@@ -27,14 +27,14 @@ const GradientLayoutPages = ({
 	title,
 	isTitleEditable,
 }: {
-	id: string;
+	id?: string;
 	title: string;
 	subtitle: string;
 	description: (string | number | null | JSX.Element)[];
 	children: ReactNode;
 	image: string | null | undefined;
 	roundAvatar: boolean;
-	isTitleEditable: boolean;
+	isTitleEditable?: boolean;
 }) => {
 	const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
 	const { updateScrollPosition } = useContext(ScrollPositionContext);

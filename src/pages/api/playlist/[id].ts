@@ -1,7 +1,7 @@
 import { validateRoute } from "../../../../lib/auth";
 import prisma from "../../../../lib/prisma";
 
-export default validateRoute(async (req, res, user) => {
+export default validateRoute(async (req, res, _user) => {
 	const { id } = req.query;
 	const { newSongId, flag } = req.body;
 
@@ -25,7 +25,6 @@ export default validateRoute(async (req, res, user) => {
 				.status(200)
 				.json({ message: "Playlist updated successfully", updatedPlaylist });
 		} else if (flag === "add") {
-			console.log("add");
 			const currentPlaylist = await prisma.playlist.findUnique({
 				where: { id },
 				select: { songs: true },

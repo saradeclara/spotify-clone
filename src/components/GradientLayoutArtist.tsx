@@ -1,7 +1,7 @@
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { UserColorContext } from "@/context/UserColorContext";
 import { Box, Flex, Heading } from "@chakra-ui/react";
-import { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, UIEvent, useContext, useEffect } from "react";
 
 const GradientLayoutArtist = ({
 	children,
@@ -15,9 +15,16 @@ const GradientLayoutArtist = ({
 	const color = useContext(UserColorContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 
-	const handleScroll = (e: any) => {
-		if (e.target && e.target.scrollTop) {
-			updateScrollPosition(e.target.scrollTop);
+	/**
+	 * The `handleScroll` function updates the scroll position of a target element based on the
+	 * scrollTop value.
+	 * @param {UIEvent | Event} e - The `e` parameter is of type `UIEvent` or `Event`, which represents
+	 * the event object triggered when a scroll event occurs.
+	 */
+	const handleScroll = (e: UIEvent | Event) => {
+		const target = e.target as HTMLDivElement;
+		if (target && target.scrollTop) {
+			updateScrollPosition(target.scrollTop);
 		}
 	};
 
@@ -64,9 +71,6 @@ const GradientLayoutArtist = ({
 							<Heading as="h1" size="4xl">
 								{name}
 							</Heading>
-							{/* <Text fontSize="sm" paddingTop="40px">
-								{description}
-							</Text> */}
 						</Box>
 					</Box>
 				</Box>

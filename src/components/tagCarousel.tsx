@@ -1,6 +1,7 @@
 import { Box, Tag, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction } from "react";
 import { RiCloseFill } from "react-icons/ri";
+
 const TagCarousel = ({
 	libraryTags,
 	currentCat,

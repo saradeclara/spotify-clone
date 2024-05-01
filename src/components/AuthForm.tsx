@@ -48,6 +48,8 @@ const AuthForm = ({
 			case "lastName":
 				updateForm({ ...form, lastName: e.currentTarget.value });
 				break;
+			case "username":
+				updateForm({ ...form, username: e.currentTarget.value });
 			default:
 				break;
 		}

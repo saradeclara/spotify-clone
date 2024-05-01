@@ -40,8 +40,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 				},
 			});
 		} catch (error) {
-			res.status(401);
+			res.status(400);
 			res.json({ error });
+			console.log({ error });
 			return;
 		}
 

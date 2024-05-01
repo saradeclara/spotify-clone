@@ -42,7 +42,9 @@ const storeModel: StoreModel = {
 
 export const store = createStore(storeModel);
 
-// In order to avoid having to constantly provide your StoreModel definition to each use of the Easy Peasy hooks, we provide a utility API that allows you to create versions of the hooks that will have the StoreModel type information baked in. - easy-pease docs
+// In order to avoid having to constantly provide your StoreModel definition to each use of the Easy Peasy
+// hooks, we provide a utility API that allows you to create versions of the hooks that will have
+// the StoreModel type information baked in. - easy-pease docs
 
 const typedHooks = createTypedHooks<StoreModel>();
 

@@ -17,6 +17,7 @@ type DefaultLogin = {
 };
 
 type DefaultRegister = {
+	username: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -39,8 +40,8 @@ type AuthFormProps = {
 
 export type {
 	AuthFormProps,
-	FormDataType,
 	DefaultLogin,
 	DefaultRegister,
+	FormDataType,
 	ToastMessagesType,
 };

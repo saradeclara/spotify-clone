@@ -1,5 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import findSubstring from "../../lib/findSubstring";
+
 function SubstringSearchText({
 	string,
 	substring,
