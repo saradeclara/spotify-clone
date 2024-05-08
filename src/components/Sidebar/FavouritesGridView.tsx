@@ -1,21 +1,19 @@
-import { likedSongsCover } from "@/pages/favourites/liked-songs";
 import { fetchFavouriteSongs } from "@/react-query/fetch";
 import { favouriteSongsKey } from "@/react-query/queryKeys";
-import { spotifyGreen } from "@/styles/colors";
-import { Box, Icon, Image, List, ListItem, Text } from "@chakra-ui/react";
-import { Album, Artist, Category, Playlist, Show } from "@prisma/client";
-import Link from "next/link";
-import { AiFillPushpin } from "react-icons/ai";
+import { Box, List } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import capitalise from "../../../lib/capitalise";
-import pluralise from "../../../lib/pluralise";
-import SubstringSearchText from "../SubstringSearchText";
+import { FeedElement } from "../../../lib/generateResultGrid";
+import GridAlbumElement from "../FavouritesFeed/Grid/GridAlbumElement";
+import GridArtistElement from "../FavouritesFeed/Grid/GridArtistElement";
+import GridPlaylistElement from "../FavouritesFeed/Grid/GridPlaylistElement";
+import GridShowElement from "../FavouritesFeed/Grid/GridShowElement";
+import LikedSongs from "../FavouritesFeed/LikedSongs";
 
 const FavouritesGridView = ({
 	data,
 	textInput,
 }: {
-	data: ((Show | Artist | Album | Playlist) & { category: Category })[];
+	data: FeedElement[];
 	textInput: string;
 }) => {
 	const { data: likedSongsData } = useQuery(
@@ -24,24 +22,9 @@ const FavouritesGridView = ({
 	);
 	if (!likedSongsData) return null;
 
-	const listItemStyles = {
-		display: "flex",
-		flexDirection: "column",
-		padding: "10px",
-		cursor: "pointer",
-		width: "150px",
-		height: "200px;",
-	};
-
-	const textWithEllipsis = {
-		whiteSpace: "nowrap",
-		overflow: "hidden",
-		textOverflow: "ellipsis",
-	};
-
 	const renderFavFeed = (
 		categoryType: string,
-		feedRecord: any,
+		feedRecord: FeedElement,
 		index: number
 	) => {
 		let component;
@@ -50,142 +33,42 @@ const FavouritesGridView = ({
 		switch (categoryType) {
 			case "album":
 				component = (
-					<Link key={index} href={url}>
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="150px"
-								src={feedRecord.avatarUrl}
-								alt={feedRecord.name}
-							/>
-							<Box>
-								<Text color="white">
-									<SubstringSearchText
-										string={feedRecord.name}
-										substring={textInput}
-									/>
-								</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									<Text as="span">{`${capitalise(
-										feedRecord.category.description
-									)} \u2022 `}</Text>
-									<Text as="span">
-										<SubstringSearchText
-											string={feedRecord.artist.name}
-											substring={textInput}
-										/>
-									</Text>
-								</Text>
-							</Box>
-						</ListItem>
-					</Link>
+					<GridAlbumElement
+						index={index}
+						url={url}
+						feedRecord={feedRecord}
+						textInput={textInput}
+					/>
 				);
 				break;
 			case "show":
 				component = (
-					<Link key={index} href={url}>
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="150px"
-								src={feedRecord.avatarUrl}
-								alt={feedRecord.name}
-							/>
-							<Box>
-								<Text color="white">
-									<SubstringSearchText
-										string={feedRecord.name}
-										substring={textInput}
-									/>
-								</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									<Text as="span">{`${capitalise(
-										feedRecord.category.description
-									)} \u2022 `}</Text>
-									<Text as="span">
-										<SubstringSearchText
-											string={feedRecord.author}
-											substring={textInput}
-										/>
-									</Text>
-								</Text>
-							</Box>
-						</ListItem>
-					</Link>
+					<GridShowElement
+						index={index}
+						url={url}
+						feedRecord={feedRecord}
+						textInput={textInput}
+					/>
 				);
 				break;
 			case "playlist":
 				component = (
-					<Link key={index} href={url}>
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="md"
-								boxSize="150px"
-								src={feedRecord.avatarUrl}
-								alt={feedRecord.name}
-							/>
-							<Box>
-								<Text color="white">
-									<SubstringSearchText
-										string={feedRecord.name}
-										substring={textInput}
-									/>
-								</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									<Text as="span">{`${capitalise(
-										feedRecord.category.description
-									)} \u2022 `}</Text>
-									<Text as="span">
-										<SubstringSearchText
-											string={`${feedRecord.createdBy.firstName} ${feedRecord.createdBy.lastName}`}
-											substring={textInput}
-										/>
-									</Text>
-								</Text>
-							</Box>
-						</ListItem>
-					</Link>
+					<GridPlaylistElement
+						index={index}
+						url={url}
+						feedRecord={feedRecord}
+						textInput={textInput}
+					/>
 				);
 				break;
 			case "artist":
 				component = (
-					<Link key={index} href={url}>
-						<ListItem
-							key={index}
-							_hover={{ backgroundColor: "#1A1A1A" }}
-							sx={listItemStyles}
-						>
-							<Image
-								borderRadius="full"
-								boxSize="150px"
-								src={feedRecord.avatarUrl}
-								alt={feedRecord.name}
-							/>
-							<Box>
-								<Text color="white">
-									<SubstringSearchText
-										string={feedRecord.name}
-										substring={textInput}
-									/>
-								</Text>
-								<Text fontSize="small" sx={textWithEllipsis}>
-									{`${capitalise(feedRecord.category.description)}`}
-								</Text>
-							</Box>
-						</ListItem>
-					</Link>
+					<GridArtistElement
+						index={index}
+						url={url}
+						feedRecord={feedRecord}
+						textInput={textInput}
+					/>
 				);
 				break;
 			default:
@@ -200,47 +83,21 @@ const FavouritesGridView = ({
 		<Box id="favourites-wrapper" sx={{ display: "flex" }}>
 			<List sx={{ display: "flex", flexWrap: "wrap" }}>
 				{/* Liked Songs - Always on Top */}
-				<Link href="/favourites/liked-songs">
-					<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
-						<Image
-							borderRadius="md"
-							boxSize="150px"
-							src={likedSongsCover}
-							alt="Liked Songs"
-						/>
-						<Box sx={{ marginLeft: "10px" }}>
-							<Text color="white">Liked Songs</Text>
-							<Text fontSize="small" sx={textWithEllipsis}>
-								<Icon
-									marginRight="6px"
-									color={spotifyGreen}
-									as={AiFillPushpin}
-								/>
-								{`Playlist \u2022 ${likedSongsData.length} ${pluralise(
-									likedSongsData.length,
-									"song"
-								)}`}
-							</Text>
-						</Box>
-					</ListItem>
-				</Link>
+				<LikedSongs likedSongsData={likedSongsData} />
+
+				{/* Favourites Feed */}
 				{data
-					? data.map(
-							(
-								singleFeedRecord: { category: { description: string } },
-								index: number
-							) => {
-								const categoryType = singleFeedRecord.category.description;
-								if (singleFeedRecord) {
-									const component = renderFavFeed(
-										categoryType,
-										singleFeedRecord,
-										index
-									);
-									return component;
-								}
+					? data.map((singleFeedRecord, index: number) => {
+							const categoryType = singleFeedRecord?.category?.description;
+							if (singleFeedRecord && categoryType) {
+								const component = renderFavFeed(
+									categoryType,
+									singleFeedRecord,
+									index
+								);
+								return component;
 							}
-					  )
+					  })
 					: "No Favourites"}
 			</List>
 		</Box>

@@ -9,6 +9,7 @@ function SubstringSearchText({
 	substring: string;
 }) {
 	const segments = findSubstring(string, substring);
+
 	const renderString = (
 		string: string,
 		segments: { match: boolean; text: string }[]

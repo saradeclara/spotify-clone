@@ -20,6 +20,7 @@ type FeedElement = (Artist | Album | User | Playlist | Show | Song) & {
 	name?: string;
 	firstName?: string;
 	lastName?: string;
+	author?: string;
 };
 
 /**
