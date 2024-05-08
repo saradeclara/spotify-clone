@@ -95,6 +95,15 @@ export default validateRoute(async (req, res, _user) => {
 
 			res.status(200).json(playlistWithTotalLength);
 		}
+	} else if (req.method === "DELETE") {
+		// /api/playlist/[id] delete current playlist
+		await prisma.playlist.delete({
+			where: {
+				id,
+			},
+		});
+
+		res.status(200).json({ message: "Playlist deleted successfully" });
 	} else {
 		res.setHeader("Allow", ["PUT", "GET"]);
 		res.status(405).end(`Method ${req.method} Not Allowed`);
