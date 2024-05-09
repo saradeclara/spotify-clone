@@ -10,9 +10,10 @@ import { useQuery } from "react-query";
 import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
 
-export const likedSongsCover = "https://i.ibb.co/7bxRhFz/rnqa7yhv4il71.webp";
+export const likedSongsCover =
+	"https://ipfs.filebase.io/ipfs/QmSFSc8WF2yoyTjvBXBwYepQikzGX52EVjubDGbY1gnaGd";
 
-const FavouritePage = () => {
+const FavouritePage = (props) => {
 	const { data } = useQuery(favouriteSongsKey, fetchFavouriteSongs);
 	const user = useContext(LoggedInUserContext);
 	if (!data) return <div key="no-data">No data available</div>;

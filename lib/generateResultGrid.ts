@@ -16,10 +16,11 @@ type FeedElement = (Artist | Album | User | Playlist | Show | Song) & {
 	releasedOn?: Date;
 	createdBy?: User;
 	username?: string;
-	avatarUrl?: string;
+	avatarUrl?: string | null;
 	name?: string;
 	firstName?: string;
 	lastName?: string;
+	author?: string;
 };
 
 /**

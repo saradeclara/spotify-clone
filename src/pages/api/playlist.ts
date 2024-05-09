@@ -8,9 +8,9 @@ is then assigned to the `avatarUrl` property of the new playlist being created. 
 variety in the appearance of the playlists created, as each new playlist will have a different
 background image selected randomly from the `backgrounds` array. */
 const backgrounds = [
-	"https://i.ibb.co/xSb7f7T/codioful-formerly-gradienta-m-7p45-Jf-XQo-unsplash.jpg",
-	"https://i.ibb.co/xjx05vX/mymind-XUls-F9-LYe-Vk-unsplash.jpg",
-	"https://i.ibb.co/5KJqbGT/pawel-czerwinski-6l-QDFGOB1iw-unsplash.jpg",
+	"https://ipfs.filebase.io/ipfs/QmfHkdn1gSVHRcxBrdjQTTyK9UaCzxL6v4Qf8KKTBqkDCN",
+	"https://ipfs.filebase.io/ipfs/Qmf71Pb32jjP2rB17hF1naXk8uYVodj9t7CbfZ11TzqT4S",
+	"https://ipfs.filebase.io/ipfs/Qmco31oV1DRRrLA9YM2YfrDnK7vokGsoWKpEr6ysGAosmz",
 ];
 
 export default validateRoute(async (req, res, user) => {
@@ -34,9 +34,6 @@ export default validateRoute(async (req, res, user) => {
 					{
 						userId: user?.id,
 					},
-					// {
-					// 	createdBy: user,
-					// },
 				],
 			},
 		});
@@ -49,7 +46,6 @@ export default validateRoute(async (req, res, user) => {
 			});
 
 			const mostRecentPlaylist = orderedPlaylists[0];
-			console.log({ mostRecentPlaylist });
 			newPlaylistNumber = Number(mostRecentPlaylist.name.split("#")[1]) + 1;
 		}
 

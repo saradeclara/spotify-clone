@@ -93,7 +93,7 @@ const LibraryMenu = () => {
 					{status === "loading" ? (
 						<Text>Loading data...</Text>
 					) : status === "error" ? (
-						<Text>Error!</Text>
+						<Text>Something went wrong. Try again.</Text>
 					) : favouritesViews[currentView] === "list" ? (
 						<FavouritesListView textInput={textInput} data={data} />
 					) : (
