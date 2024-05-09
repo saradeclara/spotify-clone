@@ -1,6 +1,8 @@
+import { currentUserKey } from "@/react-query/queryKeys";
 import { Button, useToast } from "@chakra-ui/react";
 import { User } from "@prisma/client";
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { useQueryClient } from "react-query";
 
 interface FollowUserButtonProps {
 	currentUser: User;
@@ -10,12 +12,13 @@ interface FollowUserButtonProps {
 }
 
 const FollowUserButton = ({
-	currentUser,
-	userFollowing,
-	updateFollowStatus,
-	followStatus,
-}: FollowUserButtonProps) => {
+    	currentUser,
+    	userFollowing,
+    	updateFollowStatus,
+    	followStatus,
+    }) => {
 	const toast = useToast();
+	const queryClient = useQueryClient();
 
 	const updateUserFollowing = async () => {
 		const response = await fetch("/api/me", {
@@ -28,8 +31,9 @@ const FollowUserButton = ({
 
 		const jsonResponse = await response.json();
 
-		console.log({ jsonResponse });
 		if (jsonResponse) {
+			queryClient.invalidateQueries(currentUserKey);
+
 			toast({
 				description: jsonResponse.message,
 				duration: 3000,

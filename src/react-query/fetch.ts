@@ -29,3 +29,11 @@ export const fetchPlaylist = async (id: string) => {
 	if (!response.ok) throw new Error("Failed to fetch data");
 	return response.json();
 };
+
+export const fetchCurrentUser = async (username: string) => {
+	const response = await fetch(`/api/user/${username}`, {
+		method: "GET",
+	});
+	if (!response.ok) throw new Error("Failed to fetch data");
+	return response.json();
+};
