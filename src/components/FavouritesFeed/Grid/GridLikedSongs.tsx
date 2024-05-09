@@ -5,15 +5,16 @@ import { Box, Icon, Image, ListItem, Text } from "@chakra-ui/react";
 import { Song } from "@prisma/client";
 import Link from "next/link";
 import { AiFillPushpin } from "react-icons/ai";
-import pluralise from "../../../lib/pluralise";
+import pluralise from "../../../../lib/pluralise";
 
-const LikedSongs = ({ likedSongsData }: { likedSongsData: Song[] }) => {
+const GridLikedSongs = ({ likedSongsData }: { likedSongsData: Song[] }) => {
 	return (
 		<Link href="/favourites/liked-songs">
 			<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
 				<Image
 					borderRadius="md"
-					boxSize="150px"
+					width="150px"
+					height="150px"
 					src={likedSongsCover}
 					alt="Liked Songs"
 				/>
@@ -32,4 +33,4 @@ const LikedSongs = ({ likedSongsData }: { likedSongsData: Song[] }) => {
 	);
 };
 
-export default LikedSongs;
+export default GridLikedSongs;

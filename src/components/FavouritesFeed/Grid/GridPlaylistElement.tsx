@@ -23,12 +23,15 @@ const GridPlaylistElement = ({
 				_hover={{ backgroundColor: "#1A1A1A" }}
 				sx={listItemStyles}
 			>
-				<Image
-					borderRadius="md"
-					boxSize="150px"
-					src={feedRecord.avatarUrl}
-					alt={feedRecord.name}
-				/>
+				<Box>
+					<Image
+						borderRadius="md"
+						boxSize="150px"
+						src={feedRecord.avatarUrl}
+						alt={feedRecord.name}
+					/>
+				</Box>
+
 				<Box>
 					{feedRecord && feedRecord.name ? (
 						<Text color="white">

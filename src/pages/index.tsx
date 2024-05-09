@@ -120,9 +120,16 @@ export const getServerSideProps = async (context: any) => {
 						...user?.createdPlaylists,
 					],
 					carouselFeed: {
-						favouriteSongs: {
-							label: `${user.firstName}'s top tracks`,
-							data: getTopItems(user.favouriteSongs, 6),
+						favouritePlaylists: {
+							label: "Your Playlists",
+							data: getTopItems(
+								[...user.favouritePlaylists, ...user.createdPlaylists],
+								6
+							),
+						},
+						favouriteAlbums: {
+							label: "Top 5 Albums",
+							data: getTopItems(user?.favouriteAlbums, 6),
 						},
 						artistFollowing: {
 							label: "Your Favourite Artists",
@@ -131,17 +138,6 @@ export const getServerSideProps = async (context: any) => {
 						favouriteShows: {
 							label: `${user.firstName}'s favourite podcasts`,
 							data: getTopItems(user?.favouriteShows, 6),
-						},
-						favouriteAlbums: {
-							label: "Top 5 Albums",
-							data: getTopItems(user?.favouriteAlbums, 6),
-						},
-						favouritePlaylists: {
-							label: "Your Playlists",
-							data: getTopItems(
-								[...user.favouritePlaylists, ...user.createdPlaylists],
-								6
-							),
 						},
 					},
 				},

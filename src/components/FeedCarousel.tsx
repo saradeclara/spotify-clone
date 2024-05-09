@@ -29,7 +29,11 @@ function FeedCarousel({
 						}
 					);
 
-					return <Box display="flex">{gridRow}</Box>;
+					return (
+						<Box marginBottom="20px" display="flex">
+							{gridRow}
+						</Box>
+					);
 				})}
 			</Box>
 		</Box>

@@ -12,8 +12,8 @@ const GridRow = ({ rowItems }: { rowItems: RecentlyAddedType[] }) => {
 				cursor: "pointer",
 			}}
 		>
-			{rowItems.map((item) => {
-				return <GridItem item={item} />;
+			{rowItems.map((item, index) => {
+				return <GridItem key={index} item={item} />;
 			})}
 		</Box>
 	);

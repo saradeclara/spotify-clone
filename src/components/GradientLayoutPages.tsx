@@ -165,7 +165,6 @@ const GradientLayoutPages = ({
 				inputRef.current &&
 				!inputRef.current.contains(event.target as Node)
 			) {
-				console.log("You clicked outside of me!");
 				updatingPlaylistTitle(playlistTitle, feedKey, editMode);
 			}
 		}

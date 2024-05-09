@@ -87,8 +87,15 @@ function TopList({
 		setActiveTrack(singleSong);
 	};
 
+	/**
+	 * The function `handleDeleteSong` asynchronously sends a PUT request to remove a song from a playlist
+	 * using the provided `playlistId` and `newSongId`, and then invalidates the playlist query.
+	 * @param {string} playlistId - The `playlistId` parameter in the `handleDeleteSong` function is a
+	 * string that represents the unique identifier of the playlist from which you want to delete a song.
+	 * @param {string} newSongId - The `newSongId` parameter in the `handleDeleteSong` function represents
+	 * the ID of the song that you want to remove from the playlist.
+	 */
 	const handleDeleteSong = async (playlistId: string, newSongId: string) => {
-		console.log({ playlistId, newSongId });
 		const response = await fetch(`/api/playlist/${playlistId}`, {
 			method: "PUT",
 			cache: "no-cache",
@@ -119,6 +126,11 @@ function TopList({
 		return favSongsIds.includes(id);
 	};
 
+	/* The code below defines a mutation function `updateFeedMutation` using the `useMutation` hook 
+	from the React Query library. This mutation function is responsible
+	for sending a PUT request to the "/api/feed" endpoint with a new item as the request body. If the
+	network response is successful (status code 200), it returns the JSON response.
+	Upon success, the feed query and favourite songs query are both invalidated. */
 	const updateFeedMutation = useMutation<Body, Error, Partial<Body>>(
 		async (newItem) => {
 			const response = await fetch("/api/feed", {

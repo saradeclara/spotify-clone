@@ -31,7 +31,7 @@ const Search = (
 					marginTop: "60px",
 					paddingLeft: "20px",
 					overflowY: "auto",
-					height: `calc(100vh - ${musicPlayerHeight} - 60px - 8px)`,
+					height: `calc(100vh - ${musicPlayerHeight} - 60px - 8px - 8px)`,
 				}}
 			>
 				{allAlbums.length > 0 ? (

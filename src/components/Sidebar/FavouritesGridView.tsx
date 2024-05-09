@@ -5,9 +5,9 @@ import { useQuery } from "react-query";
 import { FeedElement } from "../../../lib/generateResultGrid";
 import GridAlbumElement from "../FavouritesFeed/Grid/GridAlbumElement";
 import GridArtistElement from "../FavouritesFeed/Grid/GridArtistElement";
+import GridLikedSongs from "../FavouritesFeed/Grid/GridLikedSongs";
 import GridPlaylistElement from "../FavouritesFeed/Grid/GridPlaylistElement";
 import GridShowElement from "../FavouritesFeed/Grid/GridShowElement";
-import LikedSongs from "../FavouritesFeed/LikedSongs";
 
 const FavouritesGridView = ({
 	data,
@@ -83,7 +83,7 @@ const FavouritesGridView = ({
 		<Box id="favourites-wrapper" sx={{ display: "flex" }}>
 			<List sx={{ display: "flex", flexWrap: "wrap" }}>
 				{/* Liked Songs - Always on Top */}
-				<LikedSongs likedSongsData={likedSongsData} />
+				<GridLikedSongs likedSongsData={likedSongsData} />
 
 				{/* Favourites Feed */}
 				{data
