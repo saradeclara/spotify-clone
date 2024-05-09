@@ -165,9 +165,9 @@ const AuthForm = ({
 				>
 					{capitalise(action)}
 				</Button>
-				<Link href="#" sx={{ textDecoration: "underline" }}>
+				{/* <Link href="#" sx={{ textDecoration: "underline" }}>
 					Forgot your password?
-				</Link>
+				</Link> */}
 				<Divider color="gray" margin="40px 0px" />
 				{mode === "signin" ? (
 					<Box marginTop="10px">
