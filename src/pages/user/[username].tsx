@@ -1,25 +1,40 @@
 import FeedWrapper from "@/components/FeedWrapper";
 import GradientLayoutPages from "@/components/GradientLayoutPages";
 import TopList from "@/components/TopList/TopList";
-import { NavBarHeaderContext } from "@/context/NavBarHeader";
-import { ScrollPositionContext } from "@/context/ScrollPositionContext";
+import { LoggedInUserContext } from "@/context/LoggedInUserContext";
+import { fetchCurrentUser } from "@/react-query/fetch";
+import { currentUserKey } from "@/react-query/queryKeys";
 import { Box } from "@chakra-ui/react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { Artist, Playlist, User } from "@prisma/client";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import pluralise from "../../../lib/pluralise";
-import prisma from "../../../lib/prisma";
+import FollowUserButton from "./FollowUserButton";
 
-const UserDashboard = ({
-    	user,
-    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-	const { updateHeader } = useContext(NavBarHeaderContext);
-	const { updateScrollPosition } = useContext(ScrollPositionContext);
-	const { asPath } = useRouter();
+const UserDashboard = () => {
+	const [followStatus, updateFollowStatus] = useState(false);
+	const router = useRouter();
 
-	const userFeedData: { label: string; data: any[] }[] = [
+	const loggedInUser = useContext(LoggedInUserContext);
+	const urlUsername = router.query.username;
+
+	if (typeof urlUsername !== "string") return null;
+	const {
+		isLoading,
+		isError,
+		data: user,
+		refetch,
+	} = useQuery(currentUserKey, () => fetchCurrentUser(urlUsername));
+
+	if (isLoading) return "Loading...";
+	if (isError) return "Something went wrong. Try again.";
+
+	const userFeedData: {
+		label: string;
+		data: (Artist | Playlist | User)[];
+	}[] = [
 		{
 			label: "your top artists",
 			data: user.artistFollowing,
@@ -43,6 +58,7 @@ const UserDashboard = ({
 			? `${total} ${capitalise(pluralise(total, label))}`
 			: `${total} ${capitalise(label)}`;
 	};
+
 	const description = user.stats.map(
 		(
 			singleStat: { total: number; label: string },
@@ -57,14 +73,10 @@ const UserDashboard = ({
 		}
 	);
 
-	useEffect(() => {
-		updateHeader(`${user.firstName} ${user.lastName}`);
-	});
-
 	// reset scrollPosition when navigating through pages
 	useEffect(() => {
-		updateScrollPosition(0);
-	}, [asPath]);
+		refetch();
+	}, [router.asPath]);
 
 	return (
 		<Box
@@ -81,6 +93,17 @@ const UserDashboard = ({
 				subtitle="Profile"
 				description={description}
 			>
+				{/* only show follow button, if user is not current user */}
+				{loggedInUser.id !== user.id && loggedInUser.userFollowing ? (
+					<Box sx={{ margin: "30px 0px 0px 30px" }}>
+						<FollowUserButton
+							followStatus={followStatus}
+							updateFollowStatus={updateFollowStatus}
+							currentUser={user}
+							userFollowing={loggedInUser.userFollowing}
+						/>
+					</Box>
+				) : null}
 				{user.favouriteSongs && user.favouriteSongs.length > 0 ? (
 					<TopList
 						heading={`${user.firstName}'s Top Tracks`}
@@ -92,67 +115,65 @@ const UserDashboard = ({
 						showAlbumColumn={false}
 					/>
 				) : null}
-
 				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
 		</Box>
 	);
-	// }
 };
 
-interface CustomQuery extends ParsedUrlQuery {
-	username?: string;
-}
+// interface CustomQuery extends ParsedUrlQuery {
+// 	username?: string;
+// }
 
-export const getServerSideProps = async (
-	context: GetServerSidePropsContext
-) => {
-	const customQuery: CustomQuery = context.query;
+// export const getServerSideProps = async (
+// 	context: GetServerSidePropsContext
+// ) => {
+// 	const customQuery: CustomQuery = context.query;
 
-	const user = await prisma.user.findUnique({
-		where: {
-			username: customQuery.username,
-		},
-		include: {
-			favouriteSongs: {
-				include: { album: true, artist: true, category: true },
-			},
-			createdPlaylists: { include: { category: true } },
-			favouritePlaylists: { include: { category: true } },
-			userFollowers: true,
-			artistFollowers: {
-				include: { albums: true, songs: true, category: true },
-			},
-			userFollowing: true,
-			artistFollowing: {
-				include: { albums: true, songs: true, category: true },
-			},
-		},
-	});
-	if (user && user.favouriteSongs && user.favouriteSongs) {
-		const userWithStats = {
-			...user,
-			stats: [
-				{
-					label: "playlist",
-					total: user.createdPlaylists.length + user.favouritePlaylists.length,
-				},
-				{
-					label: "follower",
-					total: user.userFollowers.length + user.artistFollowers.length,
-				},
-				{
-					label: "following",
-					total: user.userFollowing.length + user.artistFollowing.length,
-				},
-			],
-		};
-		return {
-			props: {
-				user: userWithStats,
-			},
-		};
-	}
-};
+// 	const user = await prisma.user.findUnique({
+// 		where: {
+// 			username: customQuery.username,
+// 		},
+// 		include: {
+// 			favouriteSongs: {
+// 				include: { album: true, artist: true, category: true },
+// 			},
+// 			createdPlaylists: { include: { category: true } },
+// 			favouritePlaylists: { include: { category: true } },
+// 			userFollowers: true,
+// 			artistFollowers: {
+// 				include: { albums: true, songs: true, category: true },
+// 			},
+// 			userFollowing: true,
+// 			artistFollowing: {
+// 				include: { albums: true, songs: true, category: true },
+// 			},
+// 		},
+// 	});
+// 	if (user && user.favouriteSongs && user.favouriteSongs) {
+// 		const userWithStats = {
+// 			...user,
+// 			stats: [
+// 				{
+// 					label: "playlist",
+// 					total: user.createdPlaylists.length + user.favouritePlaylists.length,
+// 				},
+// 				{
+// 					label: "follower",
+// 					total: user.userFollowers.length + user.artistFollowers.length,
+// 				},
+// 				{
+// 					label: "following",
+// 					total: user.userFollowing.length + user.artistFollowing.length,
+// 				},
+// 			],
+// 		};
+// 		return {
+// 			props: {
+// 				user: userWithStats,
+// 			},
+// 		};
+// 	}
+// };
 
 export default UserDashboard;

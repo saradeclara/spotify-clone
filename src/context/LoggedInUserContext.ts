@@ -7,6 +7,7 @@ export type loggedInUserContextType = {
 
 const loggedInUserDefault: User & {
 	favouriteShows?: Show[];
+	userFollowing?: User[];
 	favouriteSongs?: Song[];
 	followingArtist?: Artist[];
 	favouriteAlbums?: Album[];
@@ -29,6 +30,7 @@ const loggedInUserDefault: User & {
 export const LoggedInUserContext = createContext<
 	User & {
 		favouriteShows?: Show[];
+		userFollowing?: User[];
 		favouriteSongs?: Song[];
 		artistFollowing?: Artist[];
 		favouriteAlbums?: Album[];
