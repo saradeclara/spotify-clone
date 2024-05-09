@@ -9,6 +9,7 @@ export type ExtendedUser = User & {
 	favouritePlaylists: Playlist[];
 	favouriteSongs: Song[];
 	artistFollowing: Artist[];
+	userFollowing: User[];
 };
 /**
  * The `validateRoute` function validates a route handler by checking for an
@@ -48,6 +49,7 @@ export const validateRoute = (
 							createdPlaylists: { include: { category: true } },
 							favouriteSongs: { include: { category: true } },
 							artistFollowing: { include: { category: true } },
+							userFollowing: true,
 						},
 					});
 

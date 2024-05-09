@@ -4,13 +4,16 @@ import TopList from "@/components/TopList/TopList";
 import { NavBarHeaderContext } from "@/context/NavBarHeader";
 import { ScrollPositionContext } from "@/context/ScrollPositionContext";
 import { Box } from "@chakra-ui/react";
+import { Artist, Playlist, User } from "@prisma/client";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { useContext, useEffect } from "react";
 import capitalise from "../../../lib/capitalise";
+import { useMe } from "../../../lib/hooks";
 import pluralise from "../../../lib/pluralise";
 import prisma from "../../../lib/prisma";
+import FollowUserButton from "./FollowUserButton";
 
 const UserDashboard = ({
     	user,
@@ -18,25 +21,27 @@ const UserDashboard = ({
 	const { updateHeader } = useContext(NavBarHeaderContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const { asPath } = useRouter();
-
-	const userFeedData: { label: string; data: any[] }[] = [
-		{
-			label: "your top artists",
-			data: user.artistFollowing,
-		},
-		{
-			label: "your playlists",
-			data: [...user.createdPlaylists, ...user.favouritePlaylists],
-		},
-		{
-			label: "followers",
-			data: [...user.userFollowers, ...user.artistFollowers],
-		},
-		{
-			label: "following",
-			data: [...user.userFollowing, ...user.artistFollowing],
-		},
-	];
+	const { isError, isLoading, user: userData } = useMe();
+	console.log({ userData });
+	const userFeedData: { label: string; data: (Artist | Playlist | User)[] }[] =
+		[
+			{
+				label: "your top artists",
+				data: user.artistFollowing,
+			},
+			{
+				label: "your playlists",
+				data: [...user.createdPlaylists, ...user.favouritePlaylists],
+			},
+			{
+				label: "followers",
+				data: [...user.userFollowers, ...user.artistFollowers],
+			},
+			{
+				label: "following",
+				data: [...user.userFollowing, ...user.artistFollowing],
+			},
+		];
 
 	const renderText = (total: number, label: string, plural: boolean) => {
 		return plural
@@ -81,6 +86,15 @@ const UserDashboard = ({
 				subtitle="Profile"
 				description={description}
 			>
+				{/* only show follow button, if user is not current user */}
+				{userData.id !== user.id ? (
+					<Box sx={{ margin: "30px 0px 0px 30px" }}>
+						<FollowUserButton
+							currentUser={user}
+							userFollowing={userData.userFollowing}
+						/>
+					</Box>
+				) : null}
 				{user.favouriteSongs && user.favouriteSongs.length > 0 ? (
 					<TopList
 						heading={`${user.firstName}'s Top Tracks`}
@@ -92,7 +106,6 @@ const UserDashboard = ({
 						showAlbumColumn={false}
 					/>
 				) : null}
-
 				<FeedWrapper data={userFeedData} />
 			</GradientLayoutPages>
 		</Box>
