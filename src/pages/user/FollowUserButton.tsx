@@ -1,17 +1,20 @@
 import { Button, useToast } from "@chakra-ui/react";
 import { User } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 interface FollowUserButtonProps {
 	currentUser: User;
 	userFollowing: User[];
+	followStatus: boolean;
+	updateFollowStatus: Dispatch<SetStateAction<boolean>>;
 }
 
 const FollowUserButton = ({
 	currentUser,
 	userFollowing,
+	updateFollowStatus,
+	followStatus,
 }: FollowUserButtonProps) => {
-	const [followStatus, updateFollowStatus] = useState(false);
 	const toast = useToast();
 
 	const updateUserFollowing = async () => {

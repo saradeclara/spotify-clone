@@ -8,7 +8,7 @@ import { Artist, Playlist, User } from "@prisma/client";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import capitalise from "../../../lib/capitalise";
 import { useMe } from "../../../lib/hooks";
 import pluralise from "../../../lib/pluralise";
@@ -18,11 +18,12 @@ import FollowUserButton from "./FollowUserButton";
 const UserDashboard = ({
     	user,
     }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+	const [followStatus, updateFollowStatus] = useState(false);
 	const { updateHeader } = useContext(NavBarHeaderContext);
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const { asPath } = useRouter();
 	const { isError, isLoading, user: userData } = useMe();
-	console.log({ userData });
+
 	const userFeedData: { label: string; data: (Artist | Playlist | User)[] }[] =
 		[
 			{
@@ -90,6 +91,8 @@ const UserDashboard = ({
 				{userData.id !== user.id ? (
 					<Box sx={{ margin: "30px 0px 0px 30px" }}>
 						<FollowUserButton
+							followStatus={followStatus}
+							updateFollowStatus={updateFollowStatus}
 							currentUser={user}
 							userFollowing={userData.userFollowing}
 						/>
@@ -110,7 +113,6 @@ const UserDashboard = ({
 			</GradientLayoutPages>
 		</Box>
 	);
-	// }
 };
 
 interface CustomQuery extends ParsedUrlQuery {
