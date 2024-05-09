@@ -7,6 +7,7 @@ import {
 	Flex,
 	FormControl,
 	FormLabel,
+	Heading,
 	Input,
 	InputGroup,
 	InputRightElement,
@@ -106,8 +107,8 @@ const AuthForm = ({
 
 	return (
 		<Box sx={{ height: "100vh", width: "100vw", bg: "black", color: "white" }}>
-			<Flex justify="center" align="center" height="100px">
-				<h1>Log in to Spotify</h1>
+			<Flex paddingTop="100px" justify="center" align="center" height="100px">
+				<Heading as="h1">Spotify</Heading>
 			</Flex>
 			<Flex
 				direction="column"

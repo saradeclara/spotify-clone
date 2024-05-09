@@ -1,4 +1,4 @@
-import PlayerLayout from "@/components/PlayerLayout";
+import PlayerLayout from "@/components/playerLayout";
 import "@/styles/globals.css";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { StoreProvider } from "easy-peasy";
