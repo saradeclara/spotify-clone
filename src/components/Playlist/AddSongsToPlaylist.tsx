@@ -52,6 +52,7 @@ const AddSongsToPlaylist = ({ playlistId }: { playlistId: string }) => {
 				<InputLeftElement
 					color="gray.300"
 					fontSize="1.2em"
+					// eslint-disable-next-line react/no-children-prop
 					children={<MdSearch />}
 					pointerEvents="none"
 				/>
@@ -67,6 +68,7 @@ const AddSongsToPlaylist = ({ playlistId }: { playlistId: string }) => {
 				<InputRightElement
 					color="gray.300"
 					fontSize="1.2em"
+					// eslint-disable-next-line react/no-children-prop
 					children={<RxCross2 />}
 					cursor="pointer"
 					onClick={handleDeleteTextInput}

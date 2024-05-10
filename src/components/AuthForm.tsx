@@ -103,6 +103,7 @@ const AuthForm = ({
 				password: newPassword !== form.password ? newPassword : form.password,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [emailElement, passwordElement]);
 
 	return (
