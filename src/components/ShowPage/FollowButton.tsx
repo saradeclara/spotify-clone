@@ -23,9 +23,10 @@ const FollowButton = ({
 	size?: Size;
 	categoryArray: string;
 	categoryData:
-		| (Show | Artist | Album | Playlist) & {
+		| ((Show | Artist | Album | Playlist) & {
 				category?: Category;
-		  };
+		  })
+		| Track;
 }) => {
 	const [followStatus, setFollowStatus] = useState<BtnStatus | string>("");
 
