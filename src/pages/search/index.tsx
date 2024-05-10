@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useContext } from "react";
 import capitalise from "../../../lib/capitalise";
 
-const Search = (props) => {
+const Search = () => {
 	const { sidebarMargin, musicPlayerHeight } = useContext(LayoutContext);
 	const browseAllItems = [
 		{
@@ -42,7 +42,7 @@ const Search = (props) => {
 					{browseAllItems.map(({ label, color }, index, array) => {
 						const url = `/${label}`;
 						return (
-							<Link href={url}>
+							<Link key={index} href={url}>
 								<Box
 									sx={{
 										width: "200px",
@@ -58,6 +58,7 @@ const Search = (props) => {
 										{capitalise(label)}
 									</Heading>
 									<Image
+										alt="No Image Available"
 										sx={{
 											width: "70%",
 											transform: "translate(90px, 60px) rotate(24deg)",
