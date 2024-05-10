@@ -43,6 +43,7 @@ const LibraryMenu = () => {
 		if (sidebarMargin === margins.l) {
 			toggleView(1);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sidebarMargin]);
 
 	return (
