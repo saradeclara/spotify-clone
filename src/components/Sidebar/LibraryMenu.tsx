@@ -6,12 +6,12 @@ import { Box, Text } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { filterAndSort } from "../../../lib/sort";
-import SortByFilter from "../SortByFilter";
 import FavouritesGridView from "./FavouritesGridView";
 import FavouritesListView from "./FavouritesListView";
 import LibraryCarousel from "./LibraryCarousel";
 import LibraryHeader from "./LibraryHeader";
 import SearchLibraryInput from "./SearchLibraryInput";
+import SortByFilter from "./SortByFilter";
 
 const filters: string[] = [
 	"Recents",
