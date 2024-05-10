@@ -12,7 +12,10 @@ const theme = extendTheme({
 	},
 });
 
-const App = ({ Component, pageProps }) => {
+const App = (props: { Component: any; pageProps: any; }) => {
+	/* eslint-disable react/prop-types */
+	const { Component, pageProps } = props;
+
 	const router = useRouter();
 
 	const authLayout = <Component {...pageProps} />;
