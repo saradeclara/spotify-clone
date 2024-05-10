@@ -13,7 +13,8 @@ import pluralise from "../../../lib/pluralise";
 export const likedSongsCover =
 	"https://ipfs.filebase.io/ipfs/QmSFSc8WF2yoyTjvBXBwYepQikzGX52EVjubDGbY1gnaGd";
 
-const FavouritePage = (props) => {
+	const FavouritePage = () => {
+	/* eslint-disable react/prop-types */
 	const { data } = useQuery(favouriteSongsKey, fetchFavouriteSongs);
 	const user = useContext(LoggedInUserContext);
 	if (!data) return <div key="no-data">No data available</div>;
