@@ -5,13 +5,15 @@ import { fetchPlaylist } from "@/react-query/fetch";
 import { feedKey, playlistKey } from "@/react-query/queryKeys";
 import { spotifyGreen } from "@/styles/colors";
 import { Avatar, Box, Button, Text, useToast } from "@chakra-ui/react";
+import { Category, Playlist, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { MdDelete } from "react-icons/md";
 import { useQuery, useQueryClient } from "react-query";
 import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
+import { ExtendedSong } from "../../../lib/store";
 
-const PlaylistPage = () => {
+const PlaylistPage = (props) => {
 	const router = useRouter();
 	const {
 		query: { id },
@@ -20,13 +22,23 @@ const PlaylistPage = () => {
 	const queryClient = useQueryClient();
 	const toast = useToast();
 
-	if (!id || typeof id !== "string") return;
-
-	const { data, isLoading } = useQuery([playlistKey, id], () =>
-		fetchPlaylist(id)
+	const { data, isLoading } = useQuery<
+		any,
+		any,
+		Playlist & {
+			createdBy: User;
+			songs: ExtendedSong[];
+			totalLength: number;
+			category: Category;
+		},
+		any
+	>(
+		[playlistKey, id],
+		id && typeof id === "string" ? () => fetchPlaylist(id) : () => {}
 	);
 
 	if (isLoading) return <Box>Loading data...</Box>;
+	if (!data) return null;
 
 	const gradientProps = {
 		image: data.avatarUrl,
@@ -34,18 +46,21 @@ const PlaylistPage = () => {
 		isTitleEditable: true,
 		description: [
 			<Avatar
+				key="avatar-element"
 				size="xs"
 				sx={{ border: "2px solid black", marginRight: "5px" }}
 				src={data.createdBy.avatarUrl ?? undefined}
 			/>,
-			<Text fontWeight="bold">
+			<Text key="fullname" fontWeight="bold">
 				{`${data.createdBy.firstName} ${data.createdBy.lastName}`}
 			</Text>,
-			<Text margin="0px 5px">{"\u2022"}</Text>,
-			<Text>
+			<Text key="separator" margin="0px 5px">
+				{"\u2022"}
+			</Text>,
+			<Text key="length">
 				{data.songs.length} {pluralise(data.songs.length, "song")},
 			</Text>,
-			<Text marginLeft="5px">
+			<Text key="duration" marginLeft="5px">
 				{convertSeconds(data.totalLength, "hhhh mmmm ssss")}
 			</Text>,
 		],
@@ -96,7 +111,11 @@ const PlaylistPage = () => {
 							leftIcon={<MdDelete />}
 							color={spotifyGreen}
 							variant="outline"
-							onClick={() => handleDeletePlaylist(id)}
+							onClick={
+								id && typeof id === "string"
+									? () => handleDeletePlaylist(id)
+									: () => {}
+							}
 						>
 							Delete this playlist
 						</Button>
