@@ -88,6 +88,7 @@ const AlbumPage = (
 						showArtist
 						showFavourites
 					/>
+					
 				</Box>
 			</GradientLayoutPages>
 		</Box>

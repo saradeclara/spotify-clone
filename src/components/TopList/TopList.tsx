@@ -193,7 +193,7 @@ function TopList({
 		return <Box>Error</Box>;
 	}
 
-	if (!data) return;
+	if (!data) return <Box></Box>;
 
 	const favouriteSongs = [...data].filter(
 		(record) => record.category.description === "song"
