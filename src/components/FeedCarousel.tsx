@@ -16,7 +16,7 @@ function FeedCarousel({
 				{capitalise(feed.label)}
 			</Heading>
 			<Box>
-				{resultGrid.map((singleRow: FeedElement[]) => {
+				{resultGrid.map((singleRow: FeedElement[], index) => {
 					const gridRow = singleRow.map(
 						(singleElement: FeedElement, index, array) => {
 							return (
@@ -30,7 +30,7 @@ function FeedCarousel({
 					);
 
 					return (
-						<Box marginBottom="20px" display="flex">
+						<Box key={index} marginBottom="20px" display="flex">
 							{gridRow}
 						</Box>
 					);
