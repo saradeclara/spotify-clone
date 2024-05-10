@@ -13,7 +13,8 @@ import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
 import { ExtendedSong } from "../../../lib/store";
 
-const PlaylistPage = (props) => {
+/* eslint-disable react/prop-types */
+const PlaylistPage = (_props: any) => {
 	const router = useRouter();
 	const {
 		query: { id },

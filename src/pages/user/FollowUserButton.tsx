@@ -11,12 +11,13 @@ interface FollowUserButtonProps {
 	updateFollowStatus: Dispatch<SetStateAction<boolean>>;
 }
 
+/* eslint-disable react/prop-types */
 const FollowUserButton = ({
-    	currentUser,
-    	userFollowing,
-    	updateFollowStatus,
-    	followStatus,
-    }) => {
+        	currentUser,
+        	userFollowing,
+        	updateFollowStatus,
+        	followStatus,
+        }: FollowUserButtonProps) => {
 	const toast = useToast();
 	const queryClient = useQueryClient();
 
