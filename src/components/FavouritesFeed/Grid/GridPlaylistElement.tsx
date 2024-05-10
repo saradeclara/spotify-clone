@@ -27,7 +27,7 @@ const GridPlaylistElement = ({
 					<Image
 						borderRadius="md"
 						boxSize="150px"
-						src={feedRecord.avatarUrl}
+						src={feedRecord.avatarUrl ?? ""}
 						alt={feedRecord.name}
 					/>
 				</Box>
