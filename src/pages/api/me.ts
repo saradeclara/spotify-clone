@@ -3,7 +3,6 @@ import prisma from "../../../lib/prisma";
 
 export default validateRoute(async (req, res, user) => {
 	const { newUser } = req.body;
-	console.log({ newUser });
 	switch (req.method) {
 		case "GET":
 			{

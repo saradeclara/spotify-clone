@@ -73,7 +73,6 @@ const UserDashboard = () => {
 		}
 	);
 
-	// reset scrollPosition when navigating through pages
 	useEffect(() => {
 		refetch();
 	}, [router.asPath]);
@@ -120,60 +119,5 @@ const UserDashboard = () => {
 		</Box>
 	);
 };
-
-// interface CustomQuery extends ParsedUrlQuery {
-// 	username?: string;
-// }
-
-// export const getServerSideProps = async (
-// 	context: GetServerSidePropsContext
-// ) => {
-// 	const customQuery: CustomQuery = context.query;
-
-// 	const user = await prisma.user.findUnique({
-// 		where: {
-// 			username: customQuery.username,
-// 		},
-// 		include: {
-// 			favouriteSongs: {
-// 				include: { album: true, artist: true, category: true },
-// 			},
-// 			createdPlaylists: { include: { category: true } },
-// 			favouritePlaylists: { include: { category: true } },
-// 			userFollowers: true,
-// 			artistFollowers: {
-// 				include: { albums: true, songs: true, category: true },
-// 			},
-// 			userFollowing: true,
-// 			artistFollowing: {
-// 				include: { albums: true, songs: true, category: true },
-// 			},
-// 		},
-// 	});
-// 	if (user && user.favouriteSongs && user.favouriteSongs) {
-// 		const userWithStats = {
-// 			...user,
-// 			stats: [
-// 				{
-// 					label: "playlist",
-// 					total: user.createdPlaylists.length + user.favouritePlaylists.length,
-// 				},
-// 				{
-// 					label: "follower",
-// 					total: user.userFollowers.length + user.artistFollowers.length,
-// 				},
-// 				{
-// 					label: "following",
-// 					total: user.userFollowing.length + user.artistFollowing.length,
-// 				},
-// 			],
-// 		};
-// 		return {
-// 			props: {
-// 				user: userWithStats,
-// 			},
-// 		};
-// 	}
-// };
 
 export default UserDashboard;

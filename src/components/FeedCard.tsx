@@ -20,13 +20,10 @@ const FeedCard = ({
 	 * @returns The function `getCategory` returns "track" if the `catDescription` parameter is equal to
 	 * "song", otherwise it returns the `catDescription` parameter as is.
 	 */
-	const getCategory = (catDescription: string) => {
-		return catDescription === "song" ? "track" : catDescription;
-	};
 
 	const linkUrl =
 		data.category && data.category.description
-			? `/${getCategory(data.category.description)}/${data.id}`
+			? `/${data.category.description}/${data.id}`
 			: `/user/${data.username}`;
 
 	const avatarUrl =

@@ -47,9 +47,12 @@ export default validateRoute(async (req, res, user) => {
 		}
 		res.json(feed);
 	} else if (req.method === "PUT") {
-		const { itemId, category }: { itemId: string; category: string } = req.body;
-
-		// check if show is in favouriteShows of current user
+		const {
+			itemId,
+			category,
+			name,
+		}: { itemId: string; category: string; name: string } = req.body;
+		// check if element is in favourites of current user
 		if (user) {
 			const categoryList = getCategory(user, category);
 			const isItemInCategoryList = [...categoryList].filter(
@@ -57,8 +60,8 @@ export default validateRoute(async (req, res, user) => {
 			);
 
 			if (isItemInCategoryList.length === 0) {
-				// if show is not in favouriteShows, add it
-				const updatedUser = await prisma.user.update({
+				// if element is not in favourites, add it
+				await prisma.user.update({
 					where: {
 						id: user.id,
 					},
@@ -79,10 +82,16 @@ export default validateRoute(async (req, res, user) => {
 						},
 					},
 				});
-				res.json(updatedUser);
+
+				res
+					.status(200)
+					.json({
+						action: "added",
+						message: `${name} was added to your Favourites`,
+					});
 			} else {
-				// if show is in favouriteShows, remove it
-				const updatedUser = await prisma.user.update({
+				// if element is in favourites, remove it
+				await prisma.user.update({
 					where: {
 						id: user.id,
 					},
@@ -103,7 +112,12 @@ export default validateRoute(async (req, res, user) => {
 						},
 					},
 				});
-				res.json(updatedUser);
+				res
+					.status(200)
+					.json({
+						action: "removed",
+						message: `${name} was removed from your Favourites`,
+					});
 			}
 		}
 	}
