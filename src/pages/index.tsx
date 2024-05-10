@@ -9,6 +9,7 @@ import { InferGetServerSidePropsType } from "next";
 import capitalise from "../../lib/capitalise";
 import prisma from "../../lib/prisma";
 import { sortRecentlyAdded } from "../../lib/sort";
+import Head from "next/head";
 
 export type RecentlyAddedType = (Album & Song & Artist & Playlist & Album) & {
 	category: Category;
@@ -56,6 +57,9 @@ const Home = (
 				padding: "8px 8px 8px 0px",
 			}}
 		>
+			<Head>
+				<title>CodeTunes - A Spotify Clone by Sara De Clara</title>
+			</Head>
 			<GradientLayoutMain color="red">
 				<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 					<RecentlyAddedGrid data={gridData} />

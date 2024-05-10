@@ -7,7 +7,6 @@ import {
 	Flex,
 	FormControl,
 	FormLabel,
-	Heading,
 	Input,
 	InputGroup,
 	InputRightElement,
@@ -20,6 +19,9 @@ import React, { FormEvent, useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import capitalise from "../../lib/capitalise";
 import { auth } from "../../lib/mutation";
+import logo from '../assets/logo-codetunes.png';
+import Image from "next/image";
+import Head from "next/head";
 
 const AuthForm = ({
 	formData,
@@ -107,15 +109,17 @@ const AuthForm = ({
 	}, [emailElement, passwordElement]);
 
 	return (
-		<Box sx={{ height: "100vh", width: "100vw", bg: "black", color: "white" }}>
-			<Flex paddingTop="100px" justify="center" align="center" height="100px">
-				<Heading as="h1">Spotify</Heading>
-			</Flex>
+		<Box sx={{ height: mode === 'signin' ? '100vh' : "", width: "100vw", bg: "black", color: "white" }}>
+			<Head>
+				<title>CodeTunes - A Spotify Clone by Sara De Clara</title>
+			</Head>
+			<Box sx={{ display: 'flex', justifyContent: 'center', padding: '30px 0px'}}>
+				<Image style={{ borderRadius: '200px', border: '5px solid white'}} alt='SpotiClone' height={350} src={logo} />
+			</Box>
 			<Flex
 				direction="column"
 				justify="center"
 				align="center"
-				height="calc(100vh - 100px)"
 				sx={{ width: "50%", margin: "0 auto" }}
 			>
 				<Box width="100%">
@@ -179,7 +183,7 @@ const AuthForm = ({
 						<Link href="/signup">Sign up for Spotify</Link>
 					</Box>
 				) : (
-					<Box marginTop="10px">
+					<Box margin="10px 0px">
 						<Text sx={{ color: "gray", display: "inline", marginRight: "5px" }}>
 							Have an account?
 						</Text>
