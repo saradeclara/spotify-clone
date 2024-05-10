@@ -5,8 +5,8 @@ import GridRow from "./GridRow";
 const RecentlyAddedGrid = ({ data }: { data: RecentlyAddedType[][] }) => {
 	return (
 		<Box sx={{ display: "flex", flexDirection: "column", marginTop: "20px" }}>
-			{data.map((singleRow) => {
-				return <GridRow rowItems={singleRow} />;
+			{data.map((singleRow, index) => {
+				return <GridRow key={index} rowItems={singleRow} />;
 			})}
 		</Box>
 	);
