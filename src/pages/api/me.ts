@@ -65,7 +65,7 @@ export default validateRoute(async (req, res, user) => {
 
 					if (isUserInFollowing) {
 						// remove newUser from following
-						const updatedFollowing = await prisma.user.update({
+						await prisma.user.update({
 							where: {
 								id: user.id,
 							},
@@ -83,7 +83,7 @@ export default validateRoute(async (req, res, user) => {
 						});
 					} else {
 						// add newUser to following
-						const updatedFollowing = await prisma.user.update({
+						await prisma.user.update({
 							where: {
 								id: user.id,
 							},
