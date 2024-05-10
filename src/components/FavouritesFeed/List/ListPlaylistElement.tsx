@@ -35,7 +35,7 @@ const ListPlaylistElement = ({
 						alt={feedRecord.name}
 					/>
 				) : (
-					<Avatar src={feedRecord.avatarUrl} />
+					<Avatar src={feedRecord.avatarUrl ?? ""} />
 				)}
 
 				<Box sx={{ marginLeft: "10px" }}>

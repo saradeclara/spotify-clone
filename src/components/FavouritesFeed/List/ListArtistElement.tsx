@@ -30,7 +30,7 @@ const ListArtistElement = ({
 				<Image
 					borderRadius="full"
 					boxSize="50px"
-					src={feedRecord.avatarUrl}
+					src={feedRecord.avatarUrl ?? ""}
 					alt={feedRecord.name}
 				/>
 				<Box sx={{ marginLeft: "10px" }}>
