@@ -173,7 +173,7 @@ const AuthForm = ({
 				{mode === "signin" ? (
 					<Box marginTop="10px">
 						<Text sx={{ color: "gray", display: "inline", marginRight: "5px" }}>
-							Don't have an account?
+							Don&apos;t have an account?
 						</Text>
 						<Link href="/signup">Sign up for Spotify</Link>
 					</Box>
