@@ -60,9 +60,8 @@ const Home = (
 				<Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
 					<RecentlyAddedGrid data={gridData} />
 					{Object.values(carouselFeed).map(({ label, data }, index) => (
-						<Box sx={{ display: "block" }}>
+						<Box key={index} sx={{ display: "block" }}>
 							<FeedCarousel
-								key={index}
 								feed={{
 									label: label
 										.split(" ")

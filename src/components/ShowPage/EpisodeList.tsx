@@ -37,8 +37,14 @@ const EpisodeList = ({
 					{capitalise(heading)}
 				</Heading>
 			) : null}
-			{episodeTracks.map((singleEpisode) => {
-				return <EpisodeRow collection={episodeTracks} info={singleEpisode} />;
+			{episodeTracks.map((singleEpisode, index) => {
+				return (
+					<EpisodeRow
+						key={index}
+						collection={episodeTracks}
+						info={singleEpisode}
+					/>
+				);
 			})}
 		</Box>
 	);

@@ -41,7 +41,7 @@ const AlbumPage = (
 
 		return [
 			artistImage,
-			<Link href={`/artist/${album.artist.id}`}>
+			<Link key="key-element" href={`/artist/${album.artist.id}`}>
 				<Text
 					sx={{ display: "inline", marginRight: "4px" }}
 					_hover={{ textDecoration: "underline" }}
