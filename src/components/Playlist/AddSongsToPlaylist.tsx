@@ -25,7 +25,6 @@ const AddSongsToPlaylist = ({ playlistId }: { playlistId: string }) => {
 	};
 
 	const handleDeleteTextInput = () => {
-		console.log("delete");
 		updateTextInput(textInputDefault);
 	};
 

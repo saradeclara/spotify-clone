@@ -67,7 +67,7 @@ function TopList({
 		item: 0,
 	});
 	const [isDeleteLoading, toggleDeleteLoading] = useState<boolean | null>(null);
-
+	const [songToDelete, updateSongToDelete] = useState<string | null>(null);
 	const activeTrack = useStoreState(
 		(store: State<StoreModel>) => store.activeTrack
 	);
@@ -111,6 +111,8 @@ function TopList({
 			body: JSON.stringify({ newSongId, flag: "remove" }),
 		});
 		const json = await response.json();
+		const { songToDelete } = json;
+		updateSongToDelete(songToDelete.name);
 
 		queryClient.invalidateQueries(playlistKey);
 
@@ -119,7 +121,7 @@ function TopList({
 		}
 	};
 
-	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
+	const { data } = useQuery(feedKey, fetchFeedData, {
 		staleTime: 60 * 5 * 1000,
 	});
 
@@ -246,13 +248,13 @@ function TopList({
 			});
 		} else {
 			toast({
-				title: "Success!",
+				title: `${songToDelete} was removed from your playlist.`,
 				status: "success",
 				duration: 3000,
 				isClosable: true,
 			});
 		}
-	}, [isDeleteLoading]);
+	}, [isDeleteLoading, toast, songToDelete]);
 
 	return (
 		<Box sx={{ padding: "30px" }}>
