@@ -13,11 +13,12 @@ import {
 	OrderedList,
 	Text,
 	Tooltip,
+	useToast,
 } from "@chakra-ui/react";
 import { Episode, Song } from "@prisma/client";
 import { State, useStoreState } from "easy-peasy";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
@@ -65,6 +66,7 @@ function TopList({
 		isHovering: false,
 		item: 0,
 	});
+	const [isDeleteLoading, toggleDeleteLoading] = useState<boolean | null>(null);
 
 	const activeTrack = useStoreState(
 		(store: State<StoreModel>) => store.activeTrack
@@ -73,6 +75,8 @@ function TopList({
 	// retrieving actions from the main store
 	const setActiveTracks = useStoreActions((store) => store.changeActiveTracks);
 	const setActiveTrack = useStoreActions((store) => store.changeActiveTrack);
+
+	const toast = useToast();
 
 	/**
 	 * The `handlePlay` function sets a single song as the active track and updates the collection of
@@ -96,6 +100,8 @@ function TopList({
 	 * the ID of the song that you want to remove from the playlist.
 	 */
 	const handleDeleteSong = async (playlistId: string, newSongId: string) => {
+		toggleDeleteLoading(true);
+
 		const response = await fetch(`/api/playlist/${playlistId}`, {
 			method: "PUT",
 			cache: "no-cache",
@@ -105,9 +111,12 @@ function TopList({
 			body: JSON.stringify({ newSongId, flag: "remove" }),
 		});
 		const json = await response.json();
-		console.log({ json });
 
 		queryClient.invalidateQueries(playlistKey);
+
+		if (response.ok) {
+			toggleDeleteLoading(false);
+		}
 	};
 
 	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
@@ -121,6 +130,15 @@ function TopList({
 		category: string;
 	}
 
+	/**
+	 * The function `isSongInFavourites` checks if a song with a specific ID is present in a list of
+	 * favorite songs.
+	 * @param {string} id - The `id` parameter is a string representing the unique identifier of a song.
+	 * @param {Song[]} favSongs - An array of objects representing songs, where each object has an `id`
+	 * property of type string.
+	 * @returns The function `isSongInFavourites` returns a boolean value indicating whether a song with
+	 * the given `id` is present in the array of favorite songs (`favSongs`).
+	 */
 	const isSongInFavourites = (id: string, favSongs: Song[]) => {
 		const favSongsIds = favSongs.map((song) => song.id);
 		return favSongsIds.includes(id);
@@ -185,19 +203,9 @@ function TopList({
 		return activeSong.id === currentSongId;
 	};
 
-	if (isLoading) {
-		return <Box>Loading...</Box>;
-	}
-
-	if (error) {
-		return <Box>Error</Box>;
-	}
-
-	if (!data) return <Box></Box>;
-
-	const favouriteSongs = [...data].filter(
-		(record) => record.category.description === "song"
-	);
+	const favouriteSongs = data
+		? [...data].filter((record) => record.category.description === "song")
+		: [];
 
 	const listItems: (ExtendedSong & Episode & { avatarUrl: string })[] =
 		typeof items === "undefined" ? favouriteSongs : items;
@@ -227,6 +235,25 @@ function TopList({
 						: -1;
 			  })
 			: trackList;
+
+	useEffect(() => {
+		if (isDeleteLoading) {
+			toast({
+				title: "Loading...",
+				status: "loading",
+				duration: 3000,
+				isClosable: false,
+			});
+		} else {
+			toast({
+				title: "Success!",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+			});
+		}
+	}, [isDeleteLoading]);
+
 	return (
 		<Box sx={{ padding: "30px" }}>
 			{heading ? (
