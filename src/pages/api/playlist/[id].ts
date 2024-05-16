@@ -5,15 +5,14 @@ export default validateRoute(async (req, res, _user) => {
 	const { id } = req.query;
 	const { newSongId, flag } = req.body;
 
-	const newSong = await prisma.song.findUnique({
-		where: { id: newSongId },
-	});
-
 	if (typeof id !== "string") return;
 	// /api/playlist/[id] update songs array on current playlist
 	if (req.method === "PUT") {
+		const newSong = await prisma.song.findUnique({
+			where: { id: newSongId },
+		});
 		if (flag === "remove") {
-			const updatedPlaylist = await prisma.playlist.update({
+			await prisma.playlist.update({
 				where: {
 					id,
 				},
@@ -25,12 +24,10 @@ export default validateRoute(async (req, res, _user) => {
 					},
 				},
 			});
-			res
-				.status(200)
-				.json({
-					message: "Playlist updated successfully",
-					songToDelete: newSong,
-				});
+			res.status(200).json({
+				message: "Playlist updated successfully",
+				songToDelete: newSong,
+			});
 		} else if (flag === "add") {
 			const currentPlaylist = await prisma.playlist.findUnique({
 				where: { id },
