@@ -239,20 +239,22 @@ function TopList({
 			: trackList;
 
 	useEffect(() => {
-		if (isDeleteLoading) {
-			toast({
-				title: "Loading...",
-				status: "loading",
-				duration: 3000,
-				isClosable: false,
-			});
-		} else {
-			toast({
-				title: `${songToDelete} was removed from your playlist.`,
-				status: "success",
-				duration: 3000,
-				isClosable: true,
-			});
+		if (songToDelete) {
+			if (isDeleteLoading) {
+				toast({
+					title: "Loading...",
+					status: "loading",
+					duration: 3000,
+					isClosable: false,
+				});
+			} else {
+				toast({
+					title: `${songToDelete} was removed from your playlist.`,
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+				});
+			}
 		}
 	}, [isDeleteLoading, toast, songToDelete]);
 

@@ -39,20 +39,22 @@ function ResultList({
 	};
 
 	useEffect(() => {
-		if (isAddingLoading) {
-			toast({
-				title: "Loading...",
-				status: "loading",
-				duration: 2000,
-				isClosable: true,
-			});
-		} else {
-			toast({
-				title: `${lastSongAdded} was added to your playlist.`,
-				status: "success",
-				duration: 3000,
-				isClosable: true,
-			});
+		if (lastSongAdded) {
+			if (isAddingLoading) {
+				toast({
+					title: "Loading...",
+					status: "loading",
+					duration: 2000,
+					isClosable: true,
+				});
+			} else {
+				toast({
+					title: `${lastSongAdded} was added to your playlist.`,
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+				});
+			}
 		}
 	}, [isAddingLoading, lastSongAdded, toast]);
 
