@@ -121,7 +121,7 @@ function TopList({
 		}
 	};
 
-	const { data } = useQuery(feedKey, fetchFeedData, {
+	const { data, isLoading, error } = useQuery(feedKey, fetchFeedData, {
 		staleTime: 60 * 5 * 1000,
 	});
 
@@ -255,6 +255,16 @@ function TopList({
 			});
 		}
 	}, [isDeleteLoading, toast, songToDelete]);
+
+	if (isLoading) {
+		return <Box>Loading...</Box>;
+	}
+
+	if (error) {
+		return <Box>Error</Box>;
+	}
+
+	if (!data) return <Box></Box>;
 
 	return (
 		<Box sx={{ padding: "30px" }}>
