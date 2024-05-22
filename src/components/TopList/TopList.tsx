@@ -146,12 +146,17 @@ function TopList({
 		return favSongsIds.includes(id);
 	};
 
+	interface Data {
+		message: string;
+		action: string;
+	}
+
 	/* The code below defines a mutation function `updateFeedMutation` using the `useMutation` hook 
 	from the React Query library. This mutation function is responsible
 	for sending a PUT request to the "/api/feed" endpoint with a new item as the request body. If the
 	network response is successful (status code 200), it returns the JSON response.
 	Upon success, the feed query and favourite songs query are both invalidated. */
-	const updateFeedMutation = useMutation<Body, Error, Partial<Body>>(
+	const updateFeedMutation = useMutation<Data, any, Partial<Body>, any>(
 		async (newItem) => {
 			const response = await fetch("/api/feed", {
 				method: "PUT",
@@ -168,9 +173,31 @@ function TopList({
 			return response.json();
 		},
 		{
-			onSuccess: () => {
+			onMutate: () => {
+				toast({
+					title: "Loading...",
+					status: "loading",
+					duration: 3000,
+					isClosable: true,
+				});
+			},
+			onSuccess: (data, _variables) => {
+				toast({
+					title: data.message,
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+				});
+
 				queryClient.invalidateQueries(feedKey);
 				queryClient.invalidateQueries(favouriteSongsKey);
+
+				toast({
+					title: ` was removed from your favourites.`,
+					status: "success",
+					duration: 3000,
+					isClosable: true,
+				});
 			},
 		}
 	);
@@ -185,13 +212,13 @@ function TopList({
 		updateHoveringState({ isHovering: false, item: id });
 	};
 
-	const updateSongFavourites = async (id: string) => {
-		const body = { itemId: id, category: "favouriteSongs" };
+	const updateSongFavourites = async (id: string, name: string) => {
+		const body = { itemId: id, category: "favouriteSongs", name };
 		updateFeedMutation.mutate(body);
 	};
 
-	const handleClick = (id: string) => {
-		updateSongFavourites(id);
+	const handleClick = (id: string, name: string) => {
+		updateSongFavourites(id, name);
 	};
 
 	const colStyles =
@@ -438,12 +465,14 @@ function TopList({
 												>
 													{isSongInFavourites(id, favouriteSongs) ? (
 														<AiFillHeart
-															onClick={() => handleClick(id)}
+															onClick={() => handleClick(id, name)}
 															color={spotifyGreen}
 														/>
 													) : isHovering && item == index ? (
 														<Box _hover={{ color: "white" }}>
-															<AiOutlineHeart onClick={() => handleClick(id)} />
+															<AiOutlineHeart
+																onClick={() => handleClick(id, name)}
+															/>
 														</Box>
 													) : null}
 												</Box>

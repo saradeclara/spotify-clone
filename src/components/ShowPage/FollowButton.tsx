@@ -98,7 +98,7 @@ const FollowButton = ({
 					isClosable: true,
 				});
 			},
-			onSuccess: (data, variables) => {
+			onSuccess: (data, _variables) => {
 				toast({
 					title: data.message,
 					status: "success",

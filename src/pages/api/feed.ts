@@ -83,12 +83,12 @@ export default validateRoute(async (req, res, user) => {
 					},
 				});
 
-				res
-					.status(200)
-					.json({
+				if (name && name.length > 0) {
+					res.status(200).json({
 						action: "added",
-						message: `${name} was added to your Favourites`,
+						message: `${name} was added to your favourites`,
 					});
+				}
 			} else {
 				// if element is in favourites, remove it
 				await prisma.user.update({
@@ -112,12 +112,12 @@ export default validateRoute(async (req, res, user) => {
 						},
 					},
 				});
-				res
-					.status(200)
-					.json({
+				if (name && name.length > 0) {
+					res.status(200).json({
 						action: "removed",
-						message: `${name} was removed from your Favourites`,
+						message: `${name} was removed from your favourites`,
 					});
+				}
 			}
 		}
 	}
