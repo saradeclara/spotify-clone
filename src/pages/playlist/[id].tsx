@@ -79,6 +79,13 @@ const PlaylistPage = () => {
 	 * identifier of the playlist that needs to be deleted.
 	 */
 	const handleDeletePlaylist = async (playlistId: string) => {
+		toast({
+			description: "Loading...",
+			status: "loading",
+			duration: 1000,
+			isClosable: true,
+		});
+
 		const response = await fetch(`/api/playlist/${playlistId}`, {
 			method: "DELETE",
 		});
