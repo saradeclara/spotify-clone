@@ -12,9 +12,11 @@ import { useQuery, useQueryClient } from "react-query";
 import convertSeconds from "../../../lib/convertSeconds";
 import pluralise from "../../../lib/pluralise";
 import { ExtendedSong } from "../../../lib/store";
+import GradientLayoutMain from "@/components/GradientLayoutMain";
+import GradientLayoutLoadingData from "@/components/GradientLayoutLoadingData";
 
 /* eslint-disable react/prop-types */
-const PlaylistPage = (_props: any) => {
+const PlaylistPage = () => {
 	const router = useRouter();
 	const {
 		query: { id },
@@ -38,7 +40,7 @@ const PlaylistPage = (_props: any) => {
 		id && typeof id === "string" ? () => fetchPlaylist(id) : () => {}
 	);
 
-	if (isLoading) return <Box>Loading data...</Box>;
+	if (isLoading) return <GradientLayoutLoadingData />;
 	if (!data) return null;
 
 	const gradientProps = {

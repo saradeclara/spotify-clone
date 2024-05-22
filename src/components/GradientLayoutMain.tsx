@@ -6,7 +6,7 @@ const GradientLayoutMain = ({
 	children,
 }: {
 	color: string;
-	children: ReactNode;
+	children?: ReactNode;
 }) => {
 	return (
 		<Box

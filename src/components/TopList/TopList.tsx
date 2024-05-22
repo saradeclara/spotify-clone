@@ -279,7 +279,7 @@ function TopList({
 	}, [isDeleteLoading, toast, songToDelete]);
 
 	if (isLoading) {
-		return <Box>Loading...</Box>;
+		return <Box>Loading data...</Box>;
 	}
 
 	if (error) {
