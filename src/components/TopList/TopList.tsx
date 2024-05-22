@@ -191,13 +191,6 @@ function TopList({
 
 				queryClient.invalidateQueries(feedKey);
 				queryClient.invalidateQueries(favouriteSongsKey);
-
-				toast({
-					title: ` was removed from your favourites.`,
-					status: "success",
-					duration: 3000,
-					isClosable: true,
-				});
 			},
 		}
 	);
