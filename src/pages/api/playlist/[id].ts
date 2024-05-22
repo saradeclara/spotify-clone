@@ -59,7 +59,6 @@ export default validateRoute(async (req, res, _user) => {
 				.json({ message: "Playlist updated successfully", newSong });
 		} else if (flag === "edit") {
 			const { flag, ...restOfBody } = req.body;
-			console.log({ id });
 			const updatedPlaylist = await prisma.playlist.update({
 				where: {
 					id,
