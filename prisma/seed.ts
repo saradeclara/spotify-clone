@@ -3,23 +3,28 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 const salt = bcrypt.genSaltSync();
 
-const categories = ["album", "song", "artist", "podcast", "playlist"];
+const categories = ["album", "song", "artist", "show", "playlist"];
 const artists = [
 	{
 		name: "Depeche Mode",
-		headerUrl: "https://i.ibb.co/gwBGf2c/depeche-mode-FINAL-IMAGE.jpg",
+		headerUrl:
+			"https://ipfs.filebase.io/ipfs/QmSwiDwhYzUn4KoAx1opdpyjs1drePk5hsmYc4wpLTPfdc",
 		avatarUrl:
-			"https://i.ibb.co/hghwKxr/ab6761610000e5ebaff13c9484fdad590ccfb73c.jpg",
+			"https://ipfs.filebase.io/ipfs/QmQParJbu6D6iD6xNo9gbV6HcGGrUFxNVVxENuc4ak1fvp",
 	},
 	{
 		name: "Soundgarden",
-		headerUrl: "https://i.ibb.co/0VpYgLD/soundgardenborucki-copy.jpg",
-		avatarUrl: "https://i.ibb.co/hY7mtbT/cc7.jpg",
+		headerUrl:
+			"https://ipfs.filebase.io/ipfs/Qmf7cd67JnZS2ecwJkdq6T9fQP2GpjmJ3merQvRUGgJtbB",
+		avatarUrl:
+			"https://ipfs.filebase.io/ipfs/QmQH28cjvd5w4pYiEsdexBiMtBAP3p1HQrNeSsDxaXBkiN",
 	},
 	{
 		name: "PJ Harvey",
-		headerUrl: "https://i.ibb.co/0sXLrJh/image-18.png",
-		avatarUrl: "https://i.ibb.co/Vg67Q7h/500x500-000000-80-0-0.jpg",
+		headerUrl:
+			"https://ipfs.filebase.io/ipfs/QmSxmSB7HLJztiKK5DLRkZXAbd7LKraLVSMPnxpgK1JMMg",
+		avatarUrl:
+			"https://ipfs.filebase.io/ipfs/QmYpwhwAa3K2UbgZooFmKSgJRs7hkU48mGgnueekfrQVwH",
 	},
 ];
 
@@ -51,7 +56,7 @@ const main = async () => {
 	});
 
 	const catPodcast = await prisma.category.findFirst({
-		where: { description: "podcast" },
+		where: { description: "show" },
 	});
 
 	if (catArtist && catAlbum && catSong && catPlaylist && catPodcast) {
@@ -83,7 +88,8 @@ const main = async () => {
 		const albums: any = [
 			{
 				name: "Superunknown",
-				avatarUrl: "https://i.ibb.co/9VrXvB0/Superunknown.jpg",
+				avatarUrl:
+					"https://ipfs.filebase.io/ipfs/QmXtfyE8gZdc5fsXSUZYDSaZCZCNaiT4TUTTHixchhtusV",
 				releasedOn: new Date("1994-03-07T00:00:00+0000"),
 				artistId: artist1?.id,
 				songs: [
@@ -91,13 +97,14 @@ const main = async () => {
 						name: "Black Hole Sun",
 						duration: 138,
 						albumIndex: 8,
-						url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=0",
+						url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=1",
 					},
 				],
 			},
 			{
 				name: "Violator",
-				avatarUrl: "https://i.ibb.co/9hCrb1r/violator.png",
+				avatarUrl:
+					"https://ipfs.filebase.io/ipfs/QmNav8tkhHrhhXqUwgqk1TojZvJr3gSfBUfVKoh7s9XKPf",
 				releasedOn: new Date("1990-03-19T00:00:00+0000"),
 				artistId: artist2?.id,
 				songs: [
@@ -105,13 +112,14 @@ const main = async () => {
 						name: "Policy of Truth",
 						duration: 138,
 						albumIndex: 8,
-						url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=0",
+						url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=1",
 					},
 				],
 			},
 			{
 				name: "Dry",
-				avatarUrl: "https://i.ibb.co/dLDQG6R/PJHarvey-Dryalbumcover.jpg",
+				avatarUrl:
+					"https://ipfs.filebase.io/ipfs/QmXxL7S8HqmHXoGnHuJHYf2ijYtGQgi4MLo7pUqa5NPnWf",
 				releasedOn: new Date("1992-03-30T00:00:00+0000"),
 				artistId: artist3?.id,
 				songs: [
@@ -119,7 +127,7 @@ const main = async () => {
 						name: "Sheela-Na-Gig",
 						duration: 138,
 						albumIndex: 5,
-						url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=0",
+						url: "https://www.dropbox.com/s/ncrnretfal1kpyp/forest-lullaby-110624.mp3?dl=1",
 					},
 				],
 			},
@@ -160,7 +168,8 @@ const main = async () => {
 				name: "Significant Others",
 				author: "Team Coco",
 				categoryId: catPodcast?.id,
-				avatarUrl: "https://i.ibb.co/M8tmrvk/significant.webp",
+				avatarUrl:
+					"https://ipfs.filebase.io/ipfs/Qma1RcWz2yrsJDDfdiGpHcK6RofGjtDyPoGog5y1ceramw",
 			},
 		});
 
@@ -187,7 +196,8 @@ const main = async () => {
 					name: "90s Mix",
 					categoryId: catPlaylist?.id,
 					userId: spotifyUser?.id,
-					avatarUrl: "https://i.ibb.co/QD8qHnT/download.png",
+					avatarUrl:
+						"https://ipfs.filebase.io/ipfs/QmVncFNBff9kv9VafT1s6q7cRHvqdjC89hJXHpSHJphyps",
 					songs: {
 						connect: allSongs.map((singleSong) => {
 							return { id: singleSong.id };
@@ -200,7 +210,8 @@ const main = async () => {
 					firstName: "Sara",
 					lastName: "De Clara",
 					username: "saradc88",
-					avatarUrl: "https://i.ibb.co/fH00WNk/500x500-000000-80-0-0.jpg",
+					avatarUrl:
+						"https://ipfs.filebase.io/ipfs/QmNy9a2QanHffTWKWPButhvY2xfMsMR8iTJvzpCevXRk35",
 					email: "saradeclara@gmail.com",
 					password: bcrypt.hashSync("password", salt),
 					isAdmin: true,
@@ -227,7 +238,7 @@ const main = async () => {
 								create: {
 									name: "Depeche Mode",
 									avatarUrl:
-										"https://i.ibb.co/hghwKxr/ab6761610000e5ebaff13c9484fdad590ccfb73c.jpg",
+										"https://ipfs.filebase.io/ipfs/QmQParJbu6D6iD6xNo9gbV6HcGGrUFxNVVxENuc4ak1fvp",
 									categoryId: catArtist.id,
 								},
 							},
@@ -237,7 +248,8 @@ const main = async () => {
 								},
 								create: {
 									name: "Soundgarden",
-									avatarUrl: "https://i.ibb.co/hY7mtbT/cc7.jpg",
+									avatarUrl:
+										"https://ipfs.filebase.io/ipfs/QmQH28cjvd5w4pYiEsdexBiMtBAP3p1HQrNeSsDxaXBkiN",
 									categoryId: catArtist.id,
 								},
 							},
