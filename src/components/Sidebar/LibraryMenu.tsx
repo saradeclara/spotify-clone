@@ -12,6 +12,8 @@ import LibraryCarousel from "./LibraryCarousel";
 import LibraryHeader from "./LibraryHeader";
 import SearchLibraryInput from "./SearchLibraryInput";
 import SortByFilter from "./SortByFilter";
+import GradientLayoutLoadingData from "../GradientLayoutLoadingData";
+import FavouritesLoadingData from "./FavouritesLoadingData";
 
 const filters: string[] = [
 	"Recents",
@@ -92,7 +94,7 @@ const LibraryMenu = () => {
 				{/* Main Favourites List */}
 				<Box sx={{ marginTop: "20px" }}>
 					{status === "loading" ? (
-						<Text>Loading data...</Text>
+						<FavouritesLoadingData />
 					) : status === "error" ? (
 						<Text>Something went wrong. Try again.</Text>
 					) : favouritesViews[currentView] === "list" ? (

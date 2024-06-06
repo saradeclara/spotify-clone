@@ -12,6 +12,7 @@ import { useQuery } from "react-query";
 import capitalise from "../../../lib/capitalise";
 import pluralise from "../../../lib/pluralise";
 import FollowUserButton from "./FollowUserButton";
+import GradientLayoutLoadingData from "@/components/GradientLayoutLoadingData";
 
 const UserDashboard = () => {
 	const [followStatus, updateFollowStatus] = useState(false);
@@ -31,7 +32,11 @@ const UserDashboard = () => {
 		favouriteSongs: Song[];
 	};
 
-	const { data: user, refetch } = useQuery<any, any, ExtendedUser>(
+	const {
+		data: user,
+		isLoading,
+		refetch,
+	} = useQuery<any, any, ExtendedUser>(
 		currentUserKey,
 		typeof urlUsername === "string"
 			? () => fetchCurrentUser(urlUsername)
@@ -100,6 +105,8 @@ const UserDashboard = () => {
 	}, [refetch, router.asPath]);
 
 	const userFeedData = user ? generateUserFeedData(user) : [];
+
+	if (isLoading) return <GradientLayoutLoadingData />;
 
 	if (user)
 		return (

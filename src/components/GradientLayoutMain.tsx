@@ -15,6 +15,7 @@ const GradientLayoutMain = ({
 				overflowY: "auto",
 				borderRadius: "10px",
 				background: "black",
+				// bgGradient: "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)";
 				bgGradient: `linear(to-b, ${color}.900 0%, rgba(18,18,18, .90) 40%)`,
 			}}
 		>
