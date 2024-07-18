@@ -1,7 +1,6 @@
 import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-const protectedPages: string[] = ["/", "/playlist", "/library"];
 
 export default function middleware(
 	req: NextRequest & {

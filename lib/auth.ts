@@ -28,7 +28,7 @@ export const validateRoute = (
 		arg0: NextApiRequest,
 		arg1: NextApiResponse,
 		arg2: ExtendedUser
-	) => any
+	) => void
 ) => {
 	return async (req: NextApiRequest, res: NextApiResponse) => {
 		const { FAKE_SPOTIFY_ACCESS_TOKEN: token } = req.cookies;

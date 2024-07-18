@@ -12,7 +12,7 @@ const theme = extendTheme({
 	},
 });
 
-const App = (props: { Component: any; pageProps: any; }) => {
+const App = (props: { Component: any; pageProps: any }) => {
 	/* eslint-disable react/prop-types */
 	const { Component, pageProps } = props;
 

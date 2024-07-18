@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 

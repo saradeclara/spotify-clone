@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { jwtPayload } from "@/types";
 import bcrypt from "bcrypt";
 import cookie from "cookie";
