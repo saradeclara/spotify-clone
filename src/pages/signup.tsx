@@ -6,8 +6,7 @@ import {
 	ToastMessagesType,
 } from "@/types/authForm";
 
-/* eslint-disable react/prop-types */
-const Signup = (props) => {
+const Signup = () => {
 	const formData: FormDataType[] = [
 		{
 			type: "text",
