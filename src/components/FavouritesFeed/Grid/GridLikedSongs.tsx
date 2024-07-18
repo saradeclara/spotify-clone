@@ -13,8 +13,8 @@ const GridLikedSongs = ({ likedSongsData }: { likedSongsData: Song[] }) => {
 			<ListItem _hover={{ backgroundColor: "#1A1A1A" }} sx={listItemStyles}>
 				<Image
 					borderRadius="md"
-					width="150px"
-					height="150px"
+					width="130px"
+					height="130px"
 					src={likedSongsCover}
 					alt="Liked Songs"
 				/>

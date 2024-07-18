@@ -27,12 +27,13 @@ const ListArtistElement = ({
 					cursor: "pointer",
 				}}
 			>
-				<Image
-					borderRadius="full"
-					boxSize="50px"
-					src={feedRecord.avatarUrl ?? ""}
-					alt={feedRecord.name}
-				/>
+				<Box
+					background={`url(${feedRecord.avatarUrl})` ?? ""}
+					backgroundSize="cover"
+					borderRadius="100%"
+					width="50px"
+					height="50px"
+				></Box>
 				<Box sx={{ marginLeft: "10px" }}>
 					<Text color="white">
 						<SubstringSearchText

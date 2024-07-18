@@ -23,12 +23,13 @@ const GridArtistElement = ({
 				_hover={{ backgroundColor: "#1A1A1A" }}
 				sx={listItemStyles}
 			>
-				<Image
-					borderRadius="full"
-					boxSize="150px"
-					src={feedRecord.avatarUrl ?? ""}
-					alt={feedRecord.name}
-				/>
+				<Box
+					background={`url(${feedRecord.avatarUrl})` ?? ""}
+					backgroundSize="cover"
+					borderRadius="100%"
+					width="130px"
+					height="130px"
+				></Box>
 				<Box>
 					{feedRecord && feedRecord.name ? (
 						<Text color="white">

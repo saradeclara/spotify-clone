@@ -17,6 +17,13 @@ import capitalise from "../../lib/capitalise";
 import lumaTextColor from "../../lib/lumaTextColor";
 
 const fac = new FastAverageColor();
+
+type rgbColor = {
+	r: number;
+	g: number;
+	b: number;
+};
+
 const GradientLayoutPages = ({
 	id,
 	children,
@@ -37,12 +44,17 @@ const GradientLayoutPages = ({
 	isTitleEditable?: boolean;
 }) => {
 	const [color, setColor] = useState({ r: 0, g: 0, b: 0 });
+	const [textColor, setTextColor] = useState<rgbColor>({
+		r: 255,
+		g: 255,
+		b: 255,
+	});
 	const { updateScrollPosition } = useContext(ScrollPositionContext);
 	const [editMode, toggleEditMode] = useState(false);
 	const [isEditIconVisible, toggleEditIconVisibility] = useState(false);
 	const [playlistTitle, editPlaylistTitle] = useState("");
 
-	const textColor = lumaTextColor(color);
+	// const textColor = lumaTextColor(color);
 	const inputRef: MutableRefObject<HTMLInputElement | null> | undefined =
 		useRef(null);
 	const queryClient = useQueryClient();
@@ -111,6 +123,9 @@ const GradientLayoutPages = ({
 						b: color.value[2],
 					};
 					setColor(rgbColor);
+					const newTextColor = lumaTextColor(rgbColor);
+					console.log({ newTextColor });
+					setTextColor(newTextColor);
 				})
 				.catch((e) => {
 					console.log(e);

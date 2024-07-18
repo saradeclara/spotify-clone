@@ -61,7 +61,16 @@ const FeedCard = ({
 					}
 					src={avatarUrl}
 				/>
-				<Text fontWeight="bold" fontSize="sm" color="white">
+				<Text
+					sx={{
+						textOverflow: "ellipsis",
+						overflow: "hidden",
+						whiteSpace: "nowrap",
+					}}
+					fontWeight="bold"
+					fontSize="sm"
+					color="white"
+				>
 					{data.category ? data.name : `${data.firstName} ${data.lastName}`}
 				</Text>
 				<Text fontSize="sm" marginTop="5px" color="gray">
