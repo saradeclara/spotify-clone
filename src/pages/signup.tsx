@@ -7,7 +7,7 @@ import {
 } from "@/types/authForm";
 
 /* eslint-disable react/prop-types */
-const Signup = (_props: any) => {
+const Signup = (props) => {
 	const formData: FormDataType[] = [
 		{
 			type: "text",
@@ -33,7 +33,7 @@ const Signup = (_props: any) => {
 		{
 			type: "email",
 			key: "email",
-			label: "Email or username",
+			label: "Email",
 			defaultValue: "",
 			isRequired: true,
 		},

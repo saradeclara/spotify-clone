@@ -11,7 +11,9 @@ import {
 	InputGroup,
 	InputRightElement,
 	Link,
+	ListItem,
 	Text,
+	UnorderedList,
 	useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -19,7 +21,7 @@ import React, { FormEvent, useState } from "react";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import capitalise from "../../lib/capitalise";
 import { auth } from "../../lib/mutation";
-import logo from '../assets/logo-codetunes.png';
+import logo from "../assets/logo-codetunes.png";
 import Image from "next/image";
 import Head from "next/head";
 
@@ -109,13 +111,63 @@ const AuthForm = ({
 	}, [emailElement, passwordElement]);
 
 	return (
-		<Box sx={{ height: mode === 'signin' ? '100vh' : "", width: "100vw", bg: "black", color: "white" }}>
+		<Box
+			sx={{
+				height: mode === "signin" ? "100&" : "",
+				width: "100vw",
+				bg: "black",
+				color: "white",
+			}}
+		>
 			<Head>
 				<title>CodeTunes - A Spotify Clone by Sara De Clara</title>
 			</Head>
-			<Box sx={{ display: 'flex', justifyContent: 'center', padding: '30px 0px'}}>
-				<Image style={{ borderRadius: '200px', border: '5px solid white'}} alt='SpotiClone' height={350} src={logo} />
+			<Box
+				sx={{ display: "flex", justifyContent: "center", padding: "30px 0px" }}
+			>
+				<Image
+					style={{ borderRadius: "200px", border: "5px solid white" }}
+					alt="SpotiClone"
+					height={350}
+					src={logo}
+				/>
 			</Box>
+			{mode === "signin" ? (
+				<Box
+					sx={{
+						background: "darkgray",
+						width: "30%",
+						margin: "0 auto",
+						borderRadius: "15px",
+						padding: "20px 0px",
+						color: "black",
+					}}
+				>
+					<Box>
+						<Text
+							sx={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								marginBottom: "10px",
+							}}
+						>
+							Use these credentials to access the portal:
+						</Text>
+						<UnorderedList sx={{ textAlign: "center", listStyleType: "none" }}>
+							<ListItem>
+								<Text fontWeight="bold">Email</Text>
+								<Text>admin@admin.com</Text>
+							</ListItem>
+							<ListItem>
+								<Text fontWeight="bold">Password</Text>
+								<Text>admin123</Text>
+							</ListItem>
+						</UnorderedList>
+					</Box>
+				</Box>
+			) : null}
+
 			<Flex
 				direction="column"
 				justify="center"
@@ -171,16 +223,13 @@ const AuthForm = ({
 				>
 					{capitalise(action)}
 				</Button>
-				{/* <Link href="#" sx={{ textDecoration: "underline" }}>
-					Forgot your password?
-				</Link> */}
 				<Divider color="gray" margin="40px 0px" />
 				{mode === "signin" ? (
-					<Box marginTop="10px">
+					<Box marginTop="10px" marginBottom="30px">
 						<Text sx={{ color: "gray", display: "inline", marginRight: "5px" }}>
 							Don&apos;t have an account?
 						</Text>
-						<Link href="/signup">Sign up for Spotify</Link>
+						<Link href="/signup">Sign up for CodeTunes</Link>
 					</Box>
 				) : (
 					<Box margin="10px 0px">

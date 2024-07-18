@@ -124,7 +124,6 @@ const GradientLayoutPages = ({
 					};
 					setColor(rgbColor);
 					const newTextColor = lumaTextColor(rgbColor);
-					console.log({ newTextColor });
 					setTextColor(newTextColor);
 				})
 				.catch((e) => {

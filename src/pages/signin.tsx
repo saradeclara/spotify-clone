@@ -12,7 +12,7 @@ const Signin = (_props: any) => {
 		{
 			type: "email",
 			key: "email",
-			label: "Email or username",
+			label: "Email",
 			defaultValue: "",
 			isRequired: true,
 		},
