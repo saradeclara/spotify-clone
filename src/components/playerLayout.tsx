@@ -21,7 +21,6 @@ const queryClient = new QueryClient();
 
 const PlayerLayout = ({ children }: { children: ReactNode }) => {
 	const { user } = useMe();
-	console.log({ user });
 
 	const defaultUser = {
 		id: "",
