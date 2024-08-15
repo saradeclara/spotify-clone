@@ -13,6 +13,7 @@ import { useMe } from "../../lib/hooks";
 import MainPlayer from "./BottomPlayer/MainPlayer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar/Sidebar";
+import SkeletonLayout from "./SkeletonLayout";
 
 const fac = new FastAverageColor();
 
@@ -20,6 +21,7 @@ const queryClient = new QueryClient();
 
 const PlayerLayout = ({ children }: { children: ReactNode }) => {
 	const { user } = useMe();
+	console.log({ user });
 
 	const defaultUser = {
 		id: "",
@@ -83,7 +85,13 @@ const PlayerLayout = ({ children }: { children: ReactNode }) => {
 		}
 	}, [user]);
 
-	if (!user) return null;
+	if (!user)
+		return (
+			<SkeletonLayout
+				sidebarMargin={sidebarMargin}
+				musicPlayerHeight={musicPlayerHeight}
+			/>
+		);
 
 	return (
 		<QueryClientProvider client={queryClient}>
